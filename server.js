@@ -22,9 +22,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 
 // ===== 4. ĐIỀU HƯỚNG TRANG WEB =====
-// Khi gõ /admin sẽ tự động mở file admin.html
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+// Trang chủ mặc định: Tự động chuyển hướng sang trang đăng nhập
+app.get('/', (req, res) => {
+    res.redirect('/login'); 
 });
 
 // Trang đăng nhập
@@ -32,19 +32,21 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// Trang chủ mặc định cũng là đăng nhập
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+// Giao diện Admin
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// 
+// Giao diện Giáo viên
 app.get('/teacher', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'giaovien.html')); 
 });
 
+// Giao diện Học viên
 app.get('/student', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'hocvien.html')); 
 });
+
 // ===== 5. XỬ LÝ LỖI =====
 app.use((req, res) => {
     res.status(404).json({ success: false, message: 'Đường dẫn không tồn tại!' });
