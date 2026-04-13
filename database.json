@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "admin@kids.vn",
+      "name": "Admin System",
+      "role": "admin",
+      "status": "approved",
+      "class": null,
+      "file": "admin.html"
+    }
+  ],
+  "lessons": [],
+  "assignments": [],
+  "speakingScores": [],
+  "chats": []
+}

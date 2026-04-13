@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - KidsEnglish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #4F8CFF;
+            --secondary: #FF9A3C;
+            --success: #10B981;
+            --danger: #FF6B6B;
+            --bg: #F4F7FE;
+            --text-dark: #2B3674;
+            --text-gray: #A3AED0;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .content { display: none; }
+        }
+
+        .content {
+            color: white;
+            text-align: center;
+        }
+
+        .content h1 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 100%;
+        }
+
+        .logo {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .error-msg {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #DC2626;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .register-link a:hover {
+            color: #3311DB;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>🌟 Kids English</h1>
+            <p>Nền tảng học tiếng Anh trực tuyến cho trẻ em</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🎮</div>
+                    <div class="feature-text">Học qua trò chơi</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-text">Luyện nói với AI</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <div class="feature-text">Giáo viên hỗ trợ</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">Theo dõi tiến độ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="logo">Kids<span style="color: #FF9A3C;">English</span></div>
+            
+            <h2 class="title">Đăng nhập</h2>
+            <p class="subtitle">Chào mừng bạn quay trở lại! 👋</p>
+
+            <div id="error-msg" class="error-msg"></div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                
+                <div class="form-group">
+                    <label for="email">📧 Email đăng nhập</label>
+                    <input type="email" id="email" placeholder="Nhập email của bạn..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">🔑 Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
+                </div>
+
+                <div class="remember-forgot">
+                    <label style="cursor: pointer;">
+                        <input type="checkbox" id="remember" style="width: auto; cursor: pointer;">
+                        <span>Nhớ mật khẩu</span>
+                    </label>
+                    <a href="#" style="color: var(--primary); text-decoration: none;">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn">Đăng nhập ngay 🚀</button>
+            </form>
+
+            <div class="register-link">
+                Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== KHỞI TẠO DỮ LIỆU ẢO NẾU HỆ THỐNG TRỐNG =====
+        // Mặc dù ẩn bảng gợi ý, hệ thống vẫn cần tài khoản mẫu để bạn test
+        function initMockDB() {
+            let db = JSON.parse(localStorage.getItem('ks_db'));
+            if (!db || !db.users || db.users.length === 0) {
+                db = {
+                    users: [
+                        { id: 1, fullName: 'Admin Tổng', email: 'admin@kids.vn', password: '123', role: 'admin', createdAt: new Date() },
+                        { id: 888, fullName: 'Cô Lan', email: 'teacher@kids.vn', password: '123', role: 'teacher', classes: ['Lớp 2A'], createdAt: new Date() },
+                        { id: 999, fullName: 'Minh Anh', email: 'student@kids.vn', password: '123', role: 'student', class: 'Lớp 2A', score: 9, comment: 'Bé học tốt lắm', createdAt: new Date() }
+                    ],
+                    classes: [{ id: 111, name: 'Lớp 2A', teacherName: 'Cô Lan', capacity: 30, createdAt: new Date() }],
+                    quizzes: [], lessons: [], pending_users: []
+                };
+                localStorage.setItem('ks_db', JSON.stringify(db));
+            }
+            return db;
+        }
+
+        // Xóa sạch thông tin cũ khi mở lại trang Login
+        window.onload = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            initMockDB();
+        };
+
+        // ===== XỬ LÝ ĐĂNG NHẬP THÔNG MINH =====
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+
+            if (!email || !password) {
+                showError('Vui lòng nhập email và mật khẩu');
+                return;
+            }
+
+            // Kéo dữ liệu từ kho chứa
+            const db = initMockDB();
+
+            // 1. Hệ thống tự động tìm user và nhận diện vai trò (role)
+            const user = db.users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Đăng nhập thành công
+                localStorage.setItem('token', 'mock_token_' + user.id);
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Đăng nhập thành công! Đang chuyển hướng...',
+                    timer: 1000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // Tự động phân luồng dựa vào chức vụ của tài khoản đó
+                    if (user.role === 'admin') window.location.href = 'admin.html';
+                    else if (user.role === 'teacher') window.location.href = 'giaovien.html';
+                    else if (user.role === 'student') window.location.href = 'hocvien.html';
+                    else window.location.href = 'index.html'; // Fallback
+                });
+
+            } else {
+                // 2. Nếu không tìm thấy trong danh sách chính thức, tìm trong hàng chờ duyệt
+                const isPending = db.pending_users && db.pending_users.some(u => u.email === email && u.password === password);
+                
+                if (isPending) {
+                    Swal.fire({
+                        title: 'Đang chờ duyệt ⏳',
+                        text: 'Hồ sơ của bạn đang được Thầy/Cô xét duyệt. Vui lòng quay lại sau nhé!',
+                        icon: 'info',
+                        confirmButtonColor: '#4318FF'
+                    });
+                } else {
+                    showError('Email hoặc mật khẩu không chính xác!');
+                }
+            }
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.innerText = '❌ ' + message;
+            errorMsg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

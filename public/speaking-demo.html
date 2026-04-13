@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Luyện Nói - KidsEnglish</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #EC4899;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .instruction-box {
+            background: linear-gradient(135deg, #FCE7F3 0%, #F3E8FF 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border-left: 6px solid #EC4899;
+        }
+
+        .instruction-text {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #EC4899;
+            line-height: 1.8;
+        }
+
+        .word-box {
+            background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.4);
+        }
+
+        .word-label {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .word-text {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            line-height: 1.2;
+        }
+
+        .phonetic {
+            font-size: 1.5rem;
+            font-weight: 700;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .recording-indicator {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 100%);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 3px dashed #FF6B6B;
+        }
+
+        .recording-indicator.active {
+            display: block;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .recording-dot {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: #FF6B6B;
+            border-radius: 50%;
+            margin-right: 12px;
+            animation: blink 1s infinite;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.3; }
+        }
+
+        .recording-text {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #FF6B6B;
+            margin: 12px 0;
+        }
+
+        .recording-time {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #FF6B6B;
+        }
+
+        .result {
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            color: white;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            display: none;
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .result.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .result-text {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            font-weight: 800;
+            opacity: 0.95;
+            margin-bottom: 25px;
+        }
+
+        .progress {
+            background: rgba(255,255,255,0.3);
+            height: 12px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            background: white;
+            height: 100%;
+            width: 33%;
+            transition: width 0.3s;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFEBCC 100%);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border-left: 6px solid #FBBF24;
+        }
+
+        .tips-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #FBBF24;
+            margin-bottom: 12px;
+        }
+
+        .tips-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #78350F;
+            line-height: 1.6;
+        }
+
+        .word-counter {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #EC4899;
+            margin-bottom: 20px;
+            background: #FCE7F3;
+            padding: 15px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🎤 Luyện Nói Tiếng Anh Cùng Cô Giáo</h1>
+        <p id="questionNumber">Bài 1 của 5</p>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="card">
+        <div id="resultBox" class="result"></div>
+
+        <div id="questionBox">
+            <div class="instruction-box">
+                <div class="instruction-text">
+                    👂 Nghe cô giáo phát âm<br>
+                    🎤 Em hãy lặp lại từ<br>
+                    ⭐ Cố gắng phát âm rõ ràng!
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <div class="tips-title">💡 Mẹo luyện nói:</div>
+                <div class="tips-text">
+                    • Hít thở sâu trước khi nói<br>
+                    • Mở miệng rộng khi phát âm<br>
+                    • Nói chậm và rõ ràng
+                </div>
+            </div>
+
+            <div class="word-counter" id="wordCounter">Từ: 1/5</div>
+
+            <div class="word-box">
+                <div class="word-label">📢 Cô giáo dạy bạn:</div>
+                <div class="word-text" id="wordText">HELLO</div>
+                <div class="phonetic" id="phoneticText">/həˈloʊ/</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="playBtn" onclick="playAudio()" title="Nhấn để nghe cô dạy">
+                    <span>🔊</span> Nghe Cô Dạy
+                </button>
+                <button class="btn btn-primary" id="playSlowBtn" onclick="playAudioSlow()" title="Nói rất chậm">
+                    <span>🐢</span> Nghe Chậm
+                </button>
+                <button class="btn btn-primary" id="recordBtn" onclick="startRecording()" title="Nhấn để ghi âm">
+                    <span>🎙️</span> Em Nói Đi
+                </button>
+                <button class="btn btn-secondary" id="stopBtn" onclick="stopRecording()" style="display: none;" title="Nhấn để dừng ghi âm">
+                    <span>⏹️</span> Dừng Ghi Âm
+                </button>
+            </div>
+
+            <div class="recording-indicator" id="recordingIndicator">
+                <span class="recording-dot"></span>
+                <div class="recording-text">🎤 Em đang nói...</div>
+                <div class="recording-time" id="recordingTime">0 giây</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== DỮ LIỆU TỪ VỰNG =====
+    const words = [
+        {
+            word: "HELLO",
+            phonetic: "/həˈloʊ/",
+            vietnamese: "Xin chào",
+            hint: "Dùng để chào hỏi bạn"
+        },
+        {
+            word: "GOODBYE",
+            phonetic: "/ɡʊdˈbaɪ/",
+            vietnamese: "Tạm biệt",
+            hint: "Dùng để nói tạm biệt"
+        },
+        {
+            word: "THANK YOU",
+            phonetic: "/θæŋk juː/",
+            vietnamese: "Cảm ơn bạn",
+            hint: "Dùng để cảm ơn"
+        },
+        {
+            word: "GOOD MORNING",
+            phonetic: "/ɡʊd ˈmɔːrnɪŋ/",
+            vietnamese: "Chào buổi sáng",
+            hint: "Dùng vào buổi sáng"
+        },
+        {
+            word: "HOW ARE YOU",
+            phonetic: "/haʊ ɑr juː/",
+            vietnamese: "Bạn khỏe không",
+            hint: "Hỏi người khác khỏe không"
+        }
+    ];
+
+    // ===== STATE =====
+    let currentWord = 0;
+    let isRecording = false;
+    let recordingTime = 0;
+    let mediaRecorder;
+    let audioChunks = [];
+
+    // ===== LOAD WORD =====
+    function loadWord() {
+        const w = words[currentWord];
+        const progress = ((currentWord + 1) / words.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+        document.getElementById('questionNumber').innerText = `Bài ${currentWord + 1} của ${words.length}`;
+        document.getElementById('wordCounter').innerText = `Từ: ${currentWord + 1}/${words.length}`;
+        document.getElementById('wordText').innerText = w.word;
+        document.getElementById('phoneticText').innerText = w.phonetic;
+
+        document.getElementById('recordingIndicator').classList.remove('active');
+        document.getElementById('resultBox').classList.remove('show');
+        document.getElementById('recordBtn').style.display = 'inline-flex';
+        document.getElementById('stopBtn').style.display = 'none';
+    }
+
+    // ===== NGHE BÌNH THƯỜNG - GIỌNG NỮ CHUẨN (GOOGLE) =====
+    function playAudio() {
+        const w = words[currentWord];
+        const text = w.word;
+        
+        // Sử dụng Google Translate API với giọng nữ
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`;
+        
+        const audio = new Audio(url);
+        audio.play().catch(err => {
+            console.log('Google API không khả dụng, dùng Web Speech API');
+            playWebSpeechAudio(text, 1);
+        });
+    }
+
+    // ===== NGHE CHẬM - GIỌNG NỮ CHUẨN (CHẬM) =====
+    function playAudioSlow() {
+        const w = words[currentWord];
+        const text = w.word;
+        
+        // Sử dụng Web Speech API với giọng nữ nhưng chậm hơn
+        playWebSpeechAudio(text, 0.7);
+    }
+
+    // ===== WEB SPEECH API - GIỌNG NỮ =====
+    function playWebSpeechAudio(text, speed) {
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Lấy tất cả giọng
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Ưu tiên: Giọng nữ Anh
+        let selectedVoice = voices.find(voice => 
+            voice.lang === 'en-US' && voice.name.includes('Female')
+        );
+        
+        // Fallback: Giọng nữ Anh (Google)
+        if (!selectedVoice) {
+            selectedVoice = voices.find(voice => 
+                voice.lang === 'en-US' && voice.name.includes('Google US English Female')
+            );
+        }
+        
+        // Fallback: Giọng nữ bất kỳ
+        if (!selectedVoice) {
+            selectedVoice = voices.find(voice => 
+                voice.lang.startsWith('en-') && voice.name.includes('Female')
+            );
+        }
+        
+        // Fallback: Giọng Anh bất kỳ
+        if (!selectedVoice) {
+            selectedVoice = voices.find(voice => voice.lang.startsWith('en-'));
+        }
+        
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+            console.log('🎤 Sử dụng giọng:', selectedVoice.name);
+        }
+        
+        utterance.lang = 'en-US';
+        utterance.rate = speed;
+        utterance.pitch = 1.2; // Tăng pitch để nghe như giọng nữ
+        utterance.volume = 1;
+        
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // ===== INIT VOICES =====
+    if (typeof window !== 'undefined') {
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+    }
+
+    // ===== START RECORDING =====
+    async function startRecording() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            recordingTime = 0;
+
+            document.getElementById('recordBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-flex';
+            document.getElementById('recordingIndicator').classList.add('active');
+
+            // Cập nhật thời gian ghi âm
+            const timer = setInterval(() => {
+                recordingTime++;
+                document.getElementById('recordingTime').innerText = recordingTime + ' giây';
+
+                if (!isRecording) {
+                    clearInterval(timer);
+                }
+            }, 1000);
+        } catch (error) {
+            alert('❌ Không thể truy cập microphone!\n\nVui lòng:\n1. Cho phép truy cập mic\n2. Thử lại');
+        }
+    }
+
+    // ===== STOP RECORDING =====
+    function stopRecording() {
+        mediaRecorder.stop();
+        isRecording = false;
+
+        document.getElementById('stopBtn').style.display = 'none';
+        document.getElementById('recordingIndicator').classList.remove('active');
+
+        mediaRecorder.onstop = () => {
+            showResult();
+        };
+    }
+
+    // ===== SHOW RESULT =====
+    function showResult() {
+        const w = words[currentWord];
+        const resultBox = document.getElementById('resultBox');
+
+        resultBox.innerHTML = `
+            <div class="result-icon">🎉</div>
+            <div class="result-text">Tuyệt Vời Em!</div>
+            <div class="result-message">
+                ✅ Em đã luyện nói từ <strong>"${w.word}"</strong> rất tốt!<br>
+                📝 Tiếng Việt: ${w.vietnamese}<br>
+                💡 Ghi chú: ${w.hint}
+            </div>
+            <button class="btn btn-primary" onclick="nextWord()" style="margin-top: 20px; background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                ${currentWord < words.length - 1 ? '⏭️ Từ Tiếp Theo' : '✅ Hoàn Thành'}
+            </button>
+        `;
+        resultBox.classList.add('show');
+        document.getElementById('questionBox').style.display = 'none';
+    }
+
+    // ===== NEXT WORD =====
+    function nextWord() {
+        if (currentWord < words.length - 1) {
+            currentWord++;
+            document.getElementById('questionBox').style.display = 'block';
+            loadWord();
+        } else {
+            finishLesson();
+        }
+    }
+
+    // ===== FINISH LESSON =====
+    function finishLesson() {
+        document.getElementById('questionBox').style.display = 'none';
+
+        const resultBox = document.getElementById('resultBox');
+        resultBox.innerHTML = `
+            <div class="result-icon">🏆</div>
+            <div class="result-text">Xin Chúc Mừng!</div>
+            <div class="result-message">
+                👏 Em đã hoàn thành bài luyện nói!<br>
+                ⭐ Em phát âm rất tốt!<br>
+                💪 Hãy tiếp tục luyện tập mỗi ngày!
+            </div>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                🔄 Luyện Lại
+            </button>
+        `;
+    }
+
+    // ===== INIT =====
+    window.addEventListener('load', loadWord);
+</script>
+
+</body>
+</html>

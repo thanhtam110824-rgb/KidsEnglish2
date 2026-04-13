@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Điền Khuyết - KidsEnglish</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FF9A3C 0%, #FFB84D 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #FF9A3C;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .question-box {
+            background: #FFF4E5;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 6px solid #FF9A3C;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #2B3674;
+            line-height: 2;
+        }
+
+        .blank-input {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: 3px dashed #FF9A3C;
+            border-radius: 10px;
+            background: white;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #2B3674;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            background: #FF9A3C;
+            color: white;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 154, 60, 0.3);
+        }
+
+        .result {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #FF9A3C 0%, #FFB84D 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .result-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .progress {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: white;
+            height: 100%;
+            width: 33%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>✏️ Demo Bài Điền Khuyết</h1>
+        <p id="questionNumber">Câu 1 của 3</p>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="card">
+        <div id="resultBox" class="result"></div>
+
+        <div id="questionBox">
+            <div class="question-box">
+                <div class="question-text" id="questionText">Hello! My name is ___</div>
+            </div>
+
+            <input type="text" id="answer" class="blank-input" placeholder="?" style="display: block; margin-top: 20px;">
+
+            <button class="btn" onclick="submitAnswer()">✅ Trả Lời</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { question: "Hello! My name is ___", blank: "John" },
+        { question: "I am ___ years old", blank: "10" },
+        { question: "My favorite color is ___", blank: "blue" }
+    ];
+
+    let currentQuestion = 0;
+    let answered = false;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        answered = false;
+
+        const progress = ((currentQuestion + 1) / questions.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+        document.getElementById('questionNumber').innerText = `Câu ${currentQuestion + 1} của ${questions.length}`;
+        document.getElementById('questionText').innerText = q.question;
+        document.getElementById('answer').value = '';
+        document.getElementById('answer').focus();
+        document.getElementById('resultBox').classList.remove('show');
+    }
+
+    function submitAnswer() {
+        const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+        if (!userAnswer) {
+            alert('❌ Nhập câu trả lời!');
+            return;
+        }
+
+        answered = true;
+        const q = questions[currentQuestion];
+        const isCorrect = userAnswer === q.blank.toLowerCase();
+
+        const resultBox = document.getElementById('resultBox');
+        const icon = isCorrect ? '🎉' : '😢';
+        const text = isCorrect ? 'Chính xác!' : 'Sai rồi!';
+
+        resultBox.innerHTML = `
+            <div class="result-icon">${icon}</div>
+            <div class="result-text">${text}</div>
+            <p>Đáp án: <strong>${q.blank}</strong></p>
+        `;
+        resultBox.classList.add('show');
+
+        if (isCorrect) score++;
+
+        const btn = document.querySelector('.btn');
+        if (currentQuestion < questions.length - 1) {
+            btn.innerText = '⏭️ Câu Tiếp';
+            btn.onclick = nextQuestion;
+        } else {
+            btn.innerText = '✅ Hoàn Thành';
+            btn.onclick = finishQuiz;
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        loadQuestion();
+        const btn = document.querySelector('.btn');
+        btn.innerText = '✅ Trả Lời';
+        btn.onclick = submitAnswer;
+    }
+
+    function finishQuiz() {
+        const percentage = Math.round((score / questions.length) * 100);
+        document.getElementById('questionBox').style.display = 'none';
+
+        const resultBox = document.getElementById('resultBox');
+        resultBox.innerHTML = `
+            <div class="result-icon">🏆</div>
+            <div class="result-text">Hoàn Thành!</div>
+            <p>Điểm: ${score}/${questions.length} (${percentage}%)</p>
+            <button class="btn" onclick="location.reload()" style="margin-top: 20px;">🔄 Làm Lại</button>
+        `;
+        resultBox.classList.add('show');
+    }
+
+    window.addEventListener('load', loadQuestion);
+</script>
+
+</body>
+</html>

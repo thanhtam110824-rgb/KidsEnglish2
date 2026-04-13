@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "id": "user_1",
+      "fullName": "Quản trị viên",
+      "email": "admin@kids.vn",
+      "password": "admin123",
+      "role": "admin",
+      "class": "",
+      "isActive": true,
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "lastLogin": "2026-04-12T07:30:13.914Z"
+    },
+    {
+      "id": "user_2",
+      "fullName": "Cô Giáo Thị Mến",
+      "email": "teacher@kids.vn",
+      "password": "teacher123",
+      "role": "teacher",
+      "class": "",
+      "isActive": true,
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "lastLogin": "2026-04-12T06:29:28.541Z"
+    },
+    {
+      "id": "user_3",
+      "fullName": "Minh Anh",
+      "email": "student@kids.vn",
+      "password": "student123",
+      "role": "student",
+      "class": "Lớp 2A",
+      "score": 9,
+      "comment": "Bé học rất chăm chỉ!",
+      "isActive": true,
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "lastLogin": "2026-04-12T06:24:04.861Z"
+    },
+    {
+      "id": "user_4",
+      "fullName": "Phụ huynh Mạnh",
+      "email": "parent@kids.vn",
+      "password": "parent123",
+      "role": "parent",
+      "class": "",
+      "isActive": true,
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "lastLogin": null
+    },
+    {
+      "id": null,
+      "fullName": "Lâm Bảo Ngọc",
+      "email": "lambaongochd216@gmail.com",
+      "password": "123456",
+      "role": "teacher",
+      "classes": [
+        "Lớp 2"
+      ],
+      "progress": 0,
+      "score": 0,
+      "createdAt": "2026-04-12T14:24:08.506Z"
+    }
+  ],
+  "lessons": [
+    {
+      "id": 1776057954288,
+      "title": "1",
+      "type": "Bài Giảng",
+      "createdBy": "Quản trị viên",
+      "createdAt": "2026-04-13T05:25:54.289Z",
+      "isActive": true
+    }
+  ],
+  "assignments": [],
+  "chats": [
+    {
+      "id": 1776052447285,
+      "senderEmail": "teacher@kids.vn",
+      "receiverEmail": "user_3",
+      "message": "hi",
+      "timestamp": "2026-04-13T03:54:07.285Z"
+    }
+  ],
+  "classes": [
+    {
+      "id": 1,
+      "name": "2A",
+      "teacherName": "Cô Giáo Thị Mến",
+      "capacity": 10,
+      "students": [],
+      "status": "active",
+      "createdAt": "2026-04-13T04:24:11.355Z"
+    }
+  ]
+}

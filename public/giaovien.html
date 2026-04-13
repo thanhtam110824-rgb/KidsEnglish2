@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển Giáo Viên - KidsEnglish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea; --primary-light: #f0f4ff;
+            --secondary: #FF9A3C; --secondary-light: #FFF4E5;
+            --success: #10B981; --success-light: #E5F8ED;
+            --danger: #FF6B6B; --danger-light: #FFE5E5;
+            --warning: #FBBF24; --warning-light: #FFF8E1;
+            --bg: #F4F7FE; --text-dark: #2B3674;
+            --text-gray: #A3AED0; --white: #FFFFFF; --border: #E2E8F0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+        body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text-dark); }
+        
+        /* SIDEBAR CỐ ĐỊNH - CHỐNG LỖI NHẢY NÚT */
+        .sidebar { width: 280px; background: var(--white); padding: 30px 20px; display: flex; flex-direction: column; height: 100vh; border-right: 3px solid var(--primary-light); box-shadow: 5px 0 20px rgba(0,0,0,0.05); border-radius: 0 40px 40px 0; }
+        .logo { font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 30px; flex-shrink: 0; }
+        .nav-container { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .nav-item { padding: 15px 20px; margin-bottom: 8px; border-radius: 20px; cursor: pointer; font-size: 1.1rem; font-weight: 800; color: var(--text-gray); transition: 0.3s; display: flex; align-items: center; gap: 15px; border: none; background: none; width: 100%; text-align: left; }
+        .nav-item:hover { color: var(--primary); background: var(--primary-light); }
+        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        .logout-btn { padding: 15px 20px; border-radius: 20px; cursor: pointer; font-weight: 800; color: var(--danger); background: var(--danger-light); border: none; width: 100%; display: flex; align-items: center; gap: 15px; flex-shrink: 0; transition: 0.3s; }
+        .logout-btn:hover { background: var(--danger); color: white; }
+
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .header { padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--white); box-shadow: 0 5px 20px rgba(0,0,0,0.03); border-bottom: 3px solid var(--primary-light); flex-shrink: 0; }
+        .content { padding: 30px 40px; overflow-y: auto; flex: 1; }
+        
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card { background: var(--white); border-radius: 25px; padding: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 3px solid var(--white); }
+        .card-title { font-family: 'Baloo 2', cursive; font-size: 1.6rem; color: var(--text-dark); margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--white); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid var(--border); }
+        .stat-value { font-size: 2.2rem; font-weight: 900; color: var(--primary); }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; color: white; }
+        .btn-primary { background: var(--primary); }
+        .btn-info { background: #0dcaf0; }
+        .btn-danger { background: var(--danger); }
+        .btn-warning { background: var(--warning); }
+        .btn-success { background: var(--success); }
+        .btn-small { padding: 6px 12px; font-size: 0.85rem; }
+
+        .assignment-item { background: var(--primary-light); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .chat-container { background: var(--bg); padding: 20px; border-radius: 20px; height: 400px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message { padding: 12px 18px; border-radius: 15px; max-width: 75%; font-weight: 600; line-height: 1.5; }
+        .chat-message.me { align-self: flex-end; background: var(--primary); color: white; }
+        .chat-message.other { align-self: flex-start; background: white; border: 1px solid var(--border); }
+
+        .detail-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        .detail-table th, .detail-table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        .detail-table th { background: #f8f9fa; color: var(--text-dark); font-weight: 800; }
+        .row-correct { background-color: #f0fdf4; }
+        .row-wrong { background-color: #fef2f2; }
+        input, textarea, select { width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 600; color: var(--text-dark); transition: 0.3s; outline: none; }
+        input:focus { border-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">Kids<span>English</span></div>
+    <div class="nav-container">
+        <button class="nav-item active" onclick="switchTab('dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</button>
+        <button class="nav-item" onclick="switchTab('videos', this)"><i class="fas fa-video"></i> Quản Lý Video</button>
+        <button class="nav-item" onclick="switchTab('mcq', this)"><i class="fas fa-list-ul"></i> Trắc Nghiệm</button>
+        <button class="nav-item" onclick="switchTab('fill', this)"><i class="fas fa-pencil-alt"></i> Điền Khuyết</button>
+        <button class="nav-item" onclick="switchTab('speaking', this)"><i class="fas fa-microphone"></i> Luyện Nói</button>
+        <button class="nav-item" onclick="switchTab('grades', this)"><i class="fas fa-star"></i> Bảng Điểm</button>
+        <button class="nav-item" onclick="switchTab('chat', this)"><i class="fas fa-comments"></i> Chat Với Trò</button>
+    </div>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Thoát</button>
+</aside>
+
+<div class="main-wrapper">
+    <div class="header">
+        <h1 class="page-title" id="pageTitle">📊 Bảng Điều Khiển</h1>
+        <div class="teacher-info">
+            <div style="text-align: right; margin-right: 15px;">
+                <div style="font-weight: 900; color: var(--primary);" id="teacherName">Cô Giáo</div>
+                <div style="font-size: 0.85rem; color: var(--text-gray); font-weight: 700;" id="assignedLop">Giáo viên</div>
+            </div>
+            <div class="avatar" id="teacherAvatar">T</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Học Sinh Hệ Thống</div></div>
+                <div class="stat-card"><div class="stat-icon">📹</div><div class="stat-value" id="totalLessons">0</div><div class="stat-label">Bài Giảng Video</div></div>
+                <div class="stat-card"><div class="stat-icon">✏️</div><div class="stat-value" id="totalAssignments">0</div><div class="stat-label">Bài Tập Đã Giao</div></div>
+                <div class="stat-card"><div class="stat-icon">🎤</div><div class="stat-value" id="totalSpeakings">0</div><div class="stat-label">Bài Luyện Nói</div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">💡 Ghi chú hệ thống</div>
+                <p>Cô giáo hãy vào mục <strong>Bảng Điểm</strong> để xem chi tiết bài làm và gửi báo cáo Gmail chi tiết cho phụ huynh nhé!</p>
+            </div>
+        </div>
+
+        <div id="tab-videos" class="tab-pane">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">📹 Đăng Video</div>
+                    <input type="hidden" id="lessonEditId">
+                    <div style="margin-bottom:15px;"><label>📝 Tiêu đề</label><input type="text" id="lessonTitle"></div>
+                    <div style="margin-bottom:15px;"><label>🔗 Link YouTube</label><input type="url" id="lessonVideoLink"></div>
+                    <div style="margin-bottom:15px;"><label>📚 Nội dung</label><textarea id="lessonContent" rows="4"></textarea></div>
+                    <button class="btn btn-primary" onclick="saveLesson()">✅ Lưu Video</button>
+                </div>
+                <div class="card"><div class="card-title">📹 Danh Sách</div><div id="lessonsList"></div></div>
+            </div>
+        </div>
+
+        <div id="tab-mcq" class="tab-pane">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">📋 Trắc Nghiệm <button class="btn btn-info btn-small" onclick="addMCQBlock()">+ Câu Hỏi</button></div>
+                    <input type="hidden" id="mcqEditId">
+                    <div style="margin-bottom:15px;"><label>📝 Tên Bài Tập</label><input type="text" id="mcqTitle"></div>
+                    <div id="mcqQuestionsContainer"></div>
+                    <button class="btn btn-primary" onclick="saveMCQ()" style="width: 100%;">✅ Đăng Bài</button>
+                </div>
+                <div class="card"><div class="card-title">📋 Danh Sách</div><div id="mcqList"></div></div>
+            </div>
+        </div>
+
+        <div id="tab-fill" class="tab-pane">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">✏️ Điền Khuyết <button class="btn btn-warning btn-small" onclick="addFillBlock()">+ Câu Hỏi</button></div>
+                    <input type="hidden" id="fillEditId">
+                    <div style="margin-bottom:15px;"><label>📝 Tên Bài Tập</label><input type="text" id="fillTitle"></div>
+                    <div id="fillQuestionsContainer"></div>
+                    <button class="btn btn-primary" onclick="saveFill()" style="width: 100%;">✅ Đăng Bài</button>
+                </div>
+                <div class="card"><div class="card-title">✏️ Danh Sách</div><div id="fillList"></div></div>
+            </div>
+        </div>
+
+        <div id="tab-speaking" class="tab-pane">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">🎤 Luyện Nói AI</div>
+                    <input type="hidden" id="speakEditId">
+                    <div style="margin-bottom:15px;"><label>📝 Tiêu đề</label><input type="text" id="speakTitle"></div>
+                    <div style="margin-bottom:15px;"><label>🎤 Từ Tiếng Anh</label><input type="text" id="speakWord"></div>
+                    <div style="margin-bottom:15px;"><label>💡 Nghĩa Việt</label><input type="text" id="speakVN"></div>
+                    <button class="btn btn-primary" onclick="saveSpeaking()">✅ Lưu Bài</button>
+                </div>
+                <div class="card"><div class="card-title">🎤 Danh Sách</div><div id="speakingList"></div></div>
+            </div>
+        </div>
+
+        <div id="tab-grades" class="tab-pane">
+            <div class="card">
+                <div class="card-title">⭐ Quản Lý Học Sinh & Bảng Điểm</div>
+                <div id="gradesList"></div>
+            </div>
+        </div>
+
+        <div id="tab-chat" class="tab-pane">
+            <div class="card">
+                <div class="card-title">💬 Chat Với Trò</div>
+                <div style="margin-bottom:15px;">
+                    <label>👨‍🎓 Chọn Học Sinh:</label>
+                    <select id="chatStudentSelect" onchange="loadChat()"></select>
+                </div>
+                <div class="chat-container" id="chatContainer"></div>
+                <div style="display: flex; gap: 15px;">
+                    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." style="flex: 1;" onkeypress="if(event.key === 'Enter') sendMessage()">
+                    <button class="btn btn-primary" onclick="sendMessage()">Gửi 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // ===== 0. AUTO INIT DB & LOGIN =====
+    function initDB() {
+        let db = JSON.parse(localStorage.getItem('ks_db'));
+        if (!db || !db.users) {
+            db = {
+                users: [
+                    { id: 1, fullName: "Admin", email: "admin@kids.vn", password: "123", role: "admin" },
+                    { id: 2, fullName: "Cô Thị Mến", email: "teacher@kids.vn", password: "123", role: "teacher", classes: ["Lớp 2A"] },
+                    { id: 3, fullName: "Bé Minh Anh", email: "student@kids.vn", password: "123", role: "student", class: "Lớp 2A", score: 0 }
+                ],
+                classes: [{ id: 101, name: "Lớp 2A", teacherName: "Cô Thị Mến" }],
+                lessons: [], quizzes: []
+            };
+            localStorage.setItem('ks_db', JSON.stringify(db));
+        }
+        return db;
+    }
+
+    let ks_db = initDB();
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'teacher') {
+        user = ks_db.users.find(u => u.role === 'teacher');
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    document.getElementById('teacherName').innerText = user.fullName;
+    document.getElementById('teacherAvatar').innerText = user.fullName.charAt(0).toUpperCase();
+
+    // ===== 1. HIỂN THỊ DỮ LIỆU =====
+    function refreshViews() {
+        const dbLocal = JSON.parse(localStorage.getItem('ks_db'));
+        const students = dbLocal.users.filter(u => u.role === 'student');
+        
+        document.getElementById('totalStudents').innerText = students.length;
+        document.getElementById('totalLessons').innerText = dbLocal.lessons.length;
+        document.getElementById('totalAssignments').innerText = dbLocal.quizzes.filter(q=>q.type!=='speak').length;
+        document.getElementById('totalSpeakings').innerText = dbLocal.quizzes.filter(q=>q.type==='speak').length;
+
+        document.getElementById('gradesList').innerHTML = students.map(st => `
+            <div class="assignment-item" style="background:white; border:1px solid var(--border); flex-direction:column; align-items:stretch;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div><strong style="font-size:1.1rem; color:var(--primary);">👨‍🎓 ${st.fullName}</strong> (${st.class || 'Chưa xếp'})<br><small>${st.email}</small></div>
+                    <div style="font-weight:900; color:var(--success); font-size:1.4rem;">${st.score||0}đ</div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="cmt_${st.id}" placeholder="Nhận xét..." value="${st.comment||''}" style="padding:10px; width:150px;">
+                    <button class="btn btn-success btn-small" onclick="saveGrade(${st.id})">Lưu</button>
+                    <button class="btn btn-info btn-small" onclick="viewDetails(${st.id}, '${encodeURIComponent(st.fullName)}', '${encodeURIComponent(st.email)}')"><i class="fas fa-eye"></i> Xem Bài</button>
+                </div>
+            </div>`).join('') || '<p style="text-align:center; padding:20px;">Hệ thống chưa có học sinh nào.</p>';
+
+        const sel = document.getElementById('chatStudentSelect');
+        const currentSel = sel.value;
+        sel.innerHTML = '<option value="">-- Chọn học sinh --</option>' + students.map(s => `<option value="${s.email}">${s.fullName}</option>`).join('');
+        sel.value = currentSel;
+
+        const renderList = (id, data, type) => {
+            document.getElementById(id).innerHTML = data.map(item => `
+                <div class="lesson-item" style="background:#fff; border-radius:20px; padding:15px; margin-bottom:10px; border:1px solid #eee;">
+                    <div><strong>${item.title}</strong></div>
+                    <div>
+                        <button class="btn btn-info btn-small" style="padding:5px 10px;" onclick="editData('${type}', ${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-small" style="padding:5px 10px;" onclick="delData('${type==='lesson'?'lessons':'quizzes'}', ${item.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`).join('') || 'Trống';
+        };
+        renderList('lessonsList', dbLocal.lessons, 'lesson');
+        renderList('mcqList', dbLocal.quizzes.filter(q=>q.type==='mcq'), 'mcq');
+        renderList('fillList', dbLocal.quizzes.filter(q=>q.type==='fill'), 'fill');
+        renderList('speakingList', dbLocal.quizzes.filter(q=>q.type==='speak'), 'speak');
+    }
+
+    // ===== 2. XEM CHI TIẾT & GỬI BÁO CÁO =====
+    // Hàm này đã được sử dụng mã hóa chống lỗi dấu câu kép JSON
+    function viewDetails(studentId, encStudentName, encStudentEmail) {
+        const studentName = decodeURIComponent(encStudentName);
+        const studentEmail = decodeURIComponent(encStudentEmail);
+        
+        const dbLocal = JSON.parse(localStorage.getItem('ks_db'));
+        const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
+        const speakHistory = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
+        
+        let html = `<div style="max-height: 500px; overflow-y: auto; text-align:left;">`;
+        let hasData = false;
+
+        dbLocal.quizzes.forEach(q => {
+            const resObj = (q.type === 'speak') ? speakHistory[studentId + '_' + q.id] : quizHistory[studentId + '_' + q.id];
+            
+            if (resObj) {
+                hasData = true;
+                
+                // Mã hóa dữ liệu tuyệt đối an toàn trước khi gán vào nút HTML
+                const encTitle = encodeURIComponent(q.title);
+                const encType = encodeURIComponent(q.type);
+                const encData = encodeURIComponent(JSON.stringify(resObj));
+                const encName = encodeURIComponent(studentName);
+                const encEmail = encodeURIComponent(studentEmail);
+
+                let reportBtn = `<button class="btn btn-warning btn-small" style="background:#EA4335;" onclick="sendDetailedGmail('${encName}', '${encEmail}', '${encTitle}', '${encType}', '${encData}')"><i class="fas fa-envelope"></i> Báo cáo Gmail</button>`;
+
+                if (q.type === 'speak') {
+                    html += `
+                    <div style="background:#f8f9fa; padding:20px; border-radius:25px; margin-bottom:15px; border-left:8px solid var(--warning);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="color:var(--text-dark);">${q.title}</h4>
+                            ${reportBtn}
+                        </div>
+                        <p>Bé phát âm: <strong>"${resObj.transcript}"</strong> (${resObj.score}/100đ)</p>
+                    </div>`;
+                } else if (typeof resObj === 'object' && resObj.details) {
+                    let rows = '';
+                    let wrongs = [];
+                    resObj.details.forEach((d, i) => {
+                        if (!d.isCorrect) wrongs.push(`Câu ${i+1}`);
+                        rows += `<tr class="${d.isCorrect ? 'row-correct' : 'row-wrong'}"><td>${i+1}</td><td>${d.q}</td><td>${d.userAns}</td><td>${d.correctAns}</td><td>${d.isCorrect?'✅':'❌'}</td></tr>`;
+                    });
+
+                    let draft = wrongs.length > 0 ? `Cô xem bài "${q.title}" rồi. Con chú ý ${wrongs.join(', ')} bị sai nhé!` : `Khen ngợi con bài "${q.title}" làm đúng hết!`;
+                    const encDraft = encodeURIComponent(draft);
+
+                    html += `
+                    <div style="margin-bottom: 25px; background: white; border: 2px solid #f1f5f9; padding: 20px; border-radius: 25px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <h4 style="color:var(--primary);">${q.title} <span style="color:var(--success);">(${resObj.score}/100đ)</span></h4>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-info btn-small" onclick="commitChat('${encEmail}', '${encDraft}')">💬 Nhận xét Chat</button>
+                                ${reportBtn}
+                            </div>
+                        </div>
+                        <table class="detail-table"><tr><th>#</th><th>Câu hỏi</th><th>Bé chọn</th><th>Đáp án</th><th>KQ</th></tr>${rows}</table>
+                    </div>`;
+                }
+            }
+        });
+
+        html += `</div>`;
+        if(!hasData) html = `<p style="padding:20px; text-align:center; color:gray;">Bé chưa làm bài tập nào.</p>`;
+        Swal.fire({ title: `Học viên: ${studentName}`, html: html, width: '900px', confirmButtonText: 'Đóng', confirmButtonColor: '#667eea' });
+    }
+
+    // Nhận dữ liệu đã giải mã, lưu chat và đổi tab
+    function commitChat(encEmail, encMsg) {
+        const email = decodeURIComponent(encEmail);
+        const msg = decodeURIComponent(encMsg);
+
+        let chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
+        chats.push({ senderEmail: user.email, receiverEmail: email, message: msg, timestamp: new Date() });
+        localStorage.setItem('ks_chats', JSON.stringify(chats));
+        
+        Swal.close();
+        const chatTabBtn = document.querySelector('button[onclick*="chat"]');
+        switchTab('chat', chatTabBtn);
+        document.getElementById('chatStudentSelect').value = email;
+        loadChat();
+        Swal.fire({ title: 'Đã gửi!', text: 'Nhận xét đã gửi cho bé!', icon: 'success', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
+    }
+
+    // Gửi Gmail lấy tham số và giải mã 
+    function sendDetailedGmail(encName, encEmail, encTitle, encType, encData) {
+        const studentName = decodeURIComponent(encName);
+        const studentEmail = decodeURIComponent(encEmail);
+        const quizTitle = decodeURIComponent(encTitle);
+        const quizType = decodeURIComponent(encType);
+        const resDataRaw = decodeURIComponent(encData);
+
+        const resData = JSON.parse(resDataRaw);
+        let detail = quizType === 'speak' 
+            ? `Bé phát âm: "${resData.transcript}" (${resData.score}đ)` 
+            : `Bé đạt ${resData.score}/100đ. \n- Các câu cần ôn lại: ${resData.details.filter(d=>!d.isCorrect).map(d=>d.q).join(', ') || 'Làm đúng 100%'}`;
+        
+        const subject = encodeURIComponent(`Báo cáo học tập KidsEnglish - Bé ${studentName}`);
+        const body = encodeURIComponent(
+            `Kính gửi Phụ huynh,\n\n` +
+            `Trung tâm KidsEnglish và Cô giáo xin gửi báo cáo bài "${quizTitle}":\n` +
+            `Kết quả:\n${detail}\n\n` +
+            `Nhận xét:\nCon học rất chăm chỉ và có tiến bộ, phụ huynh cùng khích lệ con nhé!\n\n` +
+            `Trân trọng.`
+        );
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${studentEmail}&su=${subject}&body=${body}`, '_blank');
+    }
+
+    // ===== 3. CÁC HÀM SỬA/LƯU BÀI =====
+    function editData(type, id) {
+        const dbLocal = JSON.parse(localStorage.getItem('ks_db'));
+        const item = (type === 'lesson') ? dbLocal.lessons.find(x => x.id == id) : dbLocal.quizzes.find(x => x.id == id);
+        if(!item) return;
+        switchTab(type === 'lesson' ? 'videos' : type, document.querySelector(`.nav-item[onclick*="${type}"]`));
+        document.getElementById(`${type}EditId`).value = item.id;
+        document.getElementById(`${type}Title`).value = item.title;
+        if(type === 'lesson') { document.getElementById('lessonContent').value = item.content; document.getElementById('lessonVideoLink').value = item.videoUrl; }
+        else if(type === 'mcq') { document.getElementById('mcqQuestionsContainer').innerHTML = ''; (item.questions||[]).forEach(q => addMCQBlock(q.question, q.options, q.correctAnswer)); }
+        else if(type === 'fill') { document.getElementById('fillQuestionsContainer').innerHTML = ''; (item.questions||[]).forEach(q => addFillBlock(q.question, q.answers)); }
+        else if(type === 'speak') { document.getElementById('speakWord').value = item.word; document.getElementById('speakVN').value = item.vietnamese; }
+    }
+
+    function addMCQBlock(q='', opts=['','','',''], correct=0) {
+        const container = document.getElementById('mcqQuestionsContainer');
+        const div = document.createElement('div'); div.className = 'question-block';
+        const uid = Date.now() + Math.random();
+        div.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()" style="padding: 5px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: red; font-weight: bold; position: absolute; right: 10px; top: 10px;">X</button>
+            <textarea placeholder="Câu hỏi...">${q}</textarea>
+            ${opts.map((o,i)=>`<div style="display:flex; gap:10px; margin-top:5px;"><input type="radio" name="r_${uid}" value="${i}" ${i==correct?'checked':''} style="width:20px; height:20px;"><input type="text" value="${o}" placeholder="Đáp án" style="padding:8px;"></div>`).join('')}`;
+        div.style.position = "relative";
+        div.style.padding = "20px";
+        div.style.border = "1px solid #ddd";
+        div.style.marginBottom = "15px";
+        div.style.borderRadius = "10px";
+        container.appendChild(div);
+    }
+    
+    function addFillBlock(q='', ans=[]) {
+        const container = document.getElementById('fillQuestionsContainer');
+        const div = document.createElement('div'); div.className = 'question-block';
+        const uid = Date.now() + Math.random();
+        div.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()" style="padding: 5px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: red; font-weight: bold; position: absolute; right: 10px; top: 10px;">X</button>
+            <textarea id="f_${uid}" onkeyup="det('${uid}')" placeholder="My ___ is Tam.">${q}</textarea><div id="a_${uid}"></div>`;
+        div.style.position = "relative";
+        div.style.padding = "20px";
+        div.style.border = "1px solid #ddd";
+        div.style.marginBottom = "15px";
+        div.style.borderRadius = "10px";
+        container.appendChild(div);
+        if(q) setTimeout(()=>det(uid, ans), 50);
+    }
+
+    function det(id, ex=[]) {
+        const text = document.getElementById(`f_${id}`).value;
+        const count = (text.match(/___/g) || []).length;
+        let h = ''; for(let i=0; i<count; i++) h += `<input type="text" placeholder="Đáp án ${i+1}" value="${ex[i]||''}" style="margin:5px 0; padding:8px; border-radius:10px;">`;
+        document.getElementById(`a_${id}`).innerHTML = h;
+    }
+
+    function saveDB(m) { localStorage.setItem('ks_db', JSON.stringify(ks_db)); refreshViews(); Swal.fire('Thành công', m, 'success'); }
+    function resetForm(t) { document.getElementById(`${t}EditId`).value = ''; }
+    
+    function saveLesson() {
+        const id = document.getElementById('lessonEditId').value;
+        const obj = { id: id ? parseInt(id) : Date.now(), title: document.getElementById('lessonTitle').value, videoUrl: document.getElementById('lessonVideoLink').value, content: document.getElementById('lessonContent').value };
+        if(id) { const idx = ks_db.lessons.findIndex(x=>x.id==id); ks_db.lessons[idx]=obj; } else ks_db.lessons.push(obj);
+        saveDB('Đã lưu video'); resetForm('lesson');
+    }
+    function saveMCQ() {
+        const id = document.getElementById('mcqEditId').value;
+        let qs = []; document.querySelectorAll('#mcqQuestionsContainer .question-block').forEach(b => { qs.push({ question: b.querySelector('textarea').value, options: Array.from(b.querySelectorAll('input[type="text"]')).map(i=>i.value), correctAnswer: b.querySelector('input:checked').value }); });
+        if(id) { const idx = ks_db.quizzes.findIndex(x=>x.id==id); ks_db.quizzes[idx]={...ks_db.quizzes[idx], title: document.getElementById('mcqTitle').value, questions: qs}; }
+        else ks_db.quizzes.push({ id: Date.now(), title: document.getElementById('mcqTitle').value, type: 'mcq', questions: qs });
+        saveDB('Đã đăng bài'); resetForm('mcq');
+    }
+    function saveFill() {
+        const id = document.getElementById('fillEditId').value;
+        let qs = []; document.querySelectorAll('#fillQuestionsContainer .question-block').forEach(b => { qs.push({ question: b.querySelector('textarea').value, answers: Array.from(b.querySelectorAll('input[type=\"text\"]')).map(i=>i.value) }); });
+        if(id) { const idx = ks_db.quizzes.findIndex(x=>x.id==id); ks_db.quizzes[idx]={...ks_db.quizzes[idx], title: document.getElementById('fillTitle').value, questions: qs}; }
+        else ks_db.quizzes.push({ id: Date.now(), title: document.getElementById('fillTitle').value, type: 'fill', questions: qs });
+        saveDB('Đã đăng bài'); resetForm('fill');
+    }
+    function saveSpeaking() {
+        const id = document.getElementById('speakEditId').value;
+        const obj = { id: id?parseInt(id):Date.now(), type:'speak', title: document.getElementById('speakTitle').value, word: document.getElementById('speakWord').value, vietnamese: document.getElementById('speakVN').value };
+        if(id) { const idx = ks_db.quizzes.findIndex(x=>x.id==id); ks_db.quizzes[idx]=obj; } else ks_db.quizzes.push(obj);
+        saveDB('Đã lưu bài nói'); resetForm('speak');
+    }
+
+    function loadChat() {
+        const email = document.getElementById('chatStudentSelect').value;
+        const box = document.getElementById('chatContainer');
+        if(!email) return box.innerHTML = '';
+        const chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
+        const msgs = chats.filter(c => (c.senderEmail === user.email && c.receiverEmail === email) || (c.senderEmail === email && c.receiverEmail === user.email));
+        box.innerHTML = msgs.map(m => `<div class="chat-message ${m.senderEmail === user.email ? 'me' : 'other'}">${m.message}</div>`).join('');
+        box.scrollTop = box.scrollHeight;
+    }
+    function sendMessage() {
+        const email = document.getElementById('chatStudentSelect').value;
+        const msg = document.getElementById('chatInput').value.trim();
+        if(!msg || !email) return;
+        let chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
+        chats.push({ senderEmail: user.email, receiverEmail: email, message: msg, timestamp: new Date() });
+        localStorage.setItem('ks_chats', JSON.stringify(chats));
+        document.getElementById('chatInput').value = ''; loadChat();
+    }
+    function switchTab(id, el) {
+        document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+        document.getElementById('tab-'+id).classList.add('active'); el.classList.add('active');
+        document.getElementById('pageTitle').innerText = el.innerText; refreshViews();
+    }
+    function saveGrade(id) { ks_db.users.find(u=>u.id==id).comment = document.getElementById('cmt_'+id).value; saveDB('Đã lưu'); }
+    function delData(table, id) { ks_db[table] = ks_db[table].filter(x=>x.id!=id); saveDB('Đã xóa'); }
+    function logout() { localStorage.removeItem('user'); window.location.href = 'login.html'; }
+
+    window.onload = () => { refreshViews(); setInterval(loadChat, 2000); };
+</script>
+</body>
+</html>

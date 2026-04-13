@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Học Tập - KidsEnglish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #4F8CFF; --blue-light: #E8F0FF;
+            --orange: #FF9A4C; --orange-light: #FFF4E5;
+            --green: #10B981; --green-light: #E5F8ED;
+            --warning: #FBBF24; --warning-light: #FFF8E1;
+            --bg: #F4F7FE; --text-dark: #2B3674;
+            --white: #FFFFFF; --border: #E2E8F0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+        body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text-dark); }
+        .sidebar { width: 260px; background: var(--white); padding: 30px 20px; display: flex; flex-direction: column; box-shadow: 5px 0 20px rgba(0,0,0,0.03); border-radius: 0 40px 40px 0; overflow-y: auto;}
+        .logo { font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800; color: var(--blue); text-align: center; margin-bottom: 40px; }
+        .logo span { color: var(--orange); }
+        .nav-item { padding: 18px 20px; margin-bottom: 12px; border-radius: 25px; cursor: pointer; font-size: 1.1rem; font-weight: 800; color: #8899AA; transition: all 0.3s; display: flex; align-items: center; gap: 15px; border: none; background: transparent; width: 100%; text-align: left; }
+        .nav-item:hover { color: var(--blue); background: var(--blue-light); transform: translateY(-3px); }
+        .nav-item.active { background: var(--blue); color: white; box-shadow: 0 10px 20px rgba(79, 140, 255, 0.3); }
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--white); box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+        .content { padding: 30px 40px; overflow-y: auto; flex: 1; }
+        .content::-webkit-scrollbar { width: 8px; }
+        .content::-webkit-scrollbar-track { background: var(--bg); }
+        .content::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 10px; }
+        .card { background: var(--white); border-radius: 30px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 25px; }
+        .card-title { font-family: 'Baloo 2', cursive; font-size: 1.6rem; color: var(--text-dark); margin-bottom: 20px; }
+        
+        .grade-box { background: var(--orange-light); border: 3px dashed var(--orange); border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 25px; }
+        .grade-score { font-family: 'Baloo 2', cursive; font-size: 3.5rem; color: var(--orange); margin: 5px 0; }
+        .grade-comment { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); background: white; padding: 12px 20px; border-radius: 20px; display: inline-block; box-shadow: 0 5px 15px rgba(255,154,60,0.2); }
+        .progress-bar { width: 100%; height: 20px; background: var(--border); border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.8rem; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg); font-weight: 800; border-bottom: 2px solid var(--border); }
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; }
+        .badge-green { background: var(--green-light); color: var(--green); }
+        .badge-orange { background: var(--orange-light); color: var(--orange); }
+        .badge-blue { background: var(--blue-light); color: var(--blue); }
+
+        .real-item { background: var(--blue-light); border-radius: 20px; padding: 20px; margin-bottom: 15px; border-left: 8px solid var(--blue); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .real-item:hover { transform: scale(1.01); background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .btn-learn { background: var(--blue); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;}
+        .btn-learn:hover { filter: brightness(0.9); transform: translateY(-2px); }
+
+        .chat-container { background: var(--bg); padding: 20px; border-radius: 20px; height: 350px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-weight: 600; line-height: 1.5; }
+        .message.student { background: var(--blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .message.teacher { background: var(--white); color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid var(--border); }
+        .input-group { display: flex; gap: 10px; }
+        .input-group input { flex: 1; padding: 15px; border: 2px solid var(--border); border-radius: 12px; font-weight: 600; outline: none; font-size:1rem;}
+        .btn-send { background: var(--green); color: white; border: none; padding: 0 25px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;}
+        .btn-send:hover { background: #0d9b6f; transform: translateY(-2px); }
+        
+        .logout-btn { padding: 15px; margin-top: auto; border-radius: 20px; cursor: pointer; font-weight: 800; color: #FF6B6B; background: #FFF0F0; border: none; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;}
+        .logout-btn:hover { background: #FFE0E0; }
+        .tab-pane { display: none; animation: slideUp 0.4s ease; } 
+        .tab-pane.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .quiz-option { display: block; background: var(--bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .quiz-option:hover { background: var(--blue-light); border-color: var(--blue); }
+        .fill-input { border: 2px dashed var(--blue); padding: 5px 10px; border-radius: 8px; outline: none; color: var(--blue); font-weight: bold; text-align: center; width: 120px;}
+
+        .speak-result-box { margin-top: 15px; padding: 15px; background: #fff; border-radius: 12px; border: 2px dashed var(--warning); display: flex; flex-direction: column; gap: 5px; }
+        .score-circle { display: inline-block; padding: 5px 15px; background: var(--warning-light); color: var(--warning); border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">Kids<span>English</span></div>
+    <button class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span> Góc Của Bé</button>
+    <button class="nav-item" onclick="switchTab('lessons', this)"><span>📺</span> Bài Học</button>
+    <button class="nav-item" onclick="switchTab('quiz', this)"><span>🎮</span> Bài Tập</button>
+    <button class="nav-item" onclick="switchTab('speaking', this)"><span>🎤</span> Luyện Nói</button>
+    <button class="nav-item" onclick="switchTab('progress', this)"><span>📊</span> Tiến Độ</button>
+    <button class="nav-item" onclick="switchTab('chat-teacher', this)"><span>👩‍🏫</span> Nhắn Cô Giáo</button>
+    <div style="flex:1"></div>
+    <button class="logout-btn" onclick="logout()"><span>🚪</span> Tạm biệt!</button>
+</aside>
+
+<div class="main-wrapper">
+    <div class="header">
+        <h1 style="font-family: 'Baloo 2', cursive; font-size: 2.2rem; color: var(--blue);" id="welcomeText">Chào bé! 👋</h1>
+        <div style="display:flex; align-items:center; gap: 15px; background: var(--bg); padding: 8px 20px; border-radius: 30px;">
+            <strong style="color: var(--text-dark); font-size: 1.1rem;" id="stNameTop">Học Viên</strong>
+            <div style="width:45px; height:45px; border-radius:50%; background:var(--orange); color:white; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem;" id="stAvatarTop">B</div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <div id="tab-home" class="tab-pane active">
+            <div class="grade-box">
+                <h2 style="font-family: 'Baloo 2'; color: var(--orange); font-size: 2rem;">🏆 Bảng Vàng Của Bé 🏆</h2>
+                <div class="grade-score" id="myScore">--</div>
+                <div class="grade-comment" id="myComment">Cô giáo chưa có ghi chú thêm nha...</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📊 Tiến Độ Học Tập</div>
+                <p style="font-weight: 700; color: #666;">Bé đã hoàn thành:</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;">
+                        <span id="progressText">0%</span>
+                    </div>
+                </div>
+                <p style="font-size: 0.95rem; color: #888; font-weight: 700;">
+                    <span id="completedCount" style="color: var(--blue);">0</span> / <span id="totalCount">0</span> nhiệm vụ
+                </p>
+            </div>
+        </div>
+
+        <div id="tab-lessons" class="tab-pane">
+            <div class="card">
+                <div class="card-title">📺 Bài Học Video</div>
+                <div style="background: var(--blue-light); padding: 15px; border-radius: 15px; margin-bottom: 20px; color: var(--blue); font-weight: 700;">
+                    💡 LƯU Ý: Bé phải xem video liên tục đủ 15 phút hệ thống mới tính điểm hoàn thành nhé!
+                </div>
+                <div id="realLessonsList"></div>
+            </div>
+        </div>
+
+        <div id="tab-quiz" class="tab-pane">
+            <div class="card">
+                <div class="card-title">🎮 Bài Tập Cô Giao</div>
+                <div id="realAssignmentsList"></div>
+            </div>
+        </div>
+
+        <div id="tab-speaking" class="tab-pane">
+            <div class="card">
+                <div class="card-title">🎤 Luyện Phát Âm Cùng AI</div>
+                <div style="background: var(--warning-light); padding: 15px; border-radius: 15px; margin-bottom: 20px; color: #78350F; font-weight: 700;">
+                    💡 Bé hãy ấn <strong>Nghe Chuẩn</strong>, sau đó ấn <strong>Tập Đọc</strong> và đọc to vào mic để máy tính chấm điểm nhé!
+                </div>
+                <div id="realSpeakingList"></div>
+            </div>
+        </div>
+
+        <div id="tab-progress" class="tab-pane">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="card-title" style="margin: 0;">📈 Bảng Thống Kê Chi Tiết</div>
+                    <button class="btn-learn" onclick="sendProgressToTeacher()" style="font-size: 1rem;">📤 Gửi Báo Cáo Cho Cô</button>
+                </div>
+                <table>
+                    <thead><tr><th>Tên Bài / Video</th><th>Loại</th><th>Trạng Thái</th></tr></thead>
+                    <tbody id="progressTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-chat-teacher" class="tab-pane">
+            <div class="card">
+                <div class="card-title">👩‍🏫 Nhắn tin cho cô giáo</div>
+                <div class="chat-container" id="teacherChatBox"></div>
+                <div class="input-group">
+                    <input type="text" id="teacherChatInput" placeholder="Nhắn tin cho cô giáo..." onkeypress="if(event.key === 'Enter') sendToTeacher()">
+                    <button class="btn-send" onclick="sendToTeacher()">Gửi 🚀</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // ===== 1. XÁC THỰC =====
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('ks_user'));
+    if (!user || user.role !== 'student') window.location.href = 'login.html';
+
+    const stName = user.fullName || user.name || 'Học Viên';
+    document.getElementById('welcomeText').innerText = `Góc của bé ${stName}! 👋`;
+    document.getElementById('stNameTop').innerText = stName;
+    document.getElementById('stAvatarTop').innerText = stName.charAt(0).toUpperCase();
+
+    function switchTab(id, el) {
+        document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        el.classList.add('active');
+    }
+
+    function getMyTeacherEmail() {
+        const db = JSON.parse(localStorage.getItem('ks_db')) || { users: [], classes: [] };
+        const myClass = user.class;
+        if (!myClass) return null;
+
+        const classInfo = db.classes.find(c => c.name === myClass);
+        if (classInfo && classInfo.teacherName) {
+            const teacher = db.users.find(u => u.role === 'teacher' && (u.fullName === classInfo.teacherName || u.name === classInfo.teacherName));
+            if (teacher) return teacher.email;
+        }
+
+        const teacherByList = db.users.find(u => u.role === 'teacher' && u.classes && (u.classes.includes(myClass) || u.classes.includes('Tất cả')));
+        if (teacherByList) return teacherByList.email;
+        return null; 
+    }
+
+    function autoNotifyTeacher(msg) {
+        const teacherEmail = getMyTeacherEmail();
+        if(!teacherEmail) return;
+        const chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
+        chats.push({ senderEmail: user.email, receiverEmail: teacherEmail, message: msg, timestamp: new Date() });
+        localStorage.setItem('ks_chats', JSON.stringify(chats));
+        currentChatHash = ""; loadChat();
+    }
+
+    // ===== TÍNH NĂNG MỚI: XEM VIDEO YOUTUBE VÀ ĐẾM NGƯỢC 15 PHÚT =====
+    function extractVideoID(url) {
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    let videoTimerInterval;
+    function watchVideo(lessonId, videoUrl, title) {
+        const vid = extractVideoID(videoUrl);
+        let embedUrl = videoUrl;
+        if (vid) embedUrl = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+
+        const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
+        const isDone = !!videoHistory[user.id + '_' + lessonId];
+
+        let watchSeconds = 0;
+        const REQUIRED_SECONDS = 15 * 60; // 900 giây = 15 phút
+
+        let timerHtml = isDone ? 
+            `<div style="color:var(--green); font-weight:800; font-size:1.2rem; margin-bottom:10px;">✅ Bài giảng này bé đã xem đủ thời gian!</div>` : 
+            `<div id="videoTimerDisplay" style="color:var(--orange); font-weight:800; font-size:1.2rem; margin-bottom:10px;">⏳ Thời gian xem: 00:00 / 15:00</div>`;
+
+        Swal.fire({
+            title: `📺 ${title}`,
+            html: `
+                ${timerHtml}
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                    <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allow="autoplay; encrypted-media; fullscreen"></iframe>
+                </div>
+            `,
+            width: '800px',
+            showCancelButton: true,
+            showConfirmButton: !isDone,
+            confirmButtonText: '✅ Đã Xem Xong',
+            cancelButtonText: 'Đóng',
+            confirmButtonColor: '#10B981',
+            didOpen: () => {
+                if(!isDone) {
+                    videoTimerInterval = setInterval(() => {
+                        watchSeconds++;
+                        let m = Math.floor(watchSeconds / 60).toString().padStart(2, '0');
+                        let s = (watchSeconds % 60).toString().padStart(2, '0');
+                        const display = document.getElementById('videoTimerDisplay');
+                        if(display) {
+                            if(watchSeconds >= REQUIRED_SECONDS) {
+                                display.innerHTML = '✅ Tuyệt vời! Đã đủ 15 phút, bé có thể ấn Đã Xem Xong!';
+                                display.style.color = 'var(--green)';
+                            } else {
+                                display.innerHTML = `⏳ Thời gian xem: ${m}:${s} / 15:00`;
+                            }
+                        }
+                    }, 1000);
+                }
+            },
+            willClose: () => {
+                if(videoTimerInterval) clearInterval(videoTimerInterval);
+            }
+        }).then((result) => {
+            if(result.isConfirmed && !isDone) {
+                if(watchSeconds < REQUIRED_SECONDS) {
+                    const xemDuocM = Math.floor(watchSeconds/60);
+                    const xemDuocS = watchSeconds % 60;
+                    Swal.fire({
+                        title: 'Cảnh báo! 🛑', 
+                        html: `Bé mới xem được <strong>${xemDuocM} phút ${xemDuocS} giây</strong>.<br>Hệ thống yêu cầu phải xem đủ <strong>15 phút</strong> mới được công nhận hoàn thành.<br>Bé hãy vào xem tiếp nhé!`, 
+                        icon: 'warning'
+                    });
+                } else {
+                    // Đã đủ giờ
+                    videoHistory[user.id + '_' + lessonId] = true;
+                    localStorage.setItem('ks_video_history', JSON.stringify(videoHistory));
+                    updateStudentScore(20); // Cộng thưởng điểm xem video
+                    
+                    Swal.fire('Thành công! 🎉', 'Bé đã xem đủ thời lượng Video bài giảng!', 'success');
+                    autoNotifyTeacher(`Con đã chăm chỉ xem hết 15 phút bài giảng "${title}" ạ! 📺`);
+                    currentDataHash = "";
+                    loadRealData();
+                }
+            }
+        });
+    }
+
+    // ===== 2. HỆ THỐNG ĐỌC MẪU & THU ÂM (AI) =====
+    let recordedAudioBlob = null;
+    let recordedAudioUrl = null;
+
+    function playAudio(text, speed) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US'; 
+        utterance.rate = speed; 
+        utterance.pitch = 1.2;
+        const voices = window.speechSynthesis.getVoices();
+        let voice = voices.find(v => v.lang === 'en-US' && v.name.includes('Female')) || voices.find(v => v.lang.startsWith('en-'));
+        if (voice) utterance.voice = voice;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function startRecording(targetWord, quizId) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            Swal.fire('Lỗi', 'Trình duyệt của bạn không hỗ trợ thu âm. Hãy dùng Chrome nhé!', 'error'); 
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US'; 
+        recognition.interimResults = false; 
+        recognition.maxAlternatives = 1;
+
+        recordedAudioBlob = null;
+        recordedAudioUrl = null;
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
+
+                mediaRecorder.onstop = () => {
+                    recordedAudioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    recordedAudioUrl = URL.createObjectURL(recordedAudioBlob);
+                };
+
+                Swal.fire({
+                    title: '🎤 Đang nghe...', 
+                    html: `<p>Bé hãy đọc thật to từ/câu: <strong>"${targetWord}"</strong></p>`,
+                    showConfirmButton: false, 
+                    allowOutsideClick: false, 
+                    didOpen: () => { 
+                        Swal.showLoading();
+                        mediaRecorder.start();
+                        recognition.start();
+                    }
+                });
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
+                    const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
+                    
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    const targetWords = target.split(/\s+/);
+                    const spokenWords = transcript.split(/\s+/);
+                    let matches = 0;
+                    
+                    targetWords.forEach(w => {
+                        if (spokenWords.includes(w)) matches++;
+                    });
+                    
+                    let score = Math.round((matches / targetWords.length) * 100);
+                    if (score > 100) score = 100;
+                    if (score === 0 && transcript !== "") score = 10;
+
+                    let comment = "";
+                    let isGood = false;
+                    if (score === 100) {
+                        comment = "Tuyệt hảo! Bé phát âm chuẩn như người bản xứ. 🌟";
+                        isGood = true;
+                    } else if (score >= 80) {
+                        comment = "Rất tốt! Bé phát âm khá chuẩn. Cố gắng thêm xíu nữa nhé! 👍";
+                        isGood = true;
+                    } else if (score >= 50) {
+                        comment = "Khá ổn! Cô thấy bé đọc đúng một số từ rồi. Cần nghe mẫu lại nhé. 🐢";
+                    } else {
+                        comment = "Cần cố gắng! Bé hãy bấm nghe cô đọc mẫu nhiều lần nhé. 💪";
+                    }
+
+                    const history = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
+                    history[user.id + '_' + quizId] = {
+                        score: score,
+                        transcript: transcript,
+                        comment: comment,
+                        audio: recordedAudioUrl
+                    };
+                    localStorage.setItem('ks_speak_history', JSON.stringify(history));
+
+                    showRecordingResult(targetWord, transcript, score, comment, isGood, quizId);
+                };
+
+                recognition.onerror = (event) => {
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                    Swal.fire('Lỗi', 'Cô không nghe rõ bé nói gì. Bé thử lại nhé!', 'error');
+                };
+            })
+            .catch(err => {
+                Swal.fire('Lỗi', 'Không thể truy cập Micro. Vui lòng kiểm tra quyền trên trình duyệt!', 'error');
+            });
+    }
+
+    function showRecordingResult(targetWord, transcript, score, comment, isGood, quizId) {
+        Swal.fire({
+            title: isGood ? '🎉 Chúc mừng bé!' : '🤔 Gần đúng rồi!',
+            html: `
+                <div style="text-align: left;">
+                    <div style="font-size: 2.5rem; color: var(--orange); text-align: center; font-weight: 900; margin-bottom: 10px;">${score}/100</div>
+                    <p style="margin: 10px 0;"><strong>Bé vừa đọc:</strong> <i>"${transcript}"</i></p>
+                    <p style="margin: 10px 0;"><strong>Từ yêu cầu:</strong> <i>"${targetWord}"</i></p>
+                    
+                    <div style="margin: 20px 0; padding: 15px; background: var(--blue-light); border-radius: 10px;">
+                        <h4 style="margin-bottom: 10px;">🔊 Giọng của bé:</h4>
+                        <audio controls style="width: 100%; margin-bottom: 10px;">
+                            <source src="${recordedAudioUrl}" type="audio/wav">
+                        </audio>
+                        <button onclick="playAudio('${targetWord}', 1)" style="width: 100%; padding: 10px; background: var(--orange); color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+                            📢 Nghe Lại Mẫu Chuẩn
+                        </button>
+                    </div>
+
+                    <div style="background: var(--green-light); border: 2px solid var(--green); border-radius: 12px; padding: 12px; color: var(--green); font-weight: 700; text-align: center;">
+                        ${comment}
+                    </div>
+                </div>
+            `,
+            icon: isGood ? 'success' : 'info',
+            showCancelButton: true,
+            confirmButtonText: '✅ Nộp Điểm',
+            cancelButtonText: '🎤 Đọc Lại',
+            confirmButtonColor: '#10B981',
+            width: '500px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStudentScore(score);
+                currentDataHash = ""; 
+                loadRealData(); 
+                Swal.fire('Đã Nộp!', 'Hệ thống đã lưu lại kết quả và ghi nhận xét vào bài tập của bé.', 'success');
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                setTimeout(() => startRecording(targetWord, quizId), 500);
+            }
+        });
+    }
+
+    // ===== 4. TẢI DỮ LIỆU TỪ CÔ GIÁO =====
+    let currentDataHash = "";
+
+    function loadRealData() {
+        const rawDB = localStorage.getItem('ks_db');
+        if (!rawDB) return;
+        
+        if (rawDB === currentDataHash) return;
+        currentDataHash = rawDB;
+
+        const db = JSON.parse(rawDB);
+        const me = db.users.find(u => u.id == user.id) || {};
+        const scoreNum = parseFloat(me.score) || 0;
+        
+        document.getElementById('myScore').innerText = me.score || '0';
+        document.getElementById('myComment').innerText = me.comment || 'Cô giáo chưa có ghi chú thêm nha...';
+
+        const speakHistory = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
+        const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
+        const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}'); // Lấy lịch sử xem video
+
+        const lessons = db.lessons || [];
+        
+        // Render BÀI GIẢNG VIDEO với cơ chế 15 phút
+        document.getElementById('realLessonsList').innerHTML = lessons.length ? lessons.map(l => {
+            const isVidDone = videoHistory[user.id + '_' + l.id] ? `<span style="color:var(--green); font-weight:bold; margin-left: 10px;">(Đã xem đủ)</span>` : '';
+            return `
+            <div class="real-item">
+                <div><strong>${l.title}</strong> ${isVidDone}<p style="font-size:0.9rem; color:gray;">${l.content || ''}</p></div>
+                <button class="btn-learn" onclick="watchVideo(${l.id}, '${l.videoUrl}', '${l.title}')">▶️ Mở Xem</button>
+            </div>
+            `;
+        }).join('') : '<p>📭 Chưa có bài giảng.</p>';
+
+        // Render Bài tập Trắc nghiệm & Điền khuyết
+        const normalQuizzes = db.quizzes.filter(q => q.type !== 'speak');
+        document.getElementById('realAssignmentsList').innerHTML = normalQuizzes.length ? normalQuizzes.map(q => {
+            const myResult = quizHistory[user.id + '_' + q.id];
+            let statusHtml = myResult !== undefined ? `<span style="color:var(--orange); font-weight:bold; margin-left:10px;">(Đã nộp)</span>` : '';
+            return `
+            <div class="real-item" style="border-left-color: var(--green);">
+                <div><strong>${q.title}</strong>${statusHtml}<p style="font-size:0.85rem; color:var(--green);">${q.type === 'mcq' ? 'Trắc nghiệm' : 'Điền khuyết'} - ${q.questions ? q.questions.length : 1} câu</p></div>
+                <button class="btn-learn" style="background: var(--green);" onclick="openQuiz(${q.id}, '${q.title}')">📝 Làm Bài</button>
+            </div>
+        `}).join('') : '<p>📭 Chưa có bài tập.</p>';
+
+        // Render Luyện Nói
+        const speakingQuizzes = db.quizzes.filter(q => q.type === 'speak');
+        document.getElementById('realSpeakingList').innerHTML = speakingQuizzes.length ? speakingQuizzes.map(s => {
+            const myResult = speakHistory[user.id + '_' + s.id];
+            let resultHtml = '';
+            
+            if (myResult) {
+                resultHtml = `
+                    <div class="speak-result-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight: 800; color: var(--text-dark);">📌 Kết quả lần nộp gần nhất:</span>
+                            <span class="score-circle">${myResult.score}/100</span>
+                        </div>
+                        <div style="font-size: 0.95rem; color: #555;">Bé đã đọc: <i>"${myResult.transcript}"</i></div>
+                        <div style="color: var(--green); font-weight: 800; margin-top: 5px;">${myResult.comment}</div>
+                    </div>
+                `;
+            }
+
+            return `
+            <div class="real-item" style="border-left-color: var(--warning); display: block;">
+                <strong style="font-size: 1.2rem;">${s.title}</strong>
+                <h3 style="color: var(--warning); font-size: 2rem; background:white; padding:10px; border-radius:10px; text-align:center; margin: 10px 0;">${s.word || ''}</h3>
+                <p style="text-align:center; color:#555; margin-bottom:15px; font-weight:bold;">${s.vietnamese ? `Nghĩa là: ${s.vietnamese}` : ''}</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn-learn" style="background: var(--warning); flex: 1; min-width: 150px;" onclick="playAudio('${s.word}', 1)">🔊 Nghe Chuẩn</button>
+                    <button class="btn-learn" style="background: #F59E0B; flex: 1; min-width: 150px;" onclick="playAudio('${s.word}', 0.5)">🐢 Nghe Chậm</button>
+                    <button class="btn-learn" style="background: var(--primary); flex: 1; min-width: 150px;" onclick="startRecording('${s.word}', ${s.id})">🎤 Tập Đọc</button>
+                </div>
+                <div id="speak_result_${s.id}">
+                    ${resultHtml}
+                </div>
+            </div>
+        `}).join('') : '<p>📭 Chưa có bài luyện nói.</p>';
+
+        // Cập nhật Bảng Tiến Độ THỰC TẾ
+        let doneCount = 0;
+        const allItems = [...lessons, ...normalQuizzes, ...speakingQuizzes];
+        
+        document.getElementById('progressTable').innerHTML = allItems.map((item, idx) => {
+            let isDone = false;
+            let typeName = '';
+
+            if (item.type === 'speak') {
+                if(speakHistory[user.id + '_' + item.id]) isDone = true;
+                typeName = 'Luyện Nói';
+            } 
+            else if (item.type === 'mcq' || item.type === 'fill') {
+                if(quizHistory[user.id + '_' + item.id] !== undefined) isDone = true;
+                typeName = item.type === 'mcq' ? 'Trắc Nghiệm' : 'Điền Khuyết';
+            } 
+            else {
+                // Kiểm tra video xem đã đủ thời gian chưa
+                if(videoHistory[user.id + '_' + item.id]) isDone = true;
+                typeName = 'Bài Học Video';
+            }
+            
+            if (isDone) doneCount++;
+
+            return `
+            <tr>
+                <td><strong>${item.title}</strong></td>
+                <td><span class="badge badge-blue">${typeName}</span></td>
+                <td>${isDone ? '<span class="badge badge-green">Đã hoàn thành</span>' : '<span class="badge badge-orange">Chưa làm</span>'}</td>
+            </tr>
+            `;
+        }).join('') || '<tr><td colspan="3" style="text-align: center;">Trống</td></tr>';
+
+        const total = allItems.length;
+        const pct = total === 0 ? 0 : Math.round((doneCount/total)*100);
+        
+        document.getElementById('progressFill').style.width = (pct > 100 ? 100 : pct) + '%';
+        document.getElementById('progressText').innerText = (pct > 100 ? 100 : pct) + '%';
+        document.getElementById('completedCount').innerText = doneCount;
+        document.getElementById('totalCount').innerText = total;
+    }
+
+    // ===== BÁO CÁO THỦ CÔNG =====
+    function sendProgressToTeacher() {
+        const teacherEmail = getMyTeacherEmail();
+        if (!teacherEmail) return Swal.fire('Thông báo', 'Bé chưa có cô giáo phụ trách!', 'info');
+
+        const completed = document.getElementById('completedCount').innerText;
+        const total = document.getElementById('totalCount').innerText;
+        const pct = document.getElementById('progressText').innerText;
+        const score = document.getElementById('myScore').innerText;
+
+        const msg = `📤 [BÁO CÁO TIẾN ĐỘ]: Cô ơi, con đã hoàn thành ${pct} lộ trình học (${completed}/${total} nhiệm vụ). Tổng điểm hiện tại của con là ${score} điểm ạ! 🌟`;
+        autoNotifyTeacher(msg);
+        Swal.fire('Thành công!', 'Đã gửi báo cáo tiến độ cho Cô giáo!', 'success');
+    }
+
+    // ===== 5. LÀM BÀI TRẮC NGHIỆM / ĐIỀN KHUYẾT =====
+    function openQuiz(quizId, quizTitle) {
+        const db = JSON.parse(localStorage.getItem('ks_db'));
+        const quiz = db.quizzes.find(q => q.id === quizId);
+        if(!quiz) return;
+
+        const questions = quiz.questions || [quiz]; 
+        let html = `<div style="text-align: left;">`;
+
+        questions.forEach((q, idx) => {
+            if(quiz.type === 'mcq') {
+                html += `
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 10px; color: var(--text-dark);">Câu ${idx+1}: ${q.question}</h4>
+                        ${q.options.map((opt, i) => `
+                            <label class="quiz-option">
+                                <input type="radio" name="q_${idx}" value="${i}" style="margin-right: 10px;"> ${opt}
+                            </label>
+                        `).join('')}
+                    </div>`;
+            } else if(quiz.type === 'fill') {
+                let formattedQ = q.question;
+                const blanksCount = (formattedQ.match(/___/g) || []).length;
+                for(let i=0; i<blanksCount; i++) {
+                    formattedQ = formattedQ.replace('___', `<input type="text" class="fill-input" id="q_${idx}_ans_${i}" placeholder="...">`);
+                }
+                html += `
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 15px; color: var(--text-dark);">Câu ${idx+1}:</h4>
+                        <div style="font-size: 1.2rem; line-height: 2;">${formattedQ}</div>
+                    </div>`;
+            }
+        });
+        html += `</div>`;
+
+        Swal.fire({
+            title: `📝 ${quiz.title}`,
+            html: html, width: '600px', showCancelButton: true, confirmButtonText: 'Nộp Bài Khảo Sát', cancelButtonText: 'Hủy', confirmButtonColor: '#10B981',
+            preConfirm: () => {
+                let score = 0;
+                const pointPerQuestion = 100 / questions.length; 
+                let details = [];
+
+                questions.forEach((q, idx) => {
+                    if(quiz.type === 'mcq') {
+                        const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+                        const userAnsIdx = selected ? parseInt(selected.value) : -1;
+                        const isCorrect = userAnsIdx === parseInt(q.correctAnswer || 0);
+                        if(isCorrect) score += pointPerQuestion;
+                        
+                        details.push({
+                            q: q.question,
+                            userAns: userAnsIdx !== -1 ? q.options[userAnsIdx] : "Bỏ trống",
+                            correctAns: q.options[parseInt(q.correctAnswer || 0)],
+                            isCorrect: isCorrect
+                        });
+                    } 
+                    else if(quiz.type === 'fill') {
+                        let isCorrect = true;
+                        let userAnsArr = [];
+                        const blanksCount = q.answers ? q.answers.length : 0;
+                        
+                        for(let i=0; i<blanksCount; i++) {
+                            const ansInput = document.getElementById(`q_${idx}_ans_${i}`);
+                            const userVal = ansInput ? ansInput.value.trim() : "";
+                            userAnsArr.push(userVal);
+                            if(userVal.toLowerCase() !== q.answers[i].toLowerCase()) isCorrect = false;
+                        }
+                        if(isCorrect && blanksCount > 0) score += pointPerQuestion;
+
+                        details.push({
+                            q: q.question.replace(/___/g, "[...]"),
+                            userAns: userAnsArr.join(', ') || "Bỏ trống",
+                            correctAns: q.answers.join(', '),
+                            isCorrect: isCorrect
+                        });
+                    }
+                });
+                return { finalScore: Math.round(score), details: details };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const finalScore = result.value.finalScore;
+                const details = result.value.details;
+                updateStudentScore(finalScore);
+
+                const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
+                quizHistory[user.id + '_' + quizId] = { score: finalScore, details: details };
+                localStorage.setItem('ks_quiz_history', JSON.stringify(quizHistory));
+                
+                Swal.fire({
+                    title: finalScore >= 80 ? 'Tuyệt Vời! 🎉' : 'Cố gắng lên nhé! 💪',
+                    text: `Bé đạt được ${finalScore} / 100 điểm. Hệ thống đã gửi điểm về cho Cô giáo!`,
+                    icon: finalScore >= 80 ? 'success' : 'info'
+                });
+
+                autoNotifyTeacher(`Con vừa hoàn thành bài tập "${quizTitle || quiz.title}" và đạt ${finalScore}/100 điểm ạ! 🎯`);
+            }
+        });
+    }
+
+    function updateStudentScore(addedScore) {
+        const db = JSON.parse(localStorage.getItem('ks_db'));
+        const index = db.users.findIndex(u => u.id == user.id);
+        if(index > -1) {
+            let currentScore = parseFloat(db.users[index].score) || 0;
+            db.users[index].score = currentScore + Math.round(addedScore / 10); 
+            localStorage.setItem('ks_db', JSON.stringify(db));
+            
+            user.score = db.users[index].score;
+            localStorage.setItem('user', JSON.stringify(user));
+            currentDataHash = ""; 
+            loadRealData(); 
+        }
+    }
+
+    // ===== 6. CHAT ĐÚNG VỚI CÔ GIÁO CHỦ NHIỆM =====
+    let currentChatHash = "";
+
+    function loadChat() {
+        const teacherEmail = getMyTeacherEmail();
+        const box = document.getElementById('teacherChatBox');
+
+        if (!teacherEmail) {
+            box.innerHTML = '<p style="text-align:center; color:#888; padding:20px;">Bé chưa được phân lớp hoặc lớp chưa có cô giáo. Hãy chờ Admin xếp lớp nhé!</p>';
+            return;
+        }
+
+        const rawChats = localStorage.getItem('ks_chats') || '[]';
+        if (rawChats === currentChatHash) return;
+        currentChatHash = rawChats;
+
+        const chats = JSON.parse(rawChats);
+        const msgs = chats.filter(c => (c.senderEmail === user.email && c.receiverEmail === teacherEmail) || (c.senderEmail === teacherEmail && c.receiverEmail === user.email));
+        
+        const isBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 10;
+        
+        box.innerHTML = msgs.length ? msgs.map(m => {
+            const isMe = m.senderEmail === user.email;
+            return `<div class="message ${isMe ? 'student' : 'teacher'}">${m.message}</div>`;
+        }).join('') : '<div class="message teacher">Chào con! Cần hỏi gì cứ nhắn cô nhé.</div>';
+        
+        if (isBottom) box.scrollTop = box.scrollHeight;
+    }
+
+    function sendToTeacher() {
+        const teacherEmail = getMyTeacherEmail();
+        if(!teacherEmail) {
+            Swal.fire('Thông báo', 'Bé chưa có cô giáo phụ trách để gửi tin nhắn!', 'info');
+            return;
+        }
+
+        const msg = document.getElementById('teacherChatInput').value.trim();
+        if(!msg) return;
+        
+        document.getElementById('teacherChatInput').value = '';
+        const chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
+        chats.push({ senderEmail: user.email, receiverEmail: teacherEmail, message: msg, timestamp: new Date() });
+        localStorage.setItem('ks_chats', JSON.stringify(chats));
+        
+        currentChatHash = ""; 
+        loadChat();
+    }
+
+    // ĐĂNG XUẤT AN TOÀN
+    function logout() {
+        Swal.fire({
+            title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập không?", icon: 'question',
+            showCancelButton: true, confirmButtonColor: '#4F8CFF', cancelButtonColor: '#FF6B6B', confirmButtonText: 'Có, tạm biệt!', cancelButtonText: 'Không, ở lại'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('token'); localStorage.removeItem('user'); 
+                window.location.href = 'login.html'; 
+            }
+        });
+    }
+
+    // KHỞI ĐỘNG VÀ ĐỒNG BỘ NGẦM
+    window.onload = () => {
+        loadRealData();
+        loadChat();
+        
+        setInterval(() => { 
+            loadRealData(); 
+            loadChat(); 
+        }, 1500); 
+        
+        let visits = JSON.parse(localStorage.getItem('ks_visits'));
+        if (!visits) visits = []; visits.push(new Date().toISOString());
+        localStorage.setItem('ks_visits', JSON.stringify(visits));
+    };
+</script>
+</body>
+</html>

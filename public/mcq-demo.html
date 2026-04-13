@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Trắc Nghiệm - KidsEnglish</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .question-box {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 6px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #2B3674;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .option {
+            padding: 20px;
+            border: 3px solid #E2E8F0;
+            border-radius: 15px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #2B3674;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-5px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .result {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .result-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .progress {
+            background: #E2E8F0;
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #667eea;
+            height: 100%;
+            width: 33%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📋 Demo Bài Trắc Nghiệm</h1>
+        <p id="questionNumber">Câu 1 của 3</p>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="card">
+        <div id="resultBox" class="result"></div>
+
+        <div id="questionBox">
+            <div class="question-box">
+                <div class="question-text" id="questionText">Con gì kêu 'Meo meo'?</div>
+            </div>
+
+            <div class="options" id="optionsBox"></div>
+
+            <button class="btn" onclick="submitAnswer()">✅ Trả Lời</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Con gì kêu 'Meo meo'?",
+            options: { A: "Dog (Chó)", B: "Cat (Mèo)", C: "Bird (Chim)", D: "Fish (Cá)" },
+            correct: "B"
+        },
+        {
+            question: "What color is the sky?",
+            options: { A: "Green", B: "Red", C: "Blue", D: "Yellow" },
+            correct: "C"
+        },
+        {
+            question: "Năm có bao nhiêu tháng?",
+            options: { A: "10", B: "12", C: "11", D: "13" },
+            correct: "B"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let selectedAnswer = null;
+    let answered = false;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        answered = false;
+        selectedAnswer = null;
+
+        const progress = ((currentQuestion + 1) / questions.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+        document.getElementById('questionNumber').innerText = `Câu ${currentQuestion + 1} của ${questions.length}`;
+        document.getElementById('questionText').innerText = q.question;
+
+        const optionsHTML = Object.entries(q.options).map(([key, value]) => `
+            <div class="option" onclick="selectOption('${key}', this)">
+                <strong>${key})</strong> ${value}
+            </div>
+        `).join('');
+
+        document.getElementById('optionsBox').innerHTML = optionsHTML;
+        document.getElementById('resultBox').classList.remove('show');
+    }
+
+    function selectOption(key, el) {
+        if (answered) return;
+        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedAnswer = key;
+    }
+
+    function submitAnswer() {
+        if (selectedAnswer === null) {
+            alert('❌ Chọn một đáp án!');
+            return;
+        }
+
+        answered = true;
+        const q = questions[currentQuestion];
+        const isCorrect = selectedAnswer === q.correct;
+
+        const resultBox = document.getElementById('resultBox');
+        const icon = isCorrect ? '🎉' : '😢';
+        const text = isCorrect ? 'Chính xác!' : 'Sai rồi!';
+
+        resultBox.innerHTML = `
+            <div class="result-icon">${icon}</div>
+            <div class="result-text">${text}</div>
+            <p>${isCorrect ? '✅ Bạn trả lời đúng!' : '❌ Đáp án: ' + q.correct}</p>
+        `;
+        resultBox.classList.add('show');
+
+        if (isCorrect) score++;
+
+        const btn = document.querySelector('.btn');
+        if (currentQuestion < questions.length - 1) {
+            btn.innerText = '⏭️ Câu Tiếp';
+            btn.onclick = nextQuestion;
+        } else {
+            btn.innerText = '✅ Hoàn Thành';
+            btn.onclick = finishQuiz;
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        loadQuestion();
+        const btn = document.querySelector('.btn');
+        btn.innerText = '✅ Trả Lời';
+        btn.onclick = submitAnswer;
+    }
+
+    function finishQuiz() {
+        const percentage = Math.round((score / questions.length) * 100);
+        document.getElementById('questionBox').style.display = 'none';
+
+        const resultBox = document.getElementById('resultBox');
+        resultBox.innerHTML = `
+            <div class="result-icon">🏆</div>
+            <div class="result-text">Hoàn Thành!</div>
+            <p>Điểm: ${score}/${questions.length} (${percentage}%)</p>
+            <button class="btn" onclick="location.reload()" style="margin-top: 20px;">🔄 Làm Lại</button>
+        `;
+        resultBox.classList.add('show');
+    }
+
+    window.addEventListener('load', loadQuestion);
+</script>
+
+</body>
+</html>
