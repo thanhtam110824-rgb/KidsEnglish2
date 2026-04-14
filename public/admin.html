@@ -714,84 +714,43 @@
 </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, where, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // 1. Cấu hình Firebase (Giữ nguyên của Tâm)
     const firebaseConfig = {
         apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
-        authDomain: "kidsenglish2.firebaseapp.com",
         projectId: "kidsenglish2",
-        storageBucket: "kidsenglish2.firebasestorage.app",
-        messagingSenderId: "25492249032",
-        appId: "1:25492249032:web:67502896b604909ee7c8fd"
+        // ... các dòng khác giữ nguyên
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    onSnapshot(query(collection(db, "users"), where("status", "==", "pending")), (snap) => {
-        let html = "", count = 0;
-        snap.forEach((d) => {
-            const p = d.data(); count++;
-            html += `<tr>
-                <td><strong>${p.fullName}</strong></td><td>${p.email}</td>
-                <td><span class="badge" style="background: #F6AD55; color: white; padding: 4px 8px; border-radius: 4px;">Chờ duyệt</span></td>
-                <td>
-                    <button class="btn btn-success btn-small" onclick="duyetHocSinh('${d.id}', '${p.fullName}')">✅ Duyệt</button>
-                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
-                </td>
-            </tr>`;
-        });
-        document.getElementById('approvalTable').innerHTML = count ? html : '<tr><td colspan="4">✅ Không có yêu cầu nào!</td></tr>';
-        const badge = document.getElementById('pendingBadge');
-        if(badge) {
-            badge.innerText = count;
-            count > 0 ? badge.classList.add('active') : badge.classList.remove('active');
+    // 2. HÀM QUAN TRỌNG: Đưa hàm ra ngoài để nút bấm cũ nhận được
+    // Thay vì gõ function viewAccount(), Tâm hãy viết thế này:
+    window.viewAccount = async (id) => {
+        try {
+            const userSnap = await getDoc(doc(db, "users", id));
+            if (userSnap.exists()) {
+                const u = userSnap.data();
+                // Chỉ hiện thông báo, không làm biến đổi giao diện cũ
+                alert(`Tài khoản: ${u.email}\nMật khẩu: ${u.password || '123456'}`);
+            }
+        } catch (error) {
+            console.error("Lỗi gọi dữ liệu:", error);
         }
-    });
+    };
 
-    onSnapshot(query(collection(db, "users"), where("role", "==", "student")), (snap) => {
-        document.getElementById('studentTable').innerHTML = snap.docs.map(d => {
-            const u = d.data();
-            const color = u.status === 'active' ? '#059669' : '#F6AD55';
-            return `<tr>
-                <td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td><td>${u.score || 0}</td>
-                <td style="color: ${color}; font-weight: bold;">${u.status === 'active' ? 'Đã duyệt' : 'Chờ'}</td>
-                <td>
-                    <button class="btn btn-info btn-small" onclick="viewUser('${d.id}')">👁️ Xem</button>
-                    <button class="btn btn-primary btn-small" onclick="window.location.href='mailto:${u.email}'">📧 Email</button>
-                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
-                </td>
-            </tr>`;
-        }).join('') || '<tr><td colspan="6">Trống</td></tr>';
-    });
-
-    onSnapshot(query(collection(db, "users"), where("role", "==", "teacher")), (snap) => {
-        document.getElementById('teacherTable').innerHTML = snap.docs.map(d => {
-            const u = d.data();
-            return `<tr>
-                <td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td>
-                <td><span class="badge" style="background: #4A90E2; color: white; padding: 4px 8px; border-radius: 4px;">Đang dạy</span></td>
-                <td>
-                    <button class="btn btn-info btn-small" onclick="viewUser('${d.id}')">👁️ Xem</button>
-                    <button class="btn btn-primary btn-small" onclick="window.location.href='mailto:${u.email}'">📧 Email</button>
-                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
-                </td>
-            </tr>`;
-        }).join('') || '<tr><td colspan="5">Trống</td></tr>';
-    });
-
-    onSnapshot(collection(db, "classes"), (snap) => {
-        document.getElementById('classTable').innerHTML = snap.docs.map(d => {
-            const c = d.data();
-            return `<tr>
-                <td>${c.name}</td><td>${c.teacher}</td><td>${c.studentsCount}</td>
-                <td><span style="color: #059669; font-weight: bold;">Mở</span></td>
-                <td>
-                    <button class="btn btn-danger btn-small" onclick="deleteItem('classes','${d.id}')">🗑️ Xóa</button>
-                </td>
-            </tr>`;
-        }).join('') || '<tr><td colspan="5">Trống</td></tr>';
-    });
+    // Hàm thống kê điểm (Dùng cho trang học viên)
+    window.saveStats = async (newScore) => {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            await updateDoc(doc(db, "users", userId), { 
+                score: newScore,
+                lastUpdate: new Date().toISOString() 
+            });
+        }
+    };
 </script>
 </body>
 </html>
