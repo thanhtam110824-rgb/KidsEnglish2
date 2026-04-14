@@ -312,6 +312,16 @@ let myTeacherEmail = null;
 let unreadChatCount = 0;
 let currentChatTarget = '';
 
+// ===== FIX: DEBOUNCE refreshUI để tránh render liên tục =====
+let _refreshTimer = null;
+function scheduleRefresh() {
+    if (_refreshTimer) clearTimeout(_refreshTimer);
+    _refreshTimer = setTimeout(() => {
+        _refreshTimer = null;
+        refreshUI();
+    }, 300); // Gộp tất cả updates trong 300ms thành 1 lần render
+}
+
 function getQuizHistory()  { try { return JSON.parse(localStorage.getItem('ks_quiz_history')||'{}'); } catch{ return {}; } }
 function getSpeakHistory() { try { return JSON.parse(localStorage.getItem('ks_speak_history')||'{}'); } catch{ return {}; } }
 function getVideoHistory() { try { return JSON.parse(localStorage.getItem('ks_video_history')||'{}'); } catch{ return {}; } }
@@ -331,7 +341,7 @@ async function loadAll() {
         allQuizzes = qSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
         allChats   = cSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
         updateMyData();
-        refreshUI();
+        refreshUI(); // Render ngay lần đầu, không cần debounce
         startListeners();
     } catch(e) {
         console.error(e);
@@ -352,36 +362,47 @@ function updateMyData() {
 }
 
 function startListeners() {
+    // FIX: Mỗi listener chỉ cập nhật data của mình, rồi gọi scheduleRefresh()
+    // scheduleRefresh sẽ gộp nhiều updates liên tiếp thành 1 lần render duy nhất
+
     onSnapshot(collection(db,'users'), snap => {
         allUsers = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        updateMyData(); refreshUI(); checkClassChange();
+        const oldClass = myData.class || '';
+        updateMyData();
+        checkClassChange(oldClass); // Truyền oldClass vào để so sánh đúng
+        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
     });
+
     onSnapshot(collection(db,'lessons'), snap => {
-        allLessons = snap.docs.map(d=>({firestoreId:d.id,...d.data()})); refreshUI();
+        allLessons = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
     });
+
     onSnapshot(collection(db,'quizzes'), snap => {
-        allQuizzes = snap.docs.map(d=>({firestoreId:d.id,...d.data()})); refreshUI();
+        allQuizzes = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
     });
+
     onSnapshot(collection(db,'chats'), snap => {
         const prevCount = allChats.length;
         allChats = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+        // Chat không cần scheduleRefresh vì nó có logic riêng
         checkNewMessages(prevCount);
-        if (currentChatTarget) loadChat();
+        if (currentChatTarget) loadChat(); // Chỉ reload chat box, không render toàn bộ UI
     });
 }
 
-let lastKnownClass = myData.class || '';
-function checkClassChange() {
+// FIX: Sửa checkClassChange để nhận oldClass thay vì dùng biến ngoài
+function checkClassChange(oldClass) {
     const newClass = myData.class || '';
-    if (lastKnownClass === '' && newClass !== '') {
-        lastKnownClass = newClass;
+    if (oldClass === '' && newClass !== '') {
         Swal.fire({
             title: '🎉 Tin vui!',
             html: `<p style="font-size:1.3rem;font-weight:800">Con đã được xếp vào <strong style="color:#2563eb;font-size:1.6rem">${newClass}</strong> rồi!</p>
                    <p style="margin-top:10px;color:#475569">Bắt đầu học thôi nào! 📚</p>`,
             icon: 'success', confirmButtonText: 'Vào học ngay! 🚀', confirmButtonColor: '#2563eb'
         });
-    } else { lastKnownClass = newClass; }
+    }
 }
 
 function checkNewMessages(prevCount) {
