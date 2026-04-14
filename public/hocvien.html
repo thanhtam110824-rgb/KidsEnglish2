@@ -28,15 +28,12 @@
         .sidebar { width:280px; background:var(--white); padding:30px 20px; display:flex; flex-direction:column; box-shadow:var(--shadow-md); border-radius:0 45px 45px 0; overflow-y:auto; z-index:100; }
         .brand-logo { font-family:'Baloo 2',cursive; font-size:3rem; font-weight:900; text-align:center; margin-bottom:30px; background:linear-gradient(135deg,#4A81E8 0%,#70A1FF 100%); -webkit-background-clip:text; color:transparent; }
         .brand-logo span { background:linear-gradient(135deg,#FF948C 0%,#FFB7B2 100%); -webkit-background-clip:text; color:transparent; }
-        
         .btn-learn, .logout-btn { background:#2563eb!important; color:var(--gold)!important; border:2px solid #1e40af!important; transition:0.3s; box-shadow:0 6px 0 #1e3a8a!important; font-weight:900; border-radius:20px; }
         .btn-learn:hover, .logout-btn:hover { background:#1d4ed8!important; transform:translateY(2px)!important; box-shadow:0 4px 0 #1e3a8a!important; }
         .btn-learn:active, .logout-btn:active { transform:translateY(6px)!important; box-shadow:0 0px 0 transparent!important; }
-        
         .nav-item { padding:15px 20px; margin-bottom:12px; border-radius:20px; cursor:pointer; font-size:1.05rem; font-weight:800; color:var(--text-gray); transition:0.3s; display:flex; align-items:center; gap:15px; border:none; background:transparent!important; width:100%; text-align:left; box-shadow:none!important; }
         .nav-item:hover { color:#2563eb!important; background:#DBF4F7!important; transform:translateX(8px)!important; }
         .nav-item.active { background:#2563eb!important; color:var(--gold)!important; box-shadow:var(--shadow-md)!important; transform:scale(1.02)!important; }
-        
         .main-wrapper { flex:1; display:flex; flex-direction:column; overflow:hidden; }
         .header { padding:25px 40px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
         .page-title { font-family:'Baloo 2',cursive; font-size:2.8rem; color:var(--text-dark); }
@@ -54,14 +51,12 @@
         .btn-learn { padding:14px 25px; border-radius:20px; font-size:1.1rem; cursor:pointer; display:inline-flex; align-items:center; gap:10px; }
         .btn-game-opt { display:block; width:100%; margin-bottom:18px; font-size:1.3rem; padding:18px 25px; background:#2563eb!important; color:var(--gold)!important; border:3px solid #1e40af!important; border-radius:20px; box-shadow:0 6px 0 #1e40af!important; font-weight:900; cursor:pointer; text-align:center; }
         .real-item { background:var(--white); border-radius:30px; padding:25px; margin-bottom:20px; border:2px solid var(--border); display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-sm); }
-        
-        .chat-container { background:var(--bg); padding:20px; border-radius:20px; height:350px; overflow-y:auto; margin-bottom:15px; display:flex; flex-direction:column; gap:12px; border:2px solid var(--border); position: relative; z-index: 10; }
-        .message { padding:12px 18px; border-radius:20px; max-width:80%; word-break:break-word; box-shadow: var(--shadow-sm); }
+        .chat-container { background:var(--bg); padding:20px; border-radius:20px; height:350px; overflow-y:auto; margin-bottom:15px; display:flex; flex-direction:column; gap:12px; border:2px solid var(--border); }
+        .message { padding:12px 18px; border-radius:20px; max-width:80%; word-break:break-word; box-shadow:var(--shadow-sm); }
         .message.student { background:#2563eb; color:white; align-self:flex-end; border-bottom-right-radius:4px; }
-        .message.teacher { background:var(--white); color:var(--text-dark); align-self:flex-start; border-bottom-left-radius:4px; border: 1px solid var(--border); }
-        .chat-sender { font-size:0.8rem; font-weight:900; opacity:0.8; margin-bottom:4px; display:block; text-transform: uppercase; color: inherit; }
-        .chat-text { font-size:1.05rem; font-weight:700; line-height:1.4; color: inherit; }
-        
+        .message.teacher { background:var(--white); color:var(--text-dark); align-self:flex-start; border-bottom-left-radius:4px; border:1px solid var(--border); }
+        .chat-sender { font-size:0.8rem; font-weight:900; opacity:0.8; margin-bottom:4px; display:block; text-transform:uppercase; color:inherit; }
+        .chat-text { font-size:1.05rem; font-weight:700; line-height:1.4; color:inherit; }
         .progress-bar { width:100%; height:35px; background:var(--white); border-radius:20px; overflow:hidden; margin:15px 0; border:3px solid var(--green-dark); }
         .progress-fill { height:100%; background:linear-gradient(90deg,var(--green-dark) 0%,#047857 100%); transition:width 0.5s; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:1.2rem; }
         .theme-btn { background:var(--yellow-light)!important; border:3px solid var(--yellow-dark)!important; color:var(--text-dark)!important; width:50px; height:50px; border-radius:50%; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 var(--yellow-dark)!important; }
@@ -89,6 +84,7 @@
             .main-wrapper{padding-bottom:75px} .content{padding:10px 20px 20px 20px} .header{flex-direction:column;gap:15px;padding:20px}
         }
         @media (min-width:769px) { .mobile-header-top{display:none} }
+        .loading-msg { text-align:center; padding:30px; color:var(--text-gray); font-weight:800; }
     </style>
 </head>
 <body>
@@ -129,6 +125,7 @@
     </div>
 
     <div class="content">
+        <!-- HOME -->
         <div id="tab-home" class="tab-pane active">
             <div style="display:grid;grid-template-columns:1fr 350px;gap:25px" id="homeGrid">
                 <div>
@@ -145,15 +142,16 @@
                 </div>
                 <div class="card" style="padding:25px;border-color:var(--blue-light);border-width:4px">
                     <div class="card-title" style="font-size:1.5rem;justify-content:center;color:var(--blue-dark)">🏆 Bảng Vinh Danh</div>
-                    <div id="leaderboardList"><div style="text-align:center;color:var(--text-gray)"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div></div>
+                    <div id="leaderboardList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div></div>
                 </div>
             </div>
         </div>
 
+        <!-- LESSONS -->
         <div id="tab-lessons" class="tab-pane">
             <div class="card" id="videoListCard">
                 <div class="card-title" style="color:var(--blue-dark)">📺 Bài Học Video</div>
-                <div id="realLessonsList"><div style="text-align:center;padding:20px;color:var(--text-gray)"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div></div>
+                <div id="realLessonsList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài giảng...</div></div>
             </div>
             <div class="card" id="videoPlayerCard" style="display:none;padding:25px;max-width:1000px;margin:0 auto">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
@@ -177,27 +175,31 @@
             </div>
         </div>
 
+        <!-- GAME -->
         <div id="tab-game" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--game-dark)">🎮 Trò Chơi Thử Thách</div>
-                <div id="realGameList"><div style="text-align:center;padding:20px;color:var(--text-gray)"><i class="fas fa-spinner fa-spin"></i></div></div>
+                <div id="realGameList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải game...</div></div>
             </div>
         </div>
 
+        <!-- QUIZ -->
         <div id="tab-quiz" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--green-dark)">📝 Bài Tập Cô Giao</div>
-                <div id="realAssignmentsList"><div style="text-align:center;padding:20px;color:var(--text-gray)"><i class="fas fa-spinner fa-spin"></i></div></div>
+                <div id="realAssignmentsList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài tập...</div></div>
             </div>
         </div>
 
+        <!-- SPEAKING -->
         <div id="tab-speaking" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--orange-dark)">🎤 Luyện Phát Âm Cùng AI</div>
-                <div id="realSpeakingList"><div style="text-align:center;padding:20px;color:var(--text-gray)"><i class="fas fa-spinner fa-spin"></i></div></div>
+                <div id="realSpeakingList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài luyện nói...</div></div>
             </div>
         </div>
 
+        <!-- PROGRESS -->
         <div id="tab-progress" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--blue-dark)">📊 Báo Cáo Tiến Độ</div>
@@ -215,6 +217,7 @@
             </div>
         </div>
 
+        <!-- CHAT -->
         <div id="tab-chat-teacher" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--blue-dark)">💬 Kênh Trò Chuyện</div>
@@ -235,6 +238,7 @@
     </div>
 </div>
 
+<!-- GAME OVERLAY -->
 <div id="gameOverlay">
     <div style="padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:absolute;top:0;left:0;width:100%;z-index:100">
         <span style="color:white;font-family:'Baloo 2';font-size:2rem;font-weight:900;text-shadow:2px 2px 0 var(--blue-dark)">🐰 THỎ VỀ ĐÍCH</span>
@@ -251,16 +255,15 @@
     <div class="game-ground"></div>
 </div>
 
+<!-- ===== FIREBASE MODULE ===== -->
 <script type="module">
-import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {
     getFirestore, collection, doc,
     getDocs, addDoc, updateDoc, onSnapshot,
-    query, orderBy, serverTimestamp, where
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getVertexAI, getGenerativeModel } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-vertexai.js";
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ===== CONFIG =====
 const firebaseConfig = {
     apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
     authDomain: "kidsenglish2.firebaseapp.com",
@@ -273,11 +276,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// KHỞI TẠO AI GẤU NÂU
-const vertexAI = getVertexAI(app);
-const aiModel = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
-
-// ===== XÁC THỰC HỌC SINH =====
+// ===== XÁC THỰC =====
 let user = null;
 try { user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('ks_user') || 'null'); } catch(e) {}
 if (!user || (user.role !== 'student' && user.role !== 'pending')) {
@@ -300,59 +299,59 @@ const stName = user.fullName || user.name || 'Học Viên';
 document.getElementById('welcomeText').innerText = `Góc của bé ${stName.split(' ').pop()}! 👋`;
 document.getElementById('stNameTop').innerText = stName;
 document.getElementById('stAvatarTop').innerText = stName.charAt(0).toUpperCase();
-if(document.getElementById('stAvatarMobile')) document.getElementById('stAvatarMobile').innerText = stName.charAt(0).toUpperCase();
+if (document.getElementById('stAvatarMobile')) document.getElementById('stAvatarMobile').innerText = stName.charAt(0).toUpperCase();
 
 // ===== CACHE =====
 let allUsers   = [];
 let allLessons = [];
 let allQuizzes = [];
 let allChats   = [];
-let myData     = {};  
+let myData     = {};
 let myTeacherEmail = null;
 let unreadChatCount = 0;
 let currentChatTarget = '';
 
-// ===== FIX: DEBOUNCE refreshUI để tránh render liên tục =====
+// Debounce để tránh render liên tục
 let _refreshTimer = null;
 function scheduleRefresh() {
     if (_refreshTimer) clearTimeout(_refreshTimer);
-    _refreshTimer = setTimeout(() => {
-        _refreshTimer = null;
-        refreshUI();
-    }, 300); // Gộp tất cả updates trong 300ms thành 1 lần render
+    _refreshTimer = setTimeout(() => { _refreshTimer = null; refreshUI(); }, 300);
 }
 
-function getQuizHistory()  { try { return JSON.parse(localStorage.getItem('ks_quiz_history')||'{}'); } catch{ return {}; } }
-function getSpeakHistory() { try { return JSON.parse(localStorage.getItem('ks_speak_history')||'{}'); } catch{ return {}; } }
-function getVideoHistory() { try { return JSON.parse(localStorage.getItem('ks_video_history')||'{}'); } catch{ return {}; } }
+function getQuizHistory()  { try { return JSON.parse(localStorage.getItem('ks_quiz_history') || '{}'); } catch { return {}; } }
+function getSpeakHistory() { try { return JSON.parse(localStorage.getItem('ks_speak_history') || '{}'); } catch { return {}; } }
+function getVideoHistory() { try { return JSON.parse(localStorage.getItem('ks_video_history') || '{}'); } catch { return {}; } }
 
 const uid = user.firestoreId || user.id || user.email;
 
+// ===== LOAD DỮ LIỆU =====
 async function loadAll() {
     try {
         const [uSnap, lSnap, qSnap, cSnap] = await Promise.all([
-            getDocs(collection(db,'users')),
-            getDocs(collection(db,'lessons')),
-            getDocs(collection(db,'quizzes')),
-            getDocs(collection(db,'chats'))
+            getDocs(collection(db, 'users')),
+            getDocs(collection(db, 'lessons')),
+            getDocs(collection(db, 'quizzes')),
+            getDocs(collection(db, 'chats'))
         ]);
-        allUsers   = uSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        allLessons = lSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        allQuizzes = qSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        allChats   = cSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+        allUsers   = uSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        allLessons = lSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        allQuizzes = qSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        allChats   = cSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
         updateMyData();
-        refreshUI(); // Render ngay lần đầu, không cần debounce
+        refreshUI();
         startListeners();
     } catch(e) {
         console.error(e);
-        Swal.fire('❌ Lỗi Firebase','Không kết nối được: '+e.message,'error');
+        Swal.fire('❌ Lỗi Firebase', 'Không kết nối được: ' + e.message, 'error');
     }
 }
 
 function updateMyData() {
-    myData = allUsers.find(u => (user.firestoreId && u.firestoreId === user.firestoreId) || (u.email === user.email)) || {};
+    myData = allUsers.find(u =>
+        (user.firestoreId && u.firestoreId === user.firestoreId) || (u.email === user.email)
+    ) || {};
     if (myData.class) {
-        const teacher = allUsers.find(u => u.role==='teacher' && (u.classes||[]).includes(myData.class));
+        const teacher = allUsers.find(u => u.role === 'teacher' && (u.classes || []).includes(myData.class));
         myTeacherEmail = teacher ? teacher.email : null;
     }
     if (myData.firestoreId && !user.firestoreId) {
@@ -362,44 +361,35 @@ function updateMyData() {
 }
 
 function startListeners() {
-    // FIX: Mỗi listener chỉ cập nhật data của mình, rồi gọi scheduleRefresh()
-    // scheduleRefresh sẽ gộp nhiều updates liên tiếp thành 1 lần render duy nhất
-
-    onSnapshot(collection(db,'users'), snap => {
-        allUsers = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+    onSnapshot(collection(db, 'users'), snap => {
         const oldClass = myData.class || '';
+        allUsers = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
         updateMyData();
-        checkClassChange(oldClass); // Truyền oldClass vào để so sánh đúng
-        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
+        checkClassChange(oldClass);
+        scheduleRefresh();
     });
-
-    onSnapshot(collection(db,'lessons'), snap => {
-        allLessons = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
+    onSnapshot(collection(db, 'lessons'), snap => {
+        allLessons = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        scheduleRefresh();
     });
-
-    onSnapshot(collection(db,'quizzes'), snap => {
-        allQuizzes = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        scheduleRefresh(); // Không gọi refreshUI() trực tiếp
+    onSnapshot(collection(db, 'quizzes'), snap => {
+        allQuizzes = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        scheduleRefresh();
     });
-
-    onSnapshot(collection(db,'chats'), snap => {
+    onSnapshot(collection(db, 'chats'), snap => {
         const prevCount = allChats.length;
-        allChats = snap.docs.map(d=>({firestoreId:d.id,...d.data()}));
-        // Chat không cần scheduleRefresh vì nó có logic riêng
+        allChats = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
         checkNewMessages(prevCount);
-        if (currentChatTarget) loadChat(); // Chỉ reload chat box, không render toàn bộ UI
+        if (currentChatTarget) loadChatInternal();
     });
 }
 
-// FIX: Sửa checkClassChange để nhận oldClass thay vì dùng biến ngoài
 function checkClassChange(oldClass) {
     const newClass = myData.class || '';
     if (oldClass === '' && newClass !== '') {
         Swal.fire({
             title: '🎉 Tin vui!',
-            html: `<p style="font-size:1.3rem;font-weight:800">Con đã được xếp vào <strong style="color:#2563eb;font-size:1.6rem">${newClass}</strong> rồi!</p>
-                   <p style="margin-top:10px;color:#475569">Bắt đầu học thôi nào! 📚</p>`,
+            html: `<p style="font-size:1.3rem;font-weight:800">Con đã được xếp vào <strong style="color:#2563eb;font-size:1.6rem">${newClass}</strong> rồi!</p>`,
             icon: 'success', confirmButtonText: 'Vào học ngay! 🚀', confirmButtonColor: '#2563eb'
         });
     }
@@ -407,16 +397,18 @@ function checkClassChange(oldClass) {
 
 function checkNewMessages(prevCount) {
     if (!myTeacherEmail || document.getElementById('tab-chat-teacher').classList.contains('active')) return;
-    const myMsgs = allChats.filter(c => (c.senderEmail === myTeacherEmail && c.receiverEmail === user.email) || (c.receiverId === 'GROUP_CHAT') );
+    const myMsgs = allChats.filter(c =>
+        (c.senderEmail === myTeacherEmail && c.receiverEmail === user.email) ||
+        c.receiverId === 'GROUP_CHAT'
+    );
     if (myMsgs.length > unreadChatCount && unreadChatCount > 0) {
         document.getElementById('chatNotifDot').classList.add('active');
-        Swal.fire({title:'💬 Cô giáo nhắn!',text:'Con có tin nhắn mới từ cô giáo!',icon:'info',toast:true,position:'top-end',timer:4000,showConfirmButton:false});
+        Swal.fire({ title: '💬 Cô giáo nhắn!', text: 'Con có tin nhắn mới!', icon: 'info', toast: true, position: 'top-end', timer: 4000, showConfirmButton: false });
     }
     unreadChatCount = myMsgs.length;
 }
 
-window.clearChatNotif = () => { document.getElementById('chatNotifDot').classList.remove('active'); };
-
+// ===== REFRESH UI =====
 function refreshUI() {
     const score   = myData.score || 0;
     const comment = myData.comment || 'Cô giáo chưa ghi chú...';
@@ -426,549 +418,689 @@ function refreshUI() {
     document.getElementById('myComment').innerText = comment;
     document.getElementById('myClass').innerText   = '🏫 Lớp: ' + myClass;
 
-    const classmates = allUsers.filter(u => u.role==='student' && u.class===myClass).sort((a,b)=>(b.score||0)-(a.score||0));
-    document.getElementById('leaderboardList').innerHTML = classmates.slice(0,5).map((st,i) => {
-        const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'⭐️';
-        return `<div class="leaderboard-item ${st.firestoreId===myData.firestoreId?'me':''}">
-            <div style="display:flex;align-items:center;gap:15px"><span style="font-size:1.6rem">${medal}</span><span>${(st.fullName||'?').split(' ').pop()}</span></div>
-            <span style="color:var(--blue-dark);font-size:1.2rem">${st.score||0}đ</span></div>`;
+    // Leaderboard
+    const classmates = allUsers
+        .filter(u => u.role === 'student' && u.class === myClass)
+        .sort((a, b) => (b.score || 0) - (a.score || 0));
+    document.getElementById('leaderboardList').innerHTML = classmates.slice(0, 5).map((st, i) => {
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '⭐️';
+        return `<div class="leaderboard-item ${st.firestoreId === myData.firestoreId ? 'me' : ''}">
+            <div style="display:flex;align-items:center;gap:15px"><span style="font-size:1.6rem">${medal}</span><span>${(st.fullName || '?').split(' ').pop()}</span></div>
+            <span style="color:var(--blue-dark);font-size:1.2rem">${st.score || 0}đ</span></div>`;
     }).join('') || '<div style="text-align:center;color:gray">Chỉ có mình bé trong lớp!</div>';
 
-    const qH = getQuizHistory(); const sH = getSpeakHistory(); const vH = getVideoHistory(); const myUid = myData.firestoreId || uid;
+    const qH = getQuizHistory();
+    const sH = getSpeakHistory();
+    const vH = getVideoHistory();
+    const myUid = myData.firestoreId || uid;
 
-    document.getElementById('realLessonsList').innerHTML = allLessons.length ? allLessons.map(l => {
-            const done = !!vH[myUid+'_'+l.firestoreId];
+    // --- Bài giảng ---
+    document.getElementById('realLessonsList').innerHTML = allLessons.length
+        ? allLessons.map(l => {
+            const done = !!vH[myUid + '_' + l.firestoreId];
             return `<div class="real-item">
                 <div><strong style="font-size:1.2rem;color:var(--blue-dark)">${l.title}</strong>
-                ${done?'<span style="color:var(--green-dark);margin-left:10px;background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;font-weight:900">✅ Đã xem</span>':''}</div>
-                <button class="btn-learn" onclick="openInlineVideo('${l.firestoreId}','${l.videoUrl||''}','${encodeURIComponent(l.title||'')}')"><i class="fas fa-play"></i> Xem</button></div>`;
-        }).join('') : '<p style="text-align:center;font-weight:800">📭 Chưa có bài giảng.</p>';
+                ${done ? '<span style="color:var(--green-dark);margin-left:10px;background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;font-weight:900">✅ Đã xem</span>' : ''}</div>
+                <button class="btn-learn" onclick="openInlineVideo('${l.firestoreId}','${encodeURIComponent(l.videoUrl || '')}','${encodeURIComponent(l.title || '')}')"><i class="fas fa-play"></i> Xem</button></div>`;
+        }).join('')
+        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài giảng.</p>';
 
-    const games = allQuizzes.filter(q=>q.type==='game');
-    document.getElementById('realGameList').innerHTML = games.length ? games.map(g => {
-            const done = qH[myUid+'_'+g.firestoreId];
+    // --- Game ---
+    const games = allQuizzes.filter(q => q.type === 'game');
+    document.getElementById('realGameList').innerHTML = games.length
+        ? games.map(g => {
+            const done = qH[myUid + '_' + g.firestoreId];
             return `<div class="real-item" style="border-color:var(--game-dark);border-width:3px;flex-direction:column;align-items:flex-start;gap:15px">
                 <div style="font-size:1.4rem;font-weight:900;color:var(--game-dark)">🎮 ${g.title}
-                ${done?`<span style="color:var(--green-dark);background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;margin-left:10px">✅ Đã Phá Đảo</span>`:''}</div>
+                ${done ? '<span style="color:var(--green-dark);background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;margin-left:10px">✅ Đã Phá Đảo</span>' : ''}</div>
                 <button class="btn-learn" style="background:var(--game-dark)!important;border-color:#7E22CE!important;box-shadow:0 5px 0 #7E22CE!important;width:100%;justify-content:center" onclick="playGame('${g.firestoreId}')"><i class="fas fa-gamepad"></i> CHƠI NGAY</button></div>`;
-        }).join('') : '<p style="text-align:center;font-weight:800">📭 Chưa có trò chơi.</p>';
+        }).join('')
+        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có trò chơi.</p>';
 
-    const normalQuizzes = allQuizzes.filter(q=>q.type==='mcq'||q.type==='fill');
-    document.getElementById('realAssignmentsList').innerHTML = normalQuizzes.length ? normalQuizzes.map(q => {
-            const res = qH[myUid+'_'+q.firestoreId];
+    // --- Bài tập ---
+    const normalQuizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill');
+    document.getElementById('realAssignmentsList').innerHTML = normalQuizzes.length
+        ? normalQuizzes.map(q => {
+            const res = qH[myUid + '_' + q.firestoreId];
             return `<div class="real-item" style="border-color:var(--green-dark)">
                 <div><strong style="font-size:1.2rem;color:var(--green-dark)">${q.title}</strong>
-                ${res?`<span style="color:white;background:var(--green-dark);padding:5px 12px;border-radius:15px;margin-left:10px;font-weight:900;font-size:0.9rem">Đã làm: ${res.score}đ</span>`:''}
-                <p style="font-size:0.95rem;color:var(--text-gray);margin-top:8px;font-weight:800">${q.type==='mcq'?'📝 Trắc nghiệm':'✍️ Điền khuyết'} - ${(q.questions||[]).length} câu</p></div>
-                <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="openQuiz('${q.firestoreId}','${encodeURIComponent(q.title||'')}')">Làm Bài</button></div>`;
-        }).join('') : '<p style="text-align:center;font-weight:800">📭 Chưa có bài tập.</p>';
+                ${res ? `<span style="color:white;background:var(--green-dark);padding:5px 12px;border-radius:15px;margin-left:10px;font-weight:900;font-size:0.9rem">Đã làm: ${res.score}đ</span>` : ''}
+                <p style="font-size:0.95rem;color:var(--text-gray);margin-top:8px;font-weight:800">${q.type === 'mcq' ? '📝 Trắc nghiệm' : '✍️ Điền khuyết'} - ${(q.questions || []).length} câu</p></div>
+                <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="openQuiz('${q.firestoreId}','${encodeURIComponent(q.title || '')}')">Làm Bài</button></div>`;
+        }).join('')
+        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài tập.</p>';
 
-    const speaks = allQuizzes.filter(q=>q.type==='speak');
-    document.getElementById('realSpeakingList').innerHTML = speaks.length ? speaks.map(s => {
-            const res = sH[myUid+'_'+s.firestoreId];
+    // --- Luyện nói ---
+    const speaks = allQuizzes.filter(q => q.type === 'speak');
+    document.getElementById('realSpeakingList').innerHTML = speaks.length
+        ? speaks.map(s => {
+            const res = sH[myUid + '_' + s.firestoreId];
             const resultHtml = res ? `<div style="margin-top:20px;padding:20px;background:var(--white);border-radius:20px;border:2px dashed var(--border)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px"><span style="font-weight:900;color:var(--text-gray)">📌 Lần gần nhất:</span><span style="background:var(--orange-dark);color:white;padding:5px 20px;border-radius:20px;font-weight:900;font-size:1.2rem">${res.score}/100đ</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+                    <span style="font-weight:900;color:var(--text-gray)">📌 Lần gần nhất:</span>
+                    <span style="background:var(--orange-dark);color:white;padding:5px 20px;border-radius:20px;font-weight:900;font-size:1.2rem">${res.score}/100đ</span>
+                </div>
                 <div style="font-weight:800;font-size:1.1rem;color:var(--blue-dark)">Bé đọc: "${res.transcript}"</div>
                 <div style="color:var(--green-dark);font-weight:900;font-size:1rem;background:var(--green-light);padding:10px;border-radius:15px;text-align:center;margin-top:10px">${res.comment}</div></div>` : '';
             return `<div class="real-item" style="display:block;border-color:var(--orange-dark)">
                 <strong style="font-size:1.3rem;color:var(--orange-dark)">${s.title}</strong>
-                <h3 style="color:var(--blue-dark);font-size:2.5rem;background:var(--white);padding:20px;border-radius:25px;text-align:center;margin:20px 0;border:3px solid var(--border)">${s.word||''}</h3>
+                <h3 style="color:var(--blue-dark);font-size:2.5rem;background:var(--white);padding:20px;border-radius:25px;text-align:center;margin:20px 0;border:3px solid var(--border)">${s.word || ''}</h3>
                 <div style="display:flex;gap:15px;flex-wrap:wrap">
                     <button class="btn-learn" style="flex:1;justify-content:center" onclick="playAudio('${s.word}',1)"><i class="fas fa-volume-up"></i> Chuẩn</button>
-                    <button class="btn-learn" style="flex:1;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-turtle"></i> Chậm</button>
+                    <button class="btn-learn" style="flex:1;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-circle-pause"></i> Chậm</button>
                     <button class="btn-learn" style="flex:1;justify-content:center;background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="startRecording('${s.word}','${s.firestoreId}')"><i class="fas fa-microphone"></i> Thu Âm</button>
                 </div>${resultHtml}</div>`;
-        }).join('') : '<p style="text-align:center;font-weight:800">📭 Chưa có bài luyện nói.</p>';
+        }).join('')
+        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài luyện nói.</p>';
 
+    // --- Tiến độ ---
     const allItems = [...allLessons, ...normalQuizzes, ...speaks, ...games];
     let doneCount = 0;
     document.getElementById('progressTable').innerHTML = allItems.map(item => {
         let done = false;
-        if (item.type==='speak')   done = !!sH[myUid+'_'+item.firestoreId];
-        else if (item.type==='game'||item.type==='mcq'||item.type==='fill') done = qH[myUid+'_'+item.firestoreId]!==undefined;
-        else done = !!vH[myUid+'_'+item.firestoreId];
+        if (item.type === 'speak')   done = !!sH[myUid + '_' + item.firestoreId];
+        else if (item.type === 'game' || item.type === 'mcq' || item.type === 'fill') done = qH[myUid + '_' + item.firestoreId] !== undefined;
+        else done = !!vH[myUid + '_' + item.firestoreId];
         if (done) doneCount++;
         return `<tr><td><strong>${item.title}</strong></td>
-            <td><span style="font-weight:bold;color:var(--text-gray)">${item.type==='speak'?'Luyện Nói':item.type==='game'?'Trò Chơi':item.type==='mcq'||item.type==='fill'?'Bài Tập':'Video'}</span></td>
-            <td style="color:${done?'var(--green-dark)':'var(--orange-dark)'};font-weight:bold">${done?'✅ Xong':'⏳ Chưa'}</td></tr>`;
+            <td><span style="font-weight:bold;color:var(--text-gray)">${item.type === 'speak' ? 'Luyện Nói' : item.type === 'game' ? 'Trò Chơi' : item.type === 'mcq' || item.type === 'fill' ? 'Bài Tập' : 'Video'}</span></td>
+            <td style="color:${done ? 'var(--green-dark)' : 'var(--orange-dark)'};font-weight:bold">${done ? '✅ Xong' : '⏳ Chưa'}</td></tr>`;
     }).join('') || '<tr><td colspan="3" style="text-align:center">Chưa có nhiệm vụ</td></tr>';
 
     const total = allItems.length;
-    const pct = total===0?0:Math.round((doneCount/total)*100);
-    const pctText = Math.min(pct,100)+'%';
-    document.getElementById('progressFillHome').style.width = pctText; document.getElementById('progressFillHome').innerText = pctText;
-    document.getElementById('progressFillTab').style.width = pctText; document.getElementById('progressFillTab').innerText = pctText;
-    document.getElementById('completedCountTab').innerText = doneCount; document.getElementById('totalCountTab').innerText = total;
+    const pct = total === 0 ? 0 : Math.min(Math.round((doneCount / total) * 100), 100);
+    const pctText = pct + '%';
+    document.getElementById('progressFillHome').style.width  = pctText;
+    document.getElementById('progressFillHome').innerText    = pctText;
+    document.getElementById('progressFillTab').style.width   = pctText;
+    document.getElementById('progressFillTab').innerText     = pctText;
+    document.getElementById('completedCountTab').innerText   = doneCount;
+    document.getElementById('totalCountTab').innerText       = total;
 }
 
-window._updateStudentScore = async function(addedScore) {
+// ===== CẬP NHẬT ĐIỂM =====
+async function updateStudentScore(addedScore) {
     if (!myData.firestoreId) return;
-    const newScore = (parseInt(myData.score)||0) + parseInt(addedScore);
-    try { await updateDoc(doc(db,'users',myData.firestoreId), { score: newScore }); } catch(e) { console.error('Lỗi cập nhật điểm:',e); }
-};
+    const newScore = (parseInt(myData.score) || 0) + parseInt(addedScore);
+    try { await updateDoc(doc(db, 'users', myData.firestoreId), { score: newScore }); } catch(e) { console.error('Lỗi cập nhật điểm:', e); }
+}
 
-// HIỂN THỊ CHAT (CÓ CHAT VỚI AI GẤU NÂU)
-function loadChat() {
+// ===== GỬI TIN NHẮN AUTO =====
+async function autoNotifyTeacher(msg) {
+    const receiver = myTeacherEmail || 'GROUP_CHAT';
+    try {
+        await addDoc(collection(db, 'chats'), {
+            senderEmail: user.email, senderName: myData.fullName || stName,
+            receiverEmail: receiver, receiverId: receiver,
+            message: msg, timestamp: serverTimestamp()
+        });
+    } catch(e) { console.error(e); }
+}
+
+// ===== CHAT =====
+function loadChatInternal() {
     const target = document.getElementById('chatTargetSelect').value;
     currentChatTarget = target;
     const box = document.getElementById('teacherChatBox');
-    let msgs = [];
     const myEmail = user.email || 'student';
 
-    // 1. NHẮN VỚI GẤU NÂU
     if (target === 'AI_BEAR') {
-        msgs = JSON.parse(localStorage.getItem('ks_ai_bear_chats') || '[]');
-        box.innerHTML = msgs.map(m => {
+        const aiChats = JSON.parse(localStorage.getItem('ks_ai_bear_chats') || '[]');
+        box.innerHTML = aiChats.map(m => {
             const isMe = m.senderEmail === myEmail;
-            return `<div class="message ${isMe?'student':'teacher'}">
-                <span class="chat-sender" style="color: ${isMe?'white':'var(--orange-dark)'}">${m.senderName}</span>
+            return `<div class="message ${isMe ? 'student' : 'teacher'}">
+                <span class="chat-sender">${m.senderName}</span>
                 <span class="chat-text">${m.message}</span></div>`;
-        }).join('') || '<div style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Chào bạn nhỏ! Tớ là Gấu Nâu đây! Cậu có câu hỏi gì cho tớ không? 🐻🍯</div>';
+        }).join('') || '<div style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Chào bạn nhỏ! Tớ là Gấu Nâu đây! 🐻🍯</div>';
         box.scrollTop = box.scrollHeight;
         return;
     }
 
-    // 2. NHẮN GROUP VÀ CÔ GIÁO
-    if (target==='GROUP_CHAT') {
-        msgs = allChats.filter(c => c.receiverId==='GROUP_CHAT'||c.receiverEmail==='GROUP_CHAT');
+    let msgs = [];
+    if (target === 'GROUP_CHAT') {
+        msgs = allChats.filter(c => c.receiverId === 'GROUP_CHAT' || c.receiverEmail === 'GROUP_CHAT');
     } else {
-        if (!myTeacherEmail) { box.innerHTML='<p style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Bé chưa có cô giáo phụ trách!</p>'; return; }
-        msgs = allChats.filter(c => (c.senderEmail===user.email && c.receiverEmail===myTeacherEmail) || (c.senderEmail===myTeacherEmail && c.receiverEmail===user.email) );
+        if (!myTeacherEmail) {
+            box.innerHTML = '<p style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Bé chưa có cô giáo phụ trách!</p>';
+            return;
+        }
+        msgs = allChats.filter(c =>
+            (c.senderEmail === user.email && c.receiverEmail === myTeacherEmail) ||
+            (c.senderEmail === myTeacherEmail && c.receiverEmail === user.email)
+        );
     }
-    msgs.sort((a,b)=>(a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+    msgs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
     box.innerHTML = msgs.map(m => {
-        const isMe = m.senderEmail===user.email;
-        return `<div class="message ${isMe?'student':'teacher'}">
-            <span class="chat-sender">${m.senderName||m.senderEmail}</span>
+        const isMe = m.senderEmail === user.email;
+        return `<div class="message ${isMe ? 'student' : 'teacher'}">
+            <span class="chat-sender">${m.senderName || m.senderEmail}</span>
             <span class="chat-text">${m.message}</span></div>`;
     }).join('') || '<div style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Hãy gửi lời chào đầu tiên! 👋</div>';
     box.scrollTop = box.scrollHeight;
 }
 
-// XỬ LÝ GỬI TIN NHẮN 
-window._sendToTeacher = async function() {
+// ===== GỬI TIN NHẮN =====
+async function sendToTeacherInternal() {
     const target = document.getElementById('chatTargetSelect').value;
     const msg = document.getElementById('teacherChatInput').value.trim();
     if (!msg) return;
     document.getElementById('teacherChatInput').value = '';
     const myEmail = myData.email || user.email || 'student';
 
-    // XỬ LÝ NHẮN CHO AI GẤU NÂU
     if (target === 'AI_BEAR') {
         const aiChats = JSON.parse(localStorage.getItem('ks_ai_bear_chats') || '[]');
         aiChats.push({ senderEmail: myEmail, senderName: 'Bé', message: msg });
         localStorage.setItem('ks_ai_bear_chats', JSON.stringify(aiChats));
-        loadChat();
+        loadChatInternal();
 
-        // Hiện chữ "Đang suy nghĩ..."
         const box = document.getElementById('teacherChatBox');
-        box.innerHTML += `<div class="message teacher" id="ai-typing" style="border-color:var(--orange-dark)"><span class="chat-sender" style="color:var(--orange-dark)">Gấu Nâu 🐻</span><span class="chat-text">Tớ đang suy nghĩ... 🍯</span></div>`;
+        const typingEl = document.createElement('div');
+        typingEl.className = 'message teacher';
+        typingEl.innerHTML = '<span class="chat-sender" style="color:var(--orange-dark)">Gấu Nâu 🐻</span><span class="chat-text">Tớ đang suy nghĩ... 🍯</span>';
+        box.appendChild(typingEl);
         box.scrollTop = box.scrollHeight;
 
+        // Gọi AI (fallback nếu không có Vertex AI)
         try {
-            const prompt = `Bạn là Gấu Nâu, một người bạn nhồi bông dễ thương, vui tính và cực kỳ thân thiện trên ứng dụng KidsEnglish. Bé hỏi bạn: "${msg}". Hãy trả lời siêu ngắn gọn (dưới 2 câu), dùng từ ngữ vui nhộn phù hợp với trẻ em tiểu học, xưng là "Tớ" và gọi bé là "Cậu" hoặc "Bạn nhỏ", nhớ dùng emoji gấu 🐻 hoặc hũ mật 🍯 nhé.`;
-            const result = await aiModel.generateContent(prompt);
-            const text = result.response.text();
-
+            const resp = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    model: "claude-sonnet-4-20250514",
+                    max_tokens: 200,
+                    system: "Bạn là Gấu Nâu, người bạn nhồi bông dễ thương trên KidsEnglish. Trả lời dưới 2 câu, vui nhộn, phù hợp trẻ em, xưng 'Tớ' gọi 'Cậu', dùng emoji 🐻🍯.",
+                    messages: [{ role: "user", content: msg }]
+                })
+            });
+            const data = await resp.json();
+            const text = data.content?.[0]?.text || 'Tớ đang đi ăn mật ong, cậu chờ tớ lát nha! 🍯🐻';
+            typingEl.remove();
             aiChats.push({ senderEmail: 'AI', senderName: 'Gấu Nâu 🐻', message: text });
             localStorage.setItem('ks_ai_bear_chats', JSON.stringify(aiChats));
-            loadChat();
+            loadChatInternal();
         } catch(e) {
-            console.error("Lỗi AI:", e);
-            aiChats.push({ senderEmail: 'AI', senderName: 'Gấu Nâu 🐻', message: 'Tớ đang đi ăn mật ong một xíu, cậu chờ tớ lát nha! 🍯🐻' });
+            typingEl.remove();
+            aiChats.push({ senderEmail: 'AI', senderName: 'Gấu Nâu 🐻', message: 'Tớ đang đi ăn mật ong, cậu chờ tớ lát nha! 🍯🐻' });
             localStorage.setItem('ks_ai_bear_chats', JSON.stringify(aiChats));
-            loadChat();
+            loadChatInternal();
         }
         return;
     }
 
-    // NHẮN LÊN FIREBASE BÌNH THƯỜNG
-    const receiverEmail = target==='GROUP_CHAT' ? 'GROUP_CHAT' : (myTeacherEmail||'GROUP_CHAT');
+    const receiverEmail = target === 'GROUP_CHAT' ? 'GROUP_CHAT' : (myTeacherEmail || 'GROUP_CHAT');
     try {
-        await addDoc(collection(db,'chats'), {
-            senderEmail: user.email, senderName: myData.fullName||stName,
-            receiverEmail, receiverId: target==='GROUP_CHAT'?'GROUP_CHAT':receiverEmail,
+        await addDoc(collection(db, 'chats'), {
+            senderEmail: user.email, senderName: myData.fullName || stName,
+            receiverEmail, receiverId: target === 'GROUP_CHAT' ? 'GROUP_CHAT' : receiverEmail,
             message: msg, timestamp: serverTimestamp()
         });
     } catch(e) { console.error(e); }
-};
+}
 
-window._autoNotifyTeacher = async function(msg) {
-    const receiver = myTeacherEmail || 'GROUP_CHAT';
-    try {
-        await addDoc(collection(db,'chats'), {
-            senderEmail: user.email, senderName: myData.fullName||stName,
-            receiverEmail: receiver, receiverId: receiver,
-            message: msg, timestamp: serverTimestamp()
-        });
-    } catch(e) { console.error(e); }
-};
+// ===== LƯU KẾT QUẢ =====
+async function saveGameResult(gameId, scoreVal) {
+    const qH = getQuizHistory();
+    const myUid = myData.firestoreId || uid;
+    qH[myUid + '_' + gameId] = { score: scoreVal };
+    localStorage.setItem('ks_quiz_history', JSON.stringify(qH));
+    await updateStudentScore(scoreVal);
+}
 
-window._sendProgressToTeacher = async function() {
+async function saveQuizResult(quizId, finalScore, details) {
+    const qH = getQuizHistory();
+    const myUid = myData.firestoreId || uid;
+    qH[myUid + '_' + quizId] = { score: finalScore, details };
+    localStorage.setItem('ks_quiz_history', JSON.stringify(qH));
+    await updateStudentScore(finalScore);
+}
+
+async function saveSpeakResult(quizId, score, transcript, comment, audioUrl) {
+    const sH = getSpeakHistory();
+    const myUid = myData.firestoreId || uid;
+    sH[myUid + '_' + quizId] = { score, transcript, comment, audio: audioUrl };
+    localStorage.setItem('ks_speak_history', JSON.stringify(sH));
+    await updateStudentScore(score);
+}
+
+async function saveVideoResult(lessonId) {
+    const vH = getVideoHistory();
+    const myUid = myData.firestoreId || uid;
+    if (!vH[myUid + '_' + lessonId]) {
+        vH[myUid + '_' + lessonId] = true;
+        localStorage.setItem('ks_video_history', JSON.stringify(vH));
+        await updateStudentScore(20);
+        await autoNotifyTeacher(`Con đã xem xong 20 phút video "${document.getElementById('inlineVideoTitle').innerText}" ạ! 📺`);
+        Swal.fire({ title: 'Thành công!', text: 'Bé đã nhận được 20 điểm!', icon: 'success', confirmButtonColor: '#4A81E8' });
+        document.getElementById('inlineBtnSubmit').innerText = '✅ Đã hoàn thành';
+    }
+}
+
+async function sendProgressToTeacherInternal() {
     const pct   = document.getElementById('progressFillTab').innerText;
     const score = document.getElementById('myScore').innerText;
-    await window._autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct} tiến độ. Tổng điểm cà rốt: ${score} ạ! 🌟`);
-    Swal.fire({title:'Thành công!',text:'Đã gửi báo cáo cho Cô giáo!',icon:'success',confirmButtonColor:'#4A81E8'});
-};
+    await autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct} tiến độ. Tổng điểm cà rốt: ${score} ạ! 🌟`);
+    Swal.fire({ title: 'Thành công!', text: 'Đã gửi báo cáo cho Cô giáo!', icon: 'success', confirmButtonColor: '#4A81E8' });
+}
 
-window._saveGameResult = async function(gameId, scoreVal) {
-    const qH = getQuizHistory(); const myUid = myData.firestoreId || uid;
-    qH[myUid+'_'+gameId] = { score: scoreVal };
-    localStorage.setItem('ks_quiz_history', JSON.stringify(qH));
-    await window._updateStudentScore(scoreVal);
-};
+// ===== GÁN TẤT CẢ VÀO WINDOW (để non-module script gọi được) =====
+window._fb_allQuizzes   = () => allQuizzes;
+window._fb_allLessons   = () => allLessons;
+window._fb_getMyUid     = () => myData.firestoreId || uid;
+window._fb_getMyData    = () => myData;
+window._fb_saveGame     = saveGameResult;
+window._fb_saveQuiz     = saveQuizResult;
+window._fb_saveSpeak    = saveSpeakResult;
+window._fb_saveVideo    = saveVideoResult;
+window._fb_notify       = autoNotifyTeacher;
+window._fb_loadChat     = loadChatInternal;
+window._fb_sendMsg      = sendToTeacherInternal;
+window._fb_sendProgress = sendProgressToTeacherInternal;
+window._fb_ready        = false;
 
-window._saveQuizResult = async function(quizId, finalScore, details) {
-    const qH = getQuizHistory(); const myUid = myData.firestoreId || uid;
-    qH[myUid+'_'+quizId] = { score: finalScore, details };
-    localStorage.setItem('ks_quiz_history', JSON.stringify(qH));
-    await window._updateStudentScore(finalScore);
-};
+// Các hàm gọi từ HTML buttons
+window.forceLoadChat         = () => loadChatInternal();
+window.sendToTeacher         = () => sendToTeacherInternal();
+window.sendProgressToTeacher = () => sendProgressToTeacherInternal();
+window.submitInlineVideo     = () => { if (window.currentVideoId) saveVideoResult(window.currentVideoId); };
 
-window._saveSpeakResult = async function(quizId, score, transcript, comment, audioUrl) {
-    const sH = getSpeakHistory(); const myUid = myData.firestoreId || uid;
-    sH[myUid+'_'+quizId] = { score, transcript, comment, audio: audioUrl };
-    localStorage.setItem('ks_speak_history', JSON.stringify(sH));
-    await window._updateStudentScore(score);
-};
-
-window._saveVideoResult = async function(lessonId) {
-    const vH = getVideoHistory(); const myUid = myData.firestoreId || uid;
-    if (!vH[myUid+'_'+lessonId]) {
-        vH[myUid+'_'+lessonId] = true;
-        localStorage.setItem('ks_video_history', JSON.stringify(vH));
-        await window._updateStudentScore(20);
-        await window._autoNotifyTeacher(`Con đã xem xong 20 phút video "${document.getElementById('inlineVideoTitle').innerText}" ạ! 📺`);
-        Swal.fire({title:'Thành công!',text:'Bé đã nhận được 20 điểm!',icon:'success',confirmButtonColor:'#4A81E8'});
-        document.getElementById('inlineBtnSubmit').innerText='✅ Đã hoàn thành';
-    }
-};
-
-window.loadChat       = loadChat;
-window.forceLoadChat  = ()=>{ loadChat(); };
-window.sendToTeacher  = window._sendToTeacher;
-window.sendProgressToTeacher = window._sendProgressToTeacher;
-window.allQuizzesRef  = () => allQuizzes;
-window.allLessonsRef  = () => allLessons;
-window.getMyUid       = () => myData.firestoreId || uid;
-window.getMyData      = () => myData;
-
-document.addEventListener('DOMContentLoaded', () => { loadAll(); });
+document.addEventListener('DOMContentLoaded', () => {
+    loadAll().then(() => { window._fb_ready = true; });
+});
 </script>
 
+<!-- ===== NON-MODULE SCRIPT ===== -->
 <script>
+// Theme
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('kids_theme', isDark?'dark':'light');
-    const icon = isDark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+    localStorage.setItem('kids_theme', isDark ? 'dark' : 'light');
+    const icon = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     document.getElementById('themeIcon').innerHTML = icon;
-    if(document.getElementById('themeIcon2')) document.getElementById('themeIcon2').innerHTML = icon;
+    if (document.getElementById('themeIcon2')) document.getElementById('themeIcon2').innerHTML = icon;
 }
-if(localStorage.getItem('kids_theme')==='dark') {
+if (localStorage.getItem('kids_theme') === 'dark') {
     document.body.classList.add('dark-theme');
-    document.getElementById('themeIcon').innerHTML='<i class="fas fa-sun"></i>';
-    if(document.getElementById('themeIcon2')) document.getElementById('themeIcon2').innerHTML='<i class="fas fa-sun"></i>';
+    document.getElementById('themeIcon').innerHTML = '<i class="fas fa-sun"></i>';
+    if (document.getElementById('themeIcon2')) document.getElementById('themeIcon2').innerHTML = '<i class="fas fa-sun"></i>';
 }
 
+// Tab switch
 function switchTab(id, el) {
-    if(id!=='lessons') closeInlineVideo();
-    document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    document.getElementById('tab-'+id).classList.add('active');
-    el.classList.add('active');
+    if (id !== 'lessons') closeInlineVideo();
+    document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (el) el.classList.add('active');
 }
 
-let currentVideoId=null; let videoWatchTime=0; let videoInterval=null;
-function extractVideoID(url) { const m=url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return m&&m[2].length===11?m[2]:null; }
+function clearChatNotif() {
+    document.getElementById('chatNotifDot').classList.remove('active');
+}
 
-function openInlineVideo(lessonId, videoUrl, title) {
-    currentVideoId = lessonId;
+function logout() {
+    Swal.fire({ title: 'Đăng xuất?', text: 'Bé có muốn thoát?', icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then(r => {
+        if (r.isConfirmed) {
+            localStorage.removeItem('token'); localStorage.removeItem('user');
+            sessionStorage.removeItem('ks_user'); sessionStorage.removeItem('ks_token');
+            window.location.href = 'login.html';
+        }
+    });
+}
+
+// ===== VIDEO PLAYER =====
+window.currentVideoId = null;
+let videoWatchTime = 0, videoInterval = null;
+
+function extractVideoID(url) {
+    const m = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+    return m && m[2].length === 11 ? m[2] : null;
+}
+
+function openInlineVideo(lessonId, encodedUrl, encodedTitle) {
+    const videoUrl = decodeURIComponent(encodedUrl);
+    const title    = decodeURIComponent(encodedTitle);
+    window.currentVideoId = lessonId;
+
     const vid = extractVideoID(videoUrl);
-    document.getElementById('videoListCard').style.display='none';
-    document.getElementById('videoPlayerCard').style.display='block';
-    document.getElementById('inlineVideoIframe').src = vid?`https://www.youtube.com/embed/${vid}?autoplay=1`:videoUrl;
-    document.getElementById('inlineVideoTitle').innerText = decodeURIComponent(title);
-    const vH = typeof getVideoHistory==='function'?getVideoHistory():(JSON.parse(localStorage.getItem('ks_video_history')||'{}'));
-    const myUid = window.getMyUid ? window.getMyUid() : 'unknown';
-    const isDone = !!vH[myUid+'_'+lessonId];
-    videoWatchTime=0;
-    const btn=document.getElementById('inlineBtnSubmit');
-    const tmr=document.getElementById('inlineVideoTimer');
-    if(isDone) {
-        btn.style.background='var(--green-dark)'; btn.style.pointerEvents='auto'; btn.innerText='✅ Đã hoàn thành';
-        tmr.innerHTML='✅ Đã xem xong';
+    document.getElementById('videoListCard').style.display   = 'none';
+    document.getElementById('videoPlayerCard').style.display = 'block';
+    document.getElementById('inlineVideoIframe').src  = vid ? `https://www.youtube.com/embed/${vid}?autoplay=1` : videoUrl;
+    document.getElementById('inlineVideoTitle').innerText = title;
+
+    const vH    = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
+    const myUid = window._fb_getMyUid ? window._fb_getMyUid() : 'unknown';
+    const isDone = !!vH[myUid + '_' + lessonId];
+    videoWatchTime = 0;
+    const btn = document.getElementById('inlineBtnSubmit');
+    const tmr = document.getElementById('inlineVideoTimer');
+
+    if (isDone) {
+        btn.style.background = 'var(--green-dark)'; btn.style.boxShadow = '0 5px 0 #047857'; btn.style.borderColor = '#047857'; btn.style.pointerEvents = 'auto'; btn.innerText = '✅ Đã hoàn thành';
+        tmr.innerHTML = '✅ Đã xem xong';
     } else {
-        btn.style.background='gray'; btn.style.pointerEvents='none'; btn.innerText='🔒 Đang xem...';
+        btn.style.background = 'gray'; btn.style.boxShadow = '0 5px 0 #475569'; btn.style.borderColor = '#475569'; btn.style.pointerEvents = 'none'; btn.innerText = '🔒 Đang xem...';
         clearInterval(videoInterval);
-        videoInterval=setInterval(()=>{
+        videoInterval = setInterval(() => {
             videoWatchTime++;
-            const m=Math.floor(videoWatchTime/60).toString().padStart(2,'0');
-            const s=(videoWatchTime%60).toString().padStart(2,'0');
-            tmr.innerText=`⏳ ${m}:${s} / 20:00`;
-            if(videoWatchTime>=1200) {
+            const m = Math.floor(videoWatchTime / 60).toString().padStart(2, '0');
+            const s = (videoWatchTime % 60).toString().padStart(2, '0');
+            tmr.innerText = `⏳ ${m}:${s} / 20:00`;
+            if (videoWatchTime >= 1200) {
                 clearInterval(videoInterval);
-                btn.style.background='var(--green-dark)'; btn.style.pointerEvents='auto'; btn.innerText='✅ Nộp Điểm Bài Giảng';
-                tmr.innerText='🎉 Xem đủ rồi!';
+                btn.style.background = 'var(--green-dark)'; btn.style.boxShadow = '0 5px 0 #047857'; btn.style.borderColor = '#047857'; btn.style.pointerEvents = 'auto'; btn.innerText = '✅ Nộp Điểm Bài Giảng';
+                tmr.innerText = '🎉 Xem đủ rồi!';
             }
-        },1000);
+        }, 1000);
     }
     loadInlineVideoChat();
 }
 
 function closeInlineVideo() {
-    document.getElementById('videoPlayerCard').style.display='none';
-    document.getElementById('videoListCard').style.display='block';
-    document.getElementById('inlineVideoIframe').src='';
-    clearInterval(videoInterval); currentVideoId=null;
-}
-
-function submitInlineVideo() {
-    if(window._saveVideoResult) window._saveVideoResult(currentVideoId);
+    document.getElementById('videoPlayerCard').style.display = 'none';
+    document.getElementById('videoListCard').style.display   = 'block';
+    document.getElementById('inlineVideoIframe').src = '';
+    clearInterval(videoInterval);
+    window.currentVideoId = null;
 }
 
 function loadInlineVideoChat() {
-    if(!currentVideoId) return;
-    let obj=JSON.parse(localStorage.getItem('ks_video_comments')||'{}');
-    let c=obj[currentVideoId]||[];
-    const box=document.getElementById('inlineVideoChatBox');
-    const user=JSON.parse(localStorage.getItem('user')||'{}');
-    box.innerHTML=c.length?c.map(m=>`<div style="background:${m.email===user.email?'var(--blue-light)':'var(--white)'};padding:15px;border-radius:15px;border:1px solid var(--border);margin-bottom:10px">
-        <div style="font-weight:900;font-size:0.9rem;color:var(--blue-dark);margin-bottom:5px">${m.name} <span style="color:gray;font-size:0.8rem">• ${m.time}</span></div>
-        <div style="font-weight:700;color:var(--text-dark)">${m.text}</div></div>`).join('')
-        :'<div style="text-align:center;color:var(--text-gray);font-weight:800;margin-top:20px">Hãy là người đầu tiên bình luận! 🌟</div>';
-    box.scrollTop=box.scrollHeight;
+    if (!window.currentVideoId) return;
+    const obj = JSON.parse(localStorage.getItem('ks_video_comments') || '{}');
+    const c = obj[window.currentVideoId] || [];
+    const box = document.getElementById('inlineVideoChatBox');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    box.innerHTML = c.length
+        ? c.map(m => `<div style="background:${m.email === user.email ? 'var(--blue-light)' : 'var(--white)'};padding:15px;border-radius:15px;border:1px solid var(--border);margin-bottom:10px">
+            <div style="font-weight:900;font-size:0.9rem;color:var(--blue-dark);margin-bottom:5px">${m.name} <span style="color:gray;font-size:0.8rem">• ${m.time}</span></div>
+            <div style="font-weight:700;color:var(--text-dark)">${m.text}</div></div>`).join('')
+        : '<div style="text-align:center;color:var(--text-gray);font-weight:800;margin-top:20px">Hãy là người đầu tiên bình luận! 🌟</div>';
+    box.scrollTop = box.scrollHeight;
 }
 
 function sendInlineVideoChat() {
-    const input=document.getElementById('inlineVideoChatInput'); const text=input.value.trim(); if(!text||!currentVideoId) return;
-    const user=JSON.parse(localStorage.getItem('user')||'{}');
-    let obj=JSON.parse(localStorage.getItem('ks_video_comments')||'{}');
-    if(!obj[currentVideoId]) obj[currentVideoId]=[];
-    obj[currentVideoId].push({email:user.email,name:user.fullName||user.name,text,time:new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})});
-    localStorage.setItem('ks_video_comments',JSON.stringify(obj));
-    input.value=''; loadInlineVideoChat();
+    const input = document.getElementById('inlineVideoChatInput');
+    const text = input.value.trim();
+    if (!text || !window.currentVideoId) return;
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const obj = JSON.parse(localStorage.getItem('ks_video_comments') || '{}');
+    if (!obj[window.currentVideoId]) obj[window.currentVideoId] = [];
+    obj[window.currentVideoId].push({ email: user.email, name: user.fullName || user.name, text, time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) });
+    localStorage.setItem('ks_video_comments', JSON.stringify(obj));
+    input.value = '';
+    loadInlineVideoChat();
 }
 
-let currentGame=null; let currentGameProgress=0; let currentGameScore=0; let isJumping=false;
-
-function playGame(gameId) {
-    const games = window.allQuizzesRef ? window.allQuizzesRef() : [];
-    currentGame = games.find(q=>q.firestoreId===gameId);
-    if(!currentGame||!currentGame.questions||currentGame.questions.length===0) return Swal.fire('Lỗi','Trò chơi rỗng!','warning');
-    currentGameProgress=0; currentGameScore=0; isJumping=false;
-    document.getElementById('gameOverlay').style.display='flex';
-    document.getElementById('inGameQuestionPanel').style.display='none';
-    renderGameMap(-1);
-}
-
-function closeGame() { document.getElementById('gameOverlay').style.display='none'; document.getElementById('inGameQuestionPanel').style.display='none'; currentGame=null; }
-
-function renderGameMap(jumpingToTarget) {
-    let rabbitX=50;
-    if(jumpingToTarget!==-1) rabbitX=(jumpingToTarget+1)*300-80;
-    else if(currentGameProgress>0) rabbitX=currentGameProgress*300+60;
-    const isWin=(jumpingToTarget===currentGame.questions.length);
-    if(isWin) rabbitX=(currentGame.questions.length+1)*300;
-    let trackHtml=`<div id="rabbitChar" class="rabbit-character ${jumpingToTarget!==-1?'rabbit-jump':''}" style="left:${rabbitX}px">🐇</div>`;
-    currentGame.questions.forEach((q,i)=>{ trackHtml+=`<div class="obstacle-item" style="left:${(i+1)*300}px">${i<currentGameProgress?'🥕':'🌵'}</div>`; });
-    const finishPos=(currentGame.questions.length+1)*300;
-    trackHtml+=`<div class="obstacle-item" style="left:${finishPos}px;font-size:6.5rem;bottom:15px">🏁</div>`;
-    const tc=document.getElementById('gameTrackContent'); tc.innerHTML=trackHtml; tc.style.width=(finishPos+500)+'px';
-    tc.style.transform=`translateX(-${Math.max(0,rabbitX-150)}px)`;
-    const ins=document.getElementById('gameInstruction');
-    if(currentGameProgress>=currentGame.questions.length&&jumpingToTarget===-1) ins.innerText='Hoan hô! Thỏ đến đích! 🎉';
-    else if(jumpingToTarget===-1) ins.innerHTML='Bấm <strong>ENTER</strong> hoặc <strong>⬆️</strong> để nhảy!';
-    else ins.innerText='Thỏ đang bay... 🐇💨';
-}
-
-window.addEventListener('keydown',e=>{
-    const overlay=document.getElementById('gameOverlay'); const qPanel=document.getElementById('inGameQuestionPanel');
-    if(overlay.style.display==='flex'&&qPanel.style.display!=='block') {
-        if(['Enter','ArrowUp','ArrowRight',' '].includes(e.key)) { if(!isJumping&&!Swal.isVisible()){e.preventDefault();triggerRabbitJump();} }
-    }
-});
-
-function triggerRabbitJump() {
-    if(currentGameProgress>=currentGame.questions.length) return;
-    isJumping=true; renderGameMap(currentGameProgress);
-    setTimeout(()=>{ isJumping=false; showInGameQuestion(currentGameProgress); },600);
-}
-
-function showInGameQuestion(index) {
-    const q=currentGame.questions[index];
-    document.getElementById('inGameQTitle').innerText=q.question;
-    const content=document.getElementById('inGameQContent');
-    let html='';
-    if(q.type==='mcq') html=q.options.map((opt,i)=>`<button class="btn-game-opt" onclick="checkInGameAnswer(${index},${i},${q.correctAnswer},${q.points})">${opt}</button>`).join('');
-    else if(q.type==='fill') html=`<input type="text" id="inGameFillAns" placeholder="Gõ đáp án..." style="padding:20px;font-size:1.5rem;text-align:center;border-radius:20px;border:4px solid var(--blue-dark);width:100%;margin-bottom:20px;color:var(--text-dark);font-weight:900">
-        <button class="btn-learn" style="width:100%;justify-content:center;font-size:1.4rem;padding:20px" onclick="checkInGameFill(${index},'${(q.answers||[]).join('|')}',${q.points})">Xác nhận</button>`;
-    else if(q.type==='speak') html=`<div style="font-size:3rem;margin-bottom:25px;color:var(--orange-dark);font-weight:900">${q.word}</div>
-        <button class="btn-learn" style="width:100%;justify-content:center;font-size:1.4rem;padding:20px;background:var(--orange-dark)!important;border-color:#FF948C!important;box-shadow:0 5px 0 #E87A72!important" onclick="startInGameRecording('${q.word}',${index},${q.points})"><i class="fas fa-microphone"></i> Đọc Thần Chú</button>
-        <div id="inGameSpeakStatus" style="font-size:1.3rem;margin-top:15px;font-weight:900"></div>`;
-    content.innerHTML=html;
-    document.getElementById('inGameQuestionPanel').style.display='block';
-    if(q.type==='fill') setTimeout(()=>document.getElementById('inGameFillAns')?.focus(),100);
-}
-
-function checkInGameAnswer(index,selected,correct,points) {
-    document.getElementById('inGameQuestionPanel').style.display='none';
-    if(selected==correct) advanceGame(points);
-    else Swal.fire({title:'Sai rồi 😢',text:'Thỏ bị vấp, chọn lại nhé!',icon:'error',confirmButtonColor:'#4A81E8'}).then(()=>showInGameQuestion(index));
-}
-function checkInGameFill(index,correctStr,points) {
-    const userAns=document.getElementById('inGameFillAns').value.trim().toLowerCase();
-    const correctArr=correctStr.split('|').map(s=>s.toLowerCase().trim());
-    document.getElementById('inGameQuestionPanel').style.display='none';
-    if(correctArr.includes(userAns)) advanceGame(points);
-    else Swal.fire({title:'Sai rồi 😢',text:'Kiểm tra lại chính tả nhé!',icon:'error',confirmButtonColor:'#4A81E8'}).then(()=>showInGameQuestion(index));
-}
-
-function startInGameRecording(targetWord,index,points) {
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    const statusDiv=document.getElementById('inGameSpeakStatus');
-    if(!SR){statusDiv.innerText='Trình duyệt không hỗ trợ Mic!';return;}
-    const recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=false;
-    statusDiv.innerHTML='<span style="color:var(--orange-dark)">Đang thu âm... Đọc to lên nhé!</span>';
-    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-        const mr=new MediaRecorder(stream); let chunks=[];
-        mr.ondataavailable=e=>chunks.push(e.data); mr.start(); recognition.start();
-        recognition.onresult=event=>{
-            const transcript=event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g,'').trim();
-            const target=targetWord.toLowerCase().replace(/[.,?!]/g,'').trim();
-            recognition.stop(); mr.stop(); stream.getTracks().forEach(t=>t.stop());
-            mr.onstop=()=>{
-                const url=URL.createObjectURL(new Blob(chunks,{type:'audio/wav'}));
-                const tW=target.split(/\s+/); const sW=transcript.split(/\s+/);
-                let m=0; tW.forEach(w=>{if(sW.includes(w))m++;});
-                document.getElementById('inGameQuestionPanel').style.display='none';
-                if((m/tW.length)>=0.5) advanceGame(points);
-                else Swal.fire({title:'Chưa đúng 🤔',html:`<p>Bé đọc: <strong>"${transcript}"</strong></p><audio controls src="${url}" style="width:100%;margin-top:10px"></audio>`,icon:'info',showCancelButton:true,confirmButtonText:'Đọc Lại',cancelButtonText:'Bỏ qua',confirmButtonColor:'#4A81E8'}).then(r=>{if(r.isConfirmed)showInGameQuestion(index);});
-            };
-        };
-        recognition.onerror=()=>{mr.stop();stream.getTracks().forEach(t=>t.stop());document.getElementById('inGameQuestionPanel').style.display='none';Swal.fire({title:'Lỗi Micro',text:'Không nghe rõ!',icon:'error',confirmButtonColor:'#4A81E8'}).then(()=>showInGameQuestion(index));};
-    }).catch(()=>{statusDiv.innerText='Cần cấp quyền Micro!';});
-}
-
-function advanceGame(points) {
-    currentGameScore+=parseInt(points)||10; currentGameProgress++;
-    if(currentGameProgress>=currentGame.questions.length) {
-        isJumping=true; renderGameMap(currentGame.questions.length);
-        setTimeout(async()=>{
-            isJumping=false;
-            if(window._saveGameResult) await window._saveGameResult(currentGame.firestoreId, currentGameScore);
-            if(window._autoNotifyTeacher) await window._autoNotifyTeacher(`Con vừa phá đảo Game "${currentGame.title}" và nhận được ${currentGameScore} điểm! 🎮🐰`);
-            Swal.fire({
-                title:'VỀ ĐÍCH RỒI! 🎉',
-                html:`<h2 style="color:var(--blue-dark);font-family:'Baloo 2';font-size:2rem">Chúc mừng bé!</h2><p style="font-size:1.3rem;margin-top:15px;font-weight:800">Bé nhận được <strong style="color:var(--orange-dark);font-size:2.8rem;display:block;margin-top:10px">${currentGameScore} 🥕</strong></p>`,
-                icon:'success',showCancelButton:true,confirmButtonText:'🔄 Chơi Lại',cancelButtonText:'🚪 Thoát',confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',allowOutsideClick:false
-            }).then(r=>{if(r.isConfirmed)playGame(currentGame.firestoreId);else closeGame();}).catch(()=>closeGame());
-        },800);
-    } else {
-        Swal.fire({title:'Đúng! 🎉',text:`Thỏ ăn được ${points} cà rốt!`,icon:'success',timer:1000,showConfirmButton:false}).then(()=>renderGameMap(-1));
-    }
-}
-
+// ===== QUIZ =====
 function openQuiz(quizId, encTitle) {
-    const quiz=(window.allQuizzesRef?window.allQuizzesRef():[]).find(q=>q.firestoreId===quizId);
-    if(!quiz) return;
-    const questions=quiz.questions||[];
-    let html='<div style="text-align:left">';
-    questions.forEach((q,idx)=>{
-        if(quiz.type==='mcq') {
-            html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
-                <h4 style="margin-bottom:15px;color:var(--blue-dark);font-size:1.2rem">Câu ${idx+1}: ${q.question}</h4>
-                ${q.options.map((opt,i)=>`<label style="display:block;background:var(--white);padding:15px;border-radius:15px;margin-bottom:10px;cursor:pointer;border:1px solid var(--border);font-weight:800;color:var(--text-dark)"><input type="radio" name="q_${idx}" value="${i}" style="margin-right:15px;transform:scale(1.3)"> ${opt}</label>`).join('')}</div>`;
-        } else if(quiz.type==='fill') {
-            let fq=q.question; const blanks=(fq.match(/___/g)||[]).length;
-            for(let i=0;i<blanks;i++) fq=fq.replace('___',`<input type="text" style="border:2px solid var(--orange-dark);padding:5px 15px;border-radius:10px;outline:none;color:var(--orange-dark);font-weight:900;text-align:center;width:150px;margin:0 5px;font-size:1.1rem;background:var(--orange-light)" id="q_${idx}_ans_${i}" placeholder="...">`);
-            html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
-                <h4 style="margin-bottom:15px;color:var(--orange-dark);font-size:1.2rem">Câu ${idx+1}:</h4>
+    const allQ = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
+    const quiz = allQ.find(q => q.firestoreId === quizId);
+    if (!quiz) return Swal.fire('Lỗi', 'Không tìm thấy bài tập!', 'error');
+    const questions = quiz.questions || [];
+    let html = '<div style="text-align:left">';
+    questions.forEach((q, idx) => {
+        if (quiz.type === 'mcq') {
+            html += `<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
+                <h4 style="margin-bottom:15px;color:var(--blue-dark);font-size:1.2rem">Câu ${idx + 1}: ${q.question}</h4>
+                ${q.options.map((opt, i) => `<label style="display:block;background:var(--white);padding:15px;border-radius:15px;margin-bottom:10px;cursor:pointer;border:1px solid var(--border);font-weight:800;color:var(--text-dark)"><input type="radio" name="q_${idx}" value="${i}" style="margin-right:15px;transform:scale(1.3)"> ${opt}</label>`).join('')}</div>`;
+        } else if (quiz.type === 'fill') {
+            let fq = q.question;
+            const blanks = (fq.match(/___/g) || []).length;
+            for (let i = 0; i < blanks; i++) fq = fq.replace('___', `<input type="text" style="border:2px solid var(--orange-dark);padding:5px 15px;border-radius:10px;outline:none;color:var(--orange-dark);font-weight:900;text-align:center;width:150px;margin:0 5px;font-size:1.1rem;background:var(--orange-light)" id="q_${idx}_ans_${i}" placeholder="...">`);
+            html += `<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
+                <h4 style="margin-bottom:15px;color:var(--orange-dark);font-size:1.2rem">Câu ${idx + 1}:</h4>
                 <div style="font-size:1.2rem;line-height:2;font-weight:800;color:var(--text-dark)">${fq}</div></div>`;
         }
     });
-    html+='</div>';
+    html += '</div>';
     Swal.fire({
-        title:`📝 ${decodeURIComponent(encTitle)}`,html,width:'700px',showCancelButton:true,
-        confirmButtonText:'Nộp Bài',cancelButtonText:'Hủy',confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',
-        preConfirm:()=>{
-            let score=0; const ppq=100/questions.length; let details=[];
-            questions.forEach((q,idx)=>{
-                if(quiz.type==='mcq'){
-                    const sel=document.querySelector(`input[name="q_${idx}"]:checked`); const ans=sel?parseInt(sel.value):-1;
-                    const ok=ans===parseInt(q.correctAnswer||0); if(ok) score+=ppq;
-                    details.push({q:q.question,userAns:ans!==-1?q.options[ans]:'Bỏ trống',correctAns:q.options[parseInt(q.correctAnswer||0)],isCorrect:ok,points:ok?Math.round(ppq):0});
-                } else if(quiz.type==='fill'){
-                    let ok=true; let uArr=[]; const blanks=q.answers?q.answers.length:0;
-                    for(let i=0;i<blanks;i++){const v=document.getElementById(`q_${idx}_ans_${i}`)?.value.trim()||''; uArr.push(v); if(v.toLowerCase()!==q.answers[i].toLowerCase()) ok=false;}
-                    if(ok&&blanks>0) score+=ppq;
-                    details.push({q:q.question.replace(/___/g,'[...]'),userAns:uArr.join(', ')||'Bỏ trống',correctAns:q.answers.join(', '),isCorrect:ok,points:ok?Math.round(ppq):0});
+        title: `📝 ${decodeURIComponent(encTitle)}`, html, width: '700px', showCancelButton: true,
+        confirmButtonText: 'Nộp Bài', cancelButtonText: 'Hủy', confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C',
+        preConfirm: () => {
+            let score = 0;
+            const ppq = 100 / questions.length;
+            let details = [];
+            questions.forEach((q, idx) => {
+                if (quiz.type === 'mcq') {
+                    const sel = document.querySelector(`input[name="q_${idx}"]:checked`);
+                    const ans = sel ? parseInt(sel.value) : -1;
+                    const ok = ans === parseInt(q.correctAnswer || 0);
+                    if (ok) score += ppq;
+                    details.push({ q: q.question, userAns: ans !== -1 ? q.options[ans] : 'Bỏ trống', correctAns: q.options[parseInt(q.correctAnswer || 0)], isCorrect: ok, points: ok ? Math.round(ppq) : 0 });
+                } else if (quiz.type === 'fill') {
+                    let ok = true; let uArr = [];
+                    const blanks = q.answers ? q.answers.length : 0;
+                    for (let i = 0; i < blanks; i++) {
+                        const v = document.getElementById(`q_${idx}_ans_${i}`)?.value.trim() || '';
+                        uArr.push(v);
+                        if (v.toLowerCase() !== (q.answers[i] || '').toLowerCase()) ok = false;
+                    }
+                    if (ok && blanks > 0) score += ppq;
+                    details.push({ q: q.question.replace(/___/g, '[...]'), userAns: uArr.join(', ') || 'Bỏ trống', correctAns: (q.answers || []).join(', '), isCorrect: ok, points: ok ? Math.round(ppq) : 0 });
                 }
             });
-            return {finalScore:Math.round(score),details};
+            return { finalScore: Math.round(score), details };
         }
-    }).then(async r=>{
-        if(r.isConfirmed){
-            const {finalScore,details}=r.value;
-            if(window._saveQuizResult) await window._saveQuizResult(quizId,finalScore,details);
-            if(window._autoNotifyTeacher) await window._autoNotifyTeacher(`Con vừa nộp bài "${decodeURIComponent(encTitle)}" đạt ${finalScore}/100 điểm ạ! 🎯`);
-            Swal.fire({title:finalScore>=80?'Tuyệt Vời! 🎉':'Cố gắng lên! 💪',text:`Bé đạt ${finalScore}/100 điểm.`,icon:finalScore>=80?'success':'info',confirmButtonColor:'#4A81E8'});
+    }).then(async r => {
+        if (r.isConfirmed) {
+            const { finalScore, details } = r.value;
+            if (window._fb_saveQuiz) await window._fb_saveQuiz(quizId, finalScore, details);
+            if (window._fb_notify) await window._fb_notify(`Con vừa nộp bài "${decodeURIComponent(encTitle)}" đạt ${finalScore}/100 điểm ạ! 🎯`);
+            Swal.fire({ title: finalScore >= 80 ? 'Tuyệt Vời! 🎉' : 'Cố gắng lên! 💪', text: `Bé đạt ${finalScore}/100 điểm.`, icon: finalScore >= 80 ? 'success' : 'info', confirmButtonColor: '#4A81E8' });
         }
     });
 }
 
-function playAudio(text,speed) {
-    if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=speed;window.speechSynthesis.speak(u);}
-    else Swal.fire('Lỗi','Trình duyệt không hỗ trợ!','error');
+// ===== PLAY AUDIO =====
+function playAudio(text, speed) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; u.rate = speed;
+        window.speechSynthesis.speak(u);
+    } else Swal.fire('Lỗi', 'Trình duyệt không hỗ trợ!', 'error');
 }
 
-function startRecording(targetWord,quizId) {
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(!SR){Swal.fire('Lỗi','Dùng Chrome nhé!','error');return;}
-    const recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=false;
-    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-        const mr=new MediaRecorder(stream); let chunks=[];
-        mr.ondataavailable=e=>chunks.push(e.data);
-        Swal.fire({title:'🎤 Đang nghe...',html:`<p>Bé đọc to: <strong style="color:var(--blue-dark);font-size:2.2rem;display:block;margin-top:15px;font-family:'Baloo 2'">"${targetWord}"</strong></p>`,showConfirmButton:false,allowOutsideClick:false,didOpen:()=>{Swal.showLoading();mr.start();recognition.start();}});
-        recognition.onresult=event=>{
-            const transcript=event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g,'').trim();
-            const target=targetWord.toLowerCase().replace(/[.,?!]/g,'').trim();
-            recognition.stop(); mr.stop(); stream.getTracks().forEach(t=>t.stop());
-            mr.onstop=async()=>{
-                const url=URL.createObjectURL(new Blob(chunks,{type:'audio/wav'}));
-                const tW=target.split(/\s+/); const sW=transcript.split(/\s+/);
-                let m=0; tW.forEach(w=>{if(sW.includes(w))m++;});
-                let score=Math.round((m/tW.length)*100); if(score>100)score=100; if(score===0&&transcript!=='')score=10;
-                const comment=score===100?'Tuyệt hảo! 🌟':score>=80?'Rất tốt! 👍':'Nghe lại mẫu và đọc lại nhé! 💪';
+// ===== SPEECH RECORDING =====
+function startRecording(targetWord, quizId) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
+    const recognition = new SR(); recognition.lang = 'en-US'; recognition.interimResults = false;
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        const mr = new MediaRecorder(stream); let chunks = [];
+        mr.ondataavailable = e => chunks.push(e.data);
+        Swal.fire({
+            title: '🎤 Đang nghe...',
+            html: `<p>Bé đọc to: <strong style="color:var(--blue-dark);font-size:2.2rem;display:block;margin-top:15px;font-family:'Baloo 2'">"${targetWord}"</strong></p>`,
+            showConfirmButton: false, allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); mr.start(); recognition.start(); }
+        });
+        recognition.onresult = event => {
+            const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
+            const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
+            recognition.stop(); mr.stop(); stream.getTracks().forEach(t => t.stop());
+            mr.onstop = async () => {
+                const url = URL.createObjectURL(new Blob(chunks, { type: 'audio/wav' }));
+                const tW = target.split(/\s+/); const sW = transcript.split(/\s+/);
+                let m = 0; tW.forEach(w => { if (sW.includes(w)) m++; });
+                let score = Math.round((m / tW.length) * 100);
+                if (score > 100) score = 100; if (score === 0 && transcript !== '') score = 10;
+                const comment = score === 100 ? 'Tuyệt hảo! 🌟' : score >= 80 ? 'Rất tốt! 👍' : 'Nghe lại mẫu và đọc lại nhé! 💪';
                 Swal.fire({
-                    title:score>=80?'🎉 Chúc mừng!':'🤔 Cố lên!',
-                    html:`<div style="font-size:3.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:15px;font-family:'Baloo 2'">${score}/100</div>
+                    title: score >= 80 ? '🎉 Chúc mừng!' : '🤔 Cố lên!',
+                    html: `<div style="font-size:3.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:15px;font-family:'Baloo 2'">${score}/100</div>
                         <p style="font-size:1.2rem;margin-bottom:10px"><strong>Bé đọc:</strong> <span style="color:var(--orange-dark);font-weight:900">"${transcript}"</span></p>
                         <audio controls src="${url}" style="width:100%;height:40px;border-radius:20px;outline:none;margin-bottom:15px"></audio>
                         <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:15px" onclick="playAudio('${targetWord}',0.5)">🐢 Nghe Mẫu Chậm</button>
                         <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark)">${comment}</div>`,
-                    icon:score>=80?'success':'info',showCancelButton:true,confirmButtonText:'✅ Nộp Điểm',cancelButtonText:'🎤 Đọc Lại',confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C'
-                }).then(async r=>{
-                    if(r.isConfirmed){
-                        if(window._saveSpeakResult) await window._saveSpeakResult(quizId,score,transcript,comment,url);
-                        if(window._autoNotifyTeacher) await window._autoNotifyTeacher(`Con vừa luyện đọc từ "${targetWord}" đạt ${score}/100 điểm! 🎤`);
-                        Swal.fire({title:'Đã Nộp!',icon:'success',timer:1500,showConfirmButton:false});
-                    } else if(r.dismiss===Swal.DismissReason.cancel) setTimeout(()=>startRecording(targetWord,quizId),500);
+                    icon: score >= 80 ? 'success' : 'info', showCancelButton: true,
+                    confirmButtonText: '✅ Nộp Điểm', cancelButtonText: '🎤 Đọc Lại',
+                    confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C'
+                }).then(async r => {
+                    if (r.isConfirmed) {
+                        if (window._fb_saveSpeak) await window._fb_saveSpeak(quizId, score, transcript, comment, url);
+                        if (window._fb_notify) await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${score}/100 điểm! 🎤`);
+                        Swal.fire({ title: 'Đã Nộp!', icon: 'success', timer: 1500, showConfirmButton: false });
+                    } else if (r.dismiss === Swal.DismissReason.cancel) {
+                        setTimeout(() => startRecording(targetWord, quizId), 500);
+                    }
                 });
             };
         };
-        recognition.onerror=e=>{
-            mr.stop(); stream.getTracks().forEach(t=>t.stop());
-            if(e.error==='not-allowed') Swal.fire('Lỗi Micro','Cần cấp quyền Micro!','error');
-            else Swal.fire('Lỗi','Không nghe rõ, thử lại!','error');
+        recognition.onerror = e => {
+            mr.stop(); stream.getTracks().forEach(t => t.stop());
+            Swal.fire(e.error === 'not-allowed' ? 'Lỗi Micro' : 'Lỗi', e.error === 'not-allowed' ? 'Cần cấp quyền Micro!' : 'Không nghe rõ, thử lại!', 'error');
         };
-    }).catch(()=>Swal.fire('Lỗi','Cần cấp quyền Micro!','error'));
+    }).catch(() => Swal.fire('Lỗi', 'Cần cấp quyền Micro!', 'error'));
 }
 
-function logout() {
-    Swal.fire({title:'Đăng xuất?',text:'Bé có muốn thoát?',icon:'question',showCancelButton:true,confirmButtonText:'Thoát',confirmButtonColor:'#FF948C',cancelButtonText:'Ở lại',cancelButtonColor:'#4A81E8'}).then(r=>{
-        if(r.isConfirmed){localStorage.removeItem('token');localStorage.removeItem('user');sessionStorage.removeItem('ks_user');window.location.href='login.html';}
+// ===== GAME =====
+let currentGame = null, currentGameProgress = 0, currentGameScore = 0, isJumping = false;
+
+function playGame(gameId) {
+    const games = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
+    currentGame = games.find(q => q.firestoreId === gameId);
+    if (!currentGame || !currentGame.questions || currentGame.questions.length === 0)
+        return Swal.fire('Lỗi', 'Trò chơi rỗng!', 'warning');
+    currentGameProgress = 0; currentGameScore = 0; isJumping = false;
+    document.getElementById('gameOverlay').style.display = 'flex';
+    document.getElementById('inGameQuestionPanel').style.display = 'none';
+    renderGameMap(-1);
+}
+
+function closeGame() {
+    document.getElementById('gameOverlay').style.display = 'none';
+    document.getElementById('inGameQuestionPanel').style.display = 'none';
+    currentGame = null;
+}
+
+function renderGameMap(jumpingToTarget) {
+    if (!currentGame) return;
+    let rabbitX = 50;
+    if (jumpingToTarget !== -1) rabbitX = (jumpingToTarget + 1) * 300 - 80;
+    else if (currentGameProgress > 0) rabbitX = currentGameProgress * 300 + 60;
+    const isWin = jumpingToTarget === currentGame.questions.length;
+    if (isWin) rabbitX = (currentGame.questions.length + 1) * 300;
+    let trackHtml = `<div id="rabbitChar" class="rabbit-character ${jumpingToTarget !== -1 ? 'rabbit-jump' : ''}" style="left:${rabbitX}px">🐇</div>`;
+    currentGame.questions.forEach((q, i) => {
+        trackHtml += `<div class="obstacle-item" style="left:${(i + 1) * 300}px">${i < currentGameProgress ? '🥕' : '🌵'}</div>`;
     });
+    const finishPos = (currentGame.questions.length + 1) * 300;
+    trackHtml += `<div class="obstacle-item" style="left:${finishPos}px;font-size:6.5rem;bottom:15px">🏁</div>`;
+    const tc = document.getElementById('gameTrackContent');
+    tc.innerHTML = trackHtml; tc.style.width = (finishPos + 500) + 'px';
+    tc.style.transform = `translateX(-${Math.max(0, rabbitX - 150)}px)`;
+    const ins = document.getElementById('gameInstruction');
+    if (currentGameProgress >= currentGame.questions.length && jumpingToTarget === -1) ins.innerText = 'Hoan hô! Thỏ đến đích! 🎉';
+    else if (jumpingToTarget === -1) ins.innerHTML = 'Bấm <strong>ENTER</strong> hoặc <strong>⬆️</strong> để nhảy!';
+    else ins.innerText = 'Thỏ đang bay... 🐇💨';
+}
+
+window.addEventListener('keydown', e => {
+    const overlay = document.getElementById('gameOverlay');
+    const qPanel  = document.getElementById('inGameQuestionPanel');
+    if (overlay.style.display === 'flex' && qPanel.style.display !== 'block') {
+        if (['Enter', 'ArrowUp', 'ArrowRight', ' '].includes(e.key)) {
+            if (!isJumping && !Swal.isVisible()) { e.preventDefault(); triggerRabbitJump(); }
+        }
+    }
+});
+
+function triggerRabbitJump() {
+    if (!currentGame || currentGameProgress >= currentGame.questions.length) return;
+    isJumping = true; renderGameMap(currentGameProgress);
+    setTimeout(() => { isJumping = false; showInGameQuestion(currentGameProgress); }, 600);
+}
+
+function showInGameQuestion(index) {
+    if (!currentGame) return;
+    const q = currentGame.questions[index];
+    document.getElementById('inGameQTitle').innerText = q.question;
+    const content = document.getElementById('inGameQContent');
+    let html = '';
+    if (q.type === 'mcq') {
+        html = q.options.map((opt, i) => `<button class="btn-game-opt" onclick="checkInGameAnswer(${index},${i},${q.correctAnswer},${q.points})">${opt}</button>`).join('');
+    } else if (q.type === 'fill') {
+        html = `<input type="text" id="inGameFillAns" placeholder="Gõ đáp án..." style="padding:20px;font-size:1.5rem;text-align:center;border-radius:20px;border:4px solid var(--blue-dark);width:100%;margin-bottom:20px;color:var(--text-dark);font-weight:900;background:var(--white)">
+            <button class="btn-learn" style="width:100%;justify-content:center;font-size:1.4rem;padding:20px" onclick="checkInGameFill(${index},'${(q.answers || []).join('|')}',${q.points})">Xác nhận</button>`;
+    } else if (q.type === 'speak') {
+        html = `<div style="font-size:3rem;margin-bottom:25px;color:var(--orange-dark);font-weight:900">${q.word}</div>
+            <button class="btn-learn" style="width:100%;justify-content:center;font-size:1.4rem;padding:20px;background:var(--orange-dark)!important;border-color:#FF948C!important;box-shadow:0 5px 0 #E87A72!important" onclick="startInGameRecording('${q.word}',${index},${q.points})"><i class="fas fa-microphone"></i> Đọc Thần Chú</button>
+            <div id="inGameSpeakStatus" style="font-size:1.3rem;margin-top:15px;font-weight:900"></div>`;
+    }
+    content.innerHTML = html;
+    document.getElementById('inGameQuestionPanel').style.display = 'block';
+    if (q.type === 'fill') setTimeout(() => document.getElementById('inGameFillAns')?.focus(), 100);
+}
+
+function checkInGameAnswer(index, selected, correct, points) {
+    document.getElementById('inGameQuestionPanel').style.display = 'none';
+    if (selected == correct) advanceGame(points);
+    else Swal.fire({ title: 'Sai rồi 😢', text: 'Thỏ bị vấp, chọn lại nhé!', icon: 'error', confirmButtonColor: '#4A81E8' }).then(() => showInGameQuestion(index));
+}
+
+function checkInGameFill(index, correctStr, points) {
+    const userAns = document.getElementById('inGameFillAns').value.trim().toLowerCase();
+    const correctArr = correctStr.split('|').map(s => s.toLowerCase().trim());
+    document.getElementById('inGameQuestionPanel').style.display = 'none';
+    if (correctArr.includes(userAns)) advanceGame(points);
+    else Swal.fire({ title: 'Sai rồi 😢', text: 'Kiểm tra lại chính tả nhé!', icon: 'error', confirmButtonColor: '#4A81E8' }).then(() => showInGameQuestion(index));
+}
+
+function startInGameRecording(targetWord, index, points) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const statusDiv = document.getElementById('inGameSpeakStatus');
+    if (!SR) { statusDiv.innerText = 'Trình duyệt không hỗ trợ Mic!'; return; }
+    const recognition = new SR(); recognition.lang = 'en-US'; recognition.interimResults = false;
+    statusDiv.innerHTML = '<span style="color:var(--orange-dark)">Đang thu âm... Đọc to lên nhé!</span>';
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        const mr = new MediaRecorder(stream); let chunks = [];
+        mr.ondataavailable = e => chunks.push(e.data); mr.start(); recognition.start();
+        recognition.onresult = event => {
+            const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
+            const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
+            recognition.stop(); mr.stop(); stream.getTracks().forEach(t => t.stop());
+            mr.onstop = () => {
+                const url = URL.createObjectURL(new Blob(chunks, { type: 'audio/wav' }));
+                const tW = target.split(/\s+/); const sW = transcript.split(/\s+/);
+                let m = 0; tW.forEach(w => { if (sW.includes(w)) m++; });
+                document.getElementById('inGameQuestionPanel').style.display = 'none';
+                if ((m / tW.length) >= 0.5) advanceGame(points);
+                else Swal.fire({
+                    title: 'Chưa đúng 🤔',
+                    html: `<p>Bé đọc: <strong>"${transcript}"</strong></p><audio controls src="${url}" style="width:100%;margin-top:10px"></audio>`,
+                    icon: 'info', showCancelButton: true, confirmButtonText: 'Đọc Lại', cancelButtonText: 'Bỏ qua', confirmButtonColor: '#4A81E8'
+                }).then(r => { if (r.isConfirmed) showInGameQuestion(index); else advanceGame(0); });
+            };
+        };
+        recognition.onerror = () => {
+            mr.stop(); stream.getTracks().forEach(t => t.stop());
+            document.getElementById('inGameQuestionPanel').style.display = 'none';
+            Swal.fire({ title: 'Lỗi Micro', text: 'Không nghe rõ!', icon: 'error', confirmButtonColor: '#4A81E8' }).then(() => showInGameQuestion(index));
+        };
+    }).catch(() => { statusDiv.innerText = 'Cần cấp quyền Micro!'; });
+}
+
+async function advanceGame(points) {
+    currentGameScore += parseInt(points) || 0;
+    currentGameProgress++;
+    if (currentGameProgress >= currentGame.questions.length) {
+        isJumping = true; renderGameMap(currentGame.questions.length);
+        setTimeout(async () => {
+            isJumping = false;
+            if (window._fb_saveGame) await window._fb_saveGame(currentGame.firestoreId, currentGameScore);
+            if (window._fb_notify)  await window._fb_notify(`Con vừa phá đảo Game "${currentGame.title}" và nhận được ${currentGameScore} điểm! 🎮🐰`);
+            Swal.fire({
+                title: 'VỀ ĐÍCH RỒI! 🎉',
+                html: `<h2 style="color:var(--blue-dark);font-family:'Baloo 2';font-size:2rem">Chúc mừng bé!</h2><p style="font-size:1.3rem;margin-top:15px;font-weight:800">Bé nhận được <strong style="color:var(--orange-dark);font-size:2.8rem;display:block;margin-top:10px">${currentGameScore} 🥕</strong></p>`,
+                icon: 'success', showCancelButton: true, confirmButtonText: '🔄 Chơi Lại', cancelButtonText: '🚪 Thoát',
+                confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C', allowOutsideClick: false
+            }).then(r => { if (r.isConfirmed) playGame(currentGame.firestoreId); else closeGame(); });
+        }, 800);
+    } else {
+        Swal.fire({ title: 'Đúng! 🎉', text: `Thỏ ăn được ${points} cà rốt!`, icon: 'success', timer: 1000, showConfirmButton: false })
+            .then(() => renderGameMap(-1));
+    }
 }
 </script>
 </body>
