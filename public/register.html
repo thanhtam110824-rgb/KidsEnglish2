@@ -3,214 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký Học Viên - KidsEnglish</title>
+    <title>Đăng nhập - KidsEnglish</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root {
-            --primary: #4318FF;
-            --secondary: #FF8A4C;
-            --bg-body: #F4F7FE;
-            --white: #FFFFFF;
-            --text-dark: #2B3674;
-            --text-gray: #A3AED0;
-            --border: #E9EDF7;
-        }
-        
+        /* GIỮ NGUYÊN CSS CỦA TÂM */
+        :root { --primary: #4F8CFF; --secondary: #FF9A3C; --success: #10B981; --danger: #FF6B6B; --bg: #F4F7FE; --text-dark: #2B3674; --text-gray: #A3AED0; --white: #FFFFFF; --border: #E2E8F0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
-        
-        body { 
-            background: var(--bg-body); 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-
-        .register-container {
-            background: var(--white);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        .logo {
-            font-family: 'Baloo 2', cursive;
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 5px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: var(--text-gray);
-            font-weight: 700;
-            margin-bottom: 30px;
-            font-size: 1.05rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid var(--border);
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            transition: all 0.3s;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(67, 24, 255, 0.1);
-        }
-
-        .btn-register {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-register:hover {
-            background: #3311DB;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(67, 24, 255, 0.3);
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 25px;
-            font-weight: 700;
-            color: var(--text-gray);
-        }
-
-        .login-link a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 800;
-            transition: 0.3s;
-        }
-
-        .login-link a:hover {
-            color: #e67332;
-        }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1200px; width: 100%; align-items: center; }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; gap: 40px; } .content { display: none; } }
+        .content { color: white; text-align: center; }
+        .content h1 { font-family: 'Baloo 2', cursive; font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .content p { font-size: 1.2rem; opacity: 0.95; line-height: 1.8; margin-bottom: 40px; }
+        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .feature { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .feature-text { font-size: 1rem; line-height: 1.5; }
+        .card { background: var(--white); padding: 50px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; }
+        .logo { font-family: 'Baloo 2', cursive; font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 30px; }
+        .title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; text-align: center; }
+        .subtitle { color: var(--text-gray); font-size: 1rem; text-align: center; margin-bottom: 30px; font-weight: 600; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--text-dark); }
+        input { width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 600; color: var(--text-dark); outline: none; transition: all 0.3s ease; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1); }
+        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s ease; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); }
+        .register-link { text-align: center; margin-top: 25px; color: var(--text-gray); font-weight: 600; }
+        .register-link a { color: var(--primary); font-weight: 800; text-decoration: none; }
     </style>
 </head>
 <body>
-
-    <div class="register-container">
-        <div class="logo">KidsEnglish</div>
-        <div class="subtitle">Đăng ký tài khoản học tập cho bé</div>
-
-        <form id="registerForm">
-            <div class="form-group">
-                <label>Họ và tên của bé</label>
-                <input type="text" id="fullName" placeholder="VD: Nguyễn Minh Anh" required>
+    <div class="container">
+        <div class="content">
+            <h1>🌟 Kids English</h1>
+            <p>Nền tảng học tiếng Anh trực tuyến cho trẻ em</p>
+            <div class="features">
+                <div class="feature"><div class="feature-icon">🎮</div><div class="feature-text">Học qua trò chơi</div></div>
+                <div class="feature"><div class="feature-icon">🎤</div><div class="feature-text">Luyện nói với AI</div></div>
+                <div class="feature"><div class="feature-icon">👨‍🏫</div><div class="feature-text">Giáo viên hỗ trợ</div></div>
+                <div class="feature"><div class="feature-icon">📊</div><div class="feature-text">Theo dõi tiến độ</div></div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label>Email đăng nhập</label>
-                <input type="email" id="email" placeholder="VD: minhanh@kids.vn" required>
+        <div class="card">
+            <div class="logo">Kids<span style="color: #FF9A3C;">English</span></div>
+            <h2 class="title">Đăng nhập</h2>
+            <p class="subtitle">Chào mừng bạn quay trở lại! 👋</p>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label>📧 Email đăng nhập</label>
+                    <input type="email" id="email" placeholder="Nhập email của bạn..." required>
+                </div>
+                <div class="form-group">
+                    <label>🔑 Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
+                </div>
+                <button type="submit" class="btn">Đăng nhập ngay 🚀</button>
+            </form>
+
+            <div class="register-link">
+                Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a>
             </div>
-
-            <div class="form-group">
-                <label>Mật khẩu</label>
-                <input type="password" id="password" placeholder="Nhập mật khẩu" required>
-            </div>
-
-            <div class="form-group">
-                <label>Xác nhận mật khẩu</label>
-                <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
-            </div>
-
-            <button type="submit" class="btn-register">Đăng ký ngay 🚀</button>
-        </form>
-
-        <div class="login-link">
-            Đã có tài khoản? <a href="login.html">Đăng nhập tại đây</a>
         </div>
     </div>
 
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Ngăn trang tự động tải lại khi ấn Submit
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-            const fullName = document.getElementById('fullName').value.trim();
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
+            authDomain: "kidsenglish2.firebaseapp.com",
+            projectId: "kidsenglish2",
+            storageBucket: "kidsenglish2.firebasestorage.app",
+            messagingSenderId: "25492249032",
+            appId: "1:25492249032:web:67502896b604909ee7c8fd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
 
-            // 1. Kiểm tra mật khẩu xác nhận
-            if (password !== confirmPassword) {
-                return Swal.fire('Lỗi', 'Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại!', 'error');
+            Swal.fire({ title: 'Đang xác thực...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+            try {
+                // 1. Đăng nhập qua Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Lấy thông tin vai trò (role) từ Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    // Lưu vào localStorage để các trang sau biết ai đang đăng nhập
+                    localStorage.setItem('user', JSON.stringify({ ...userData, uid: user.uid }));
+
+                    Swal.fire({ icon: 'success', title: 'Thành công!', timer: 1000, showConfirmButton: false }).then(() => {
+                        // Phân luồng trang theo Role
+                        if (userData.role === 'admin') window.location.href = 'admin.html';
+                        else if (userData.role === 'teacher') window.location.href = 'giaovien.html';
+                        else window.location.href = 'hocvien.html';
+                    });
+                } else {
+                    throw new Error("Tài khoản chưa có hồ sơ dữ liệu!");
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Lỗi!', text: 'Email hoặc mật khẩu không đúng!' });
             }
-
-            // 2. Lấy dữ liệu Database từ LocalStorage
-            let db = JSON.parse(localStorage.getItem('ks_db'));
-            if (!db) {
-                db = { users: [], classes: [], quizzes: [], lessons: [], pending_users: [] };
-            }
-            if (!db.pending_users) db.pending_users = [];
-
-            // 3. Kiểm tra xem Email đã tồn tại trong hệ thống chưa
-            const userExists = db.users.some(u => u.email === email);
-            const pendingExists = db.pending_users.some(u => u.email === email);
-
-            if (userExists || pendingExists) {
-                return Swal.fire('Lỗi', 'Email này đã được sử dụng hoặc đang chờ duyệt!', 'warning');
-            }
-
-            // 4. Nếu hợp lệ, đưa vào danh sách Chờ Duyệt (pending_users)
-            db.pending_users.push({
-                id: Date.now(), // Tạo ID ngẫu nhiên bằng thời gian
-                fullName: fullName,
-                email: email,
-                password: password,
-                createdAt: new Date().toISOString()
-            });
-
-            // 5. Lưu lại vào hệ thống
-            localStorage.setItem('ks_db', JSON.stringify(db));
-
-            // 6. Báo thành công và chuyển hướng
-            Swal.fire({
-                title: 'Thành công! 🎉',
-                text: 'Đơn đăng ký của bé đã được gửi. Vui lòng chờ Thầy/Cô duyệt nhé!',
-                icon: 'success',
-                confirmButtonText: 'Quay lại đăng nhập',
-                confirmButtonColor: '#4318FF'
-            }).then(() => {
-                window.location.href.html = 'login.html'; // Chuyển về trang đăng nhập
-            });
         });
     </script>
-
 </body>
 </html>
