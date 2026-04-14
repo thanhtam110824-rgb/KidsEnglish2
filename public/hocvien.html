@@ -912,25 +912,34 @@
      function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
 
      window.onload = () => { loadRealData(); loadChat(); setInterval(() => { loadRealData(); loadChat(); if(document.getElementById('videoPlayerCard').style.display==='block') loadInlineVideoChat();}, 1500); };
-     const user = JSON.parse(localStorage.getItem('user'));
-      if (user && user.role === 'student' && (!user.classId || user.status === 'pending')) {
-     Swal.fire({
-        title: 'Chào mừng con! 🎈',
-        text: 'Con đang ở phòng chờ. Thầy cô đang xếp lớp cho con, con chưa có bài tập đâu nhé. Hãy kiên nhẫn quay lại sau!',
+     // 1. Lấy thông tin bé vừa đăng nhập từ máy
+const currentUser = JSON.parse(localStorage.getItem('user'));
+
+// 2. Nếu là học sinh và đang ở trạng thái Chờ duyệt (pending)
+if (currentUser && currentUser.role === 'student' && currentUser.status === 'pending') {
+    
+    // Hiển thị thông báo "Phòng chờ" siêu đẹp
+    Swal.fire({
+        title: 'Chào mừng con đến với KidsEnglish! 🎈',
+        html: `
+            <div style="text-align: center;">
+                <p style="font-size: 1.2rem; color: #2B3674; font-weight: 700; margin-bottom: 15px;">
+                    Thầy cô đã nhận được đơn đăng ký của con rồi nhé! ✨
+                </p>
+                <div style="background: #F0F4FF; padding: 15px; border-radius: 15px; color: #4F8CFF; font-weight: 600;">
+                    🏠 Con đang ở "Phòng chờ". <br>
+                    Thầy cô đang xem hồ sơ và xếp lớp cho con, <br>
+                    con vui lòng quay lại sau một chút nhé!
+                </div>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJwamZ3Znd4Znd4Znd4Znd4Znd4Znd4Znd4Znd4Znd4Znd4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxx6659X7DG/giphy.gif" 
+                     style="width: 150px; margin-top: 15px;" alt="loading">
+            </div>
+        `,
         icon: 'info',
-        allowOutsideClick: false, // Bắt buộc chặn, không cho bấm ra ngoài bảng thông báo
-        showConfirmButton: false  // Ẩn luôn nút OK để bé không tắt được bảng này đi
+        allowOutsideClick: false, 
+        showConfirmButton: false, 
+        footer: '<a href="login.html" style="color: #A3AED0; text-decoration: none; font-weight: 700;">Đăng xuất để vào tài khoản khác</a>'
     });
-     const userWait = JSON.parse(localStorage.getItem('user'));
-        if (userWait && userWait.role === 'student' && (!userWait.classId || userWait.status === 'pending')) {
-            Swal.fire({
-                title: 'Chào mừng con! 🎈',
-                text: 'Con đang ở phòng chờ. Thầy cô đang xếp lớp cho con, con chưa có bài tập đâu nhé. Hãy kiên nhẫn quay lại sau!',
-                icon: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false
-            });
-        }
 }
 </script>
 </body>
