@@ -794,56 +794,25 @@
     });
 
     window.viewUser = async (id) => {
-        const userDoc = await getDoc(doc(db, "users", id));
-        if (userDoc.exists()) {
-            const u = userDoc.data();
-            Swal.fire({
-                title: 'Hồ sơ chi tiết',
-                html: `<div style="text-align: left;">
-                    <p><b>Họ tên:</b> ${u.fullName}</p>
-                    <p><b>Email:</b> ${u.email}</p>
-                    <p><b>Lớp:</b> ${u.classId || 'Chưa có'}</p>
-                    <p><b>Điểm:</b> ${u.score || 0}</p>
-                    <p><b>Trạng thái:</b> ${u.status === 'active' ? 'Hoạt động' : 'Đang chờ'}</p>
-                </div>`,
-                confirmButtonText: 'Đóng'
-            });
-        }
-    };
-
-    window.duyetHocSinh = async (id, name) => {
-        const { value: lop } = await Swal.fire({ title: `Xếp lớp cho ${name}`, input: 'text', placeholder: 'Tên lớp' });
-        if (lop) {
-            await updateDoc(doc(db, "users", id), { status: 'active', classId: lop, role: 'student' });
-            Swal.fire('Thành công', '', 'success');
-        }
-    };
-
-    window.deleteItem = async (col, id) => { if (confirm("Xóa mục này?")) await deleteDoc(doc(db, col, id)); };
-
-    window.addUser = async (role) => {
-        const { value: f } = await Swal.fire({
-            title: 'Thêm mới',
-            html: `<input id="n" class="swal2-input" placeholder="Tên"><input id="e" class="swal2-input" placeholder="Email"><input id="c" class="swal2-input" placeholder="Lớp">`,
-            preConfirm: () => ({ fullName: document.getElementById('n').value, email: document.getElementById('e').value, classId: document.getElementById('c').value })
+    const userDoc = await getDoc(doc(db, "users", id));
+    if (userDoc.exists()) {
+        const u = userDoc.data();
+        Swal.fire({
+            title: '🔑 Thông tin Đăng nhập',
+            html: `
+                <div style="text-align: left; background: #f4f7f6; padding: 15px; border-radius: 10px; line-height: 2;">
+                    <p style="border-bottom: 1px solid #ddd;"><b>Tên đăng nhập:</b> <span style="color: #2d3748;">${u.email}</span></p>
+                    <p style="border-bottom: 1px solid #ddd;"><b>Mật khẩu:</b> <span style="color: #e53e3e;">${u.password || '******'}</span></p>
+                    <p style="border-bottom: 1px solid #ddd;"><b>Họ tên:</b> ${u.fullName}</p>
+                    <p><b>Lớp:</b> ${u.classId || 'Chưa xếp'}</p>
+                    <p><b>Ngày tham gia:</b> ${u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : 'N/A'}</p>
+                </div>
+            `,
+            confirmButtonText: 'Đóng',
+            confirmButtonColor: '#4A90E2'
         });
-        if (f && f.fullName) {
-            await addDoc(collection(db, "users"), { ...f, role, status: 'active', score: 0, createdAt: new Date().toISOString() });
-            Swal.fire('Xong', '', 'success');
-        }
-    };
-
-    window.addClass = async () => {
-        const { value: c } = await Swal.fire({
-            title: 'Tạo Lớp',
-            html: `<input id="cn" class="swal2-input" placeholder="Tên lớp"><input id="ct" class="swal2-input" placeholder="GV">`,
-            preConfirm: () => ({ name: document.getElementById('cn').value, teacher: document.getElementById('ct').value })
-        });
-        if (c && c.name) {
-            await addDoc(collection(db, "classes"), { ...c, studentsCount: 0, status: 'active' });
-            Swal.fire('Xong', '', 'success');
-        }
-    };
+    }
+};
 </script>
 </body>
 </html>
