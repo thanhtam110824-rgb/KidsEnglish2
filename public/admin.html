@@ -793,44 +793,5 @@
         }).join('') || '<tr><td colspan="5">Trống</td></tr>';
     });
 </script>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, where, doc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Cấu hình Firebase của Tâm
-    const firebaseConfig = { /* ... API Key của bạn ... */ };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // CHỈ QUẢN LÝ TÀI KHOẢN: Đổ dữ liệu vào bảng cũ của Tâm
-    onSnapshot(collection(db, "users"), (snap) => {
-        const studentTable = document.getElementById('studentTable');
-        if(!studentTable) return;
-
-        studentTable.innerHTML = snap.docs.map(d => {
-            const u = d.data();
-            if(u.role !== 'student') return ''; // Chỉ hiện học sinh
-            return `
-                <tr>
-                    <td>${u.fullName}</td>
-                    <td>${u.email}</td>
-                    <td>${u.score || 0}</td> <td>
-                        <button class="btn-info" onclick="viewAccount('${d.id}')">👁️ Xem</button>
-                        <button class="btn-primary" onclick="window.location.href='mailto:${u.email}'">📧 Email</button>
-                        <button class="btn-danger" onclick="deleteUser('${d.id}')">🗑️ Xóa</button>
-                    </td>
-                </tr>`;
-        }).join('');
-    });
-
-    // HÀM CHỈ GỌI DỮ LIỆU (Không làm thay đổi giao diện gốc)
-    window.viewAccount = async (id) => {
-        const docSnap = await getDoc(doc(db, "users", id));
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            alert(`Tài khoản: ${data.email}\nMật khẩu: ${data.password || '123456'}`);
-        }
-    };
-</script>
 </body>
 </html>
