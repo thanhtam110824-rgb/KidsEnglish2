@@ -3,914 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Góc Học Tập - KidsEnglish</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Đăng nhập - KidsEnglish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
-            --blue: #70A1FF; --blue-light: #EAF2FF; --blue-dark: #4A81E8;
-            --orange: #FFB7B2; --orange-light: #FFF0F0; --orange-dark: #FF948C;
-            --green: #A2E1DB; --green-light: #F0FBF8; --green-dark: #6FC2B8;
-            --yellow: #FDFD96; --yellow-light: #FFFFE0; --yellow-dark: #E5E55A;
-            --gold: #FFD700;
-            --game: #C5A3FF; --game-light: #F5EFFF; --game-dark: #A378ED;
-            
-            /* TÔNG MÀU MỚI: NỀN XANH NGỌC NHẠT - CHỮ RÕ NÉT */
-            --bg: #E0F7FA; /* Nền xanh ngọc nhạt */
-            --text-dark: #0F172A; /* Chữ xanh đen cực kỳ rõ nét */
-            --text-gray: #475569; /* Chữ xám đậm dễ đọc */
-            --white: #FFFFFF; 
-            --border: #BCEBEB; /* Viền xanh ngọc đậm hơn một chút */
-            
-            --shadow-sm: 0 4px 10px rgba(13, 148, 136, 0.1);
-            --shadow-md: 0 8px 25px rgba(13, 148, 136, 0.15);
-            --shadow-btn: 0 6px 0 rgba(37, 99, 235, 1);
+            --primary: #4F8CFF;
+            --secondary: #FF9A3C;
+            --success: #10B981;
+            --danger: #FF6B6B;
+            --bg: #F4F7FE;
+            --text-dark: #2B3674;
+            --text-gray: #A3AED0;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
         }
 
-        body.dark-theme {
-            --bg: #1A1B26; --white: #24283B; --text-dark: #C0CAF5; --text-gray: #A9B1D6; --border: #414868;
-            --blue-light: #292E42; --orange-light: #292E42; --green-light: #292E42; --game-light: #292E42;
-            --shadow-sm: 0 4px 10px rgba(0,0,0,0.3); --shadow-md: 0 8px 25px rgba(0,0,0,0.4);
-            --shadow-btn: 0 6px 0 rgba(0,0,0,0.5);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; font-size: 16px; }
-        body { display: flex; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text-dark); transition: background 0.4s, color 0.4s; }
-        
-        .sidebar { width: 280px; background: var(--white); padding: 30px 20px; display: flex; flex-direction: column; box-shadow: var(--shadow-md); border-radius: 0 45px 45px 0; overflow-y: auto; z-index: 100; transition: background 0.4s;}
-        
-        .brand-logo { font-family: 'Baloo 2', cursive; font-size: 3.5rem; font-weight: 900; text-align: center; margin-bottom: 30px; line-height: 1.1; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(3px 3px 0px rgba(74, 129, 232, 0.2)); white-space: nowrap; display:flex; justify-content:center; align-items:center;}
-        .brand-logo span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 3.5rem; }
-        
-        button, .btn-learn, .logout-btn {
-            background: #2563eb !important; color: var(--gold) !important; border: 2px solid #1e40af !important; transition: 0.3s ease; box-shadow: 0 6px 0 #1e3a8a !important; font-weight: 900; border-radius: 20px;
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        button:hover, .btn-learn:hover, .logout-btn:hover { background: #1d4ed8 !important; transform: translateY(2px) !important; box-shadow: 0 4px 0 #1e3a8a !important; filter: brightness(1.1); }
-        button:active, .btn-learn:active, .logout-btn:active { transform: translateY(6px) !important; box-shadow: 0 0 0 transparent !important; }
 
-        .nav-item { padding: 15px 20px; margin-bottom: 12px; border-radius: 20px; cursor: pointer; font-size: 1.15rem; font-weight: 800; color: var(--text-gray); transition: 0.3s; display: flex; align-items: center; gap: 15px; border: none; background: transparent !important; width: 100%; text-align: left; box-shadow: none !important;}
-        .nav-item:hover { color: #2563eb !important; background: #DBF4F7 !important; transform: translateX(8px) !important; }
-        .nav-item.active { background: #2563eb !important; color: var(--gold) !important; box-shadow: var(--shadow-md) !important; transform: scale(1.02) !important; }
-        
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .header { padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        .page-title { font-family: 'Baloo 2', cursive; font-size: 2.8rem; color: var(--text-dark); margin-bottom:0; }
-        .content { padding: 10px 40px 40px 40px; overflow-y: auto; flex: 1; scroll-behavior: smooth; }
-        
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: bounceIn 0.5s ease; }
-        @keyframes bounceIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        
-        .card { background: var(--white); border-radius: 35px; padding: 35px; margin-bottom: 30px; box-shadow: var(--shadow-md); border: 2px solid var(--border); transition: 0.4s; }
-        .card-title { font-family: 'Baloo 2', cursive; font-size: 1.8rem; color: var(--text-dark); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-        
-        .grade-box { background: #2563eb; border-radius: 35px; padding: 30px; text-align: center; margin-bottom: 30px; border: 4px dashed var(--gold); box-shadow: var(--shadow-sm); }
-        .grade-score { font-family: 'Baloo 2', cursive; font-size: 5rem; font-weight: 900; color: var(--gold); margin: 5px 0; text-shadow: 3px 3px 0px rgba(0,0,0,0.3); line-height: 1; }
-        .grade-comment { font-size: 1.2rem; font-weight: 800; color: #2563eb; background: var(--gold); padding: 12px 25px; border-radius: 25px; display: inline-block; box-shadow: var(--shadow-sm); margin-top: 10px; border: 2px solid var(--border); }
-        
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 25px; background: var(--bg); border-radius: 25px; margin-bottom: 12px; font-weight: 800; font-size: 1.1rem; border: 2px solid transparent;}
-        .leaderboard-item.me { background: #DBF4F7; border-color: #2563eb; color: #2563eb;}
-
-        .btn-learn { padding: 14px 25px; border-radius: 20px; font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap:10px; text-transform: uppercase;}
-        
-        .btn-game-opt { display: block; width: 100%; margin-bottom: 18px; font-size: 1.3rem; padding: 18px 25px; background: #2563eb !important; color: var(--gold) !important; border: 3px solid #1e40af !important; border-radius: 20px; box-shadow: 0 6px 0 #1e40af !important; font-weight: 900; transition: 0.15s; cursor: pointer; text-align: center; }
-        .btn-game-opt:hover { filter: brightness(1.2); transform: translateY(2px) !important; box-shadow: 0 4px 0 #1e40af !important; }
-        .btn-game-opt:active { transform: translateY(6px) !important; box-shadow: 0 0 0 transparent !important; }
-
-        .real-item { background: var(--white); border-radius: 30px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; box-shadow: var(--shadow-sm); }
-        
-        .chat-container { background: #f0f2f5; padding: 20px; border-radius: 20px; height: 350px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border); }
-        .message { padding: 10px 15px; border-radius: 18px; max-width: 75%; word-break: break-word; font-family: sans-serif;}
-        .message.student { background: #0084ff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .message.teacher { background: #e4e6eb; color: black; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .chat-sender { font-size: 0.75rem; font-weight: bold; opacity: 0.7; margin-bottom: 3px; display: block; }
-        .chat-text { font-size: 1rem; font-weight: 600; line-height: 1.4; }
-        
-        .input-group input { flex: 1; padding: 15px 20px; border: 2px solid var(--border); border-radius: 20px; font-weight: 700; outline: none; font-size:1rem; background: var(--white); transition: 0.3s; color: var(--text-dark);}
-        .input-group input:focus { border-color: #2563eb; }
-
-        .theme-btn { background: var(--yellow-light) !important; border: 3px solid var(--yellow-dark) !important; color: var(--text-dark) !important; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 0 var(--yellow-dark) !important;}
-        .theme-btn:active { transform: translateY(4px) !important; box-shadow: 0 0 0 transparent !important; }
-        body.dark-theme .theme-btn { background: #2563eb !important; border-color: var(--blue-dark) !important; color: var(--gold) !important; box-shadow: 0 4px 0 var(--blue-dark) !important;}
-
-        .progress-bar { width: 100%; height: 35px; background: var(--white); border-radius: 20px; overflow: hidden; margin: 15px 0; border: 3px solid var(--green-dark);}
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark) 0%, #047857 100%); transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: rgb(237, 214, 214); font-weight: 900; font-size: 1.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);}
-
-        #gameOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; transition: background 0.5s; }
-        .game-sky { flex: 1; position: relative; overflow: hidden; background: linear-gradient(to bottom, #A0C4FF, #E2F0FF); }
-        body.dark-theme .game-sky { background: linear-gradient(to bottom, #1A1B26, #24283B); }
-        .game-ground { height: 120px; background: #B5EAD7; border-top: 15px solid #82C2AC; position: relative; z-index: 5; }
-        body.dark-theme .game-ground { background: #2A3A2A; border-top-color: #1A2A1A; }
-        
-        .rabbit-character { position: absolute; bottom: 0px; font-size: 5rem; transition: left 0.4s linear; z-index: 10; transform: scaleX(-1); filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
-        .rabbit-jump { animation: rabbitJump 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        @keyframes rabbitJump { 0% { bottom: 0px; transform: scaleX(-1); } 50% { bottom: 220px; transform: scaleX(-1); } 100% { bottom: 0px; transform: scaleX(-1); } }
-        
-        .obstacle-item { position: absolute; bottom: 0px; font-size: 5.5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); z-index: 8;}
-        .game-instruction { position: absolute; top: 8%; width: 100%; text-align: center; font-family: 'Baloo 2'; font-size: 2.2rem; color: white; text-shadow: 2px 2px 0px #4A81E8, -2px -2px 0 #4A81E8, 2px -2px 0 #4A81E8, -2px 2px 0 #4A81E8; animation: pulse 1.5s infinite; z-index: 10;}
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        #inGameQuestionPanel { display: none; position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 85%; max-width: 700px; background: var(--bg); padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); z-index: 100; text-align: center; border: 6px solid #2563eb; }
-        
-        body.dark-theme .swal2-popup { background: var(--white); color: var(--text-dark); }
-        body.dark-theme .swal2-title { color: var(--blue-dark); }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 1.05rem;}
-        th { background: var(--white); font-weight: 900; border-bottom: 2px solid var(--border); color: #2563eb;}
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; flex-direction: row; padding: 0; border-radius: 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); justify-content: space-around; align-items: center; z-index: 1000; }
-            .brand-logo { display: none; }
-            .nav-item { width: auto; margin: 0; padding: 5px; flex-direction: column; gap: 2px; font-size: 0.75rem; justify-content: center; }
-            .nav-item span:first-child { font-size: 1.4rem; margin: 0; }
-            .nav-text { display: none; }
-            .logout-btn { width: auto; padding: 5px; margin: 0; flex-direction: column; font-size: 0.75rem; background: transparent !important; color: #FF6B6B !important; box-shadow: none !important; border:none !important; text-shadow:none !important;}
-            .logout-btn span:first-child { font-size: 1.4rem; }
-            .logout-text { display: none; }
-            .main-wrapper { padding-bottom: 75px; }
-            #tab-home > div { grid-template-columns: 1fr; }
-            .header { flex-direction: column; gap: 15px; align-items: flex-start; padding: 20px; }
-            .mobile-header-top { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-            .logo-mobile { display: flex; font-family: 'Baloo 2', cursive; font-size: 2.5rem; font-weight: 900; text-align: center; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(2px 2px 0px rgba(74, 129, 232, 0.2)); line-height: 1; white-space: nowrap;}
-            .logo-mobile span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 2.5rem;}
-            .content { padding: 10px 20px 20px 20px; }
-            .page-title { display: none; }
-            .real-item { flex-direction: column; text-align: center; gap: 15px; }
-            .real-item > div { width: 100%; }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
         }
-        @media (min-width: 769px) { .mobile-header-top { display: none; } }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .content { display: none; }
+        }
+
+        .content {
+            color: white;
+            text-align: center;
+        }
+
+        .content h1 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 100%;
+        }
+
+        .logo {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .error-msg {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #DC2626;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .register-link a:hover {
+            color: #3311DB;
+        }
     </style>
 </head>
 <body>
-
-<aside class="sidebar">
-    <div class="brand-logo">Kids<span>English</span></div>
-    <button class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span> <span class="nav-text">Góc Của Bé</span></button>
-    <button class="nav-item" onclick="switchTab('lessons', this)"><span>📺</span> <span class="nav-text">Bài Học Video</span></button>
-    <button class="nav-item" onclick="switchTab('game', this)"><span>🎮</span> <span class="nav-text">Game Vui Nhộn</span></button>
-    <button class="nav-item" onclick="switchTab('quiz', this)"><span>📝</span> <span class="nav-text">Bài Tập Lớp</span></button>
-    <button class="nav-item" onclick="switchTab('speaking', this)"><span>🎤</span> <span class="nav-text">Luyện Nói AI</span></button>
-    <button class="nav-item" onclick="switchTab('progress', this)"><span>📊</span> <span class="nav-text">Tiến Độ Học</span></button>
-    <button class="nav-item" onclick="switchTab('chat-teacher', this)"><span>💬</span> <span class="nav-text">Trò Chuyện Cô</span></button>
-    <div style="flex:1"></div>
-    <button class="btn-learn logout-btn" style="width:100%; justify-content:center; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important;" onclick="logout()"><span>👋</span> <span class="logout-text">Thoát Ứng Dụng</span></button>
-</aside>
-
-<div class="main-wrapper">
-    <div class="header">
-        <div class="mobile-header-top">
-            <div class="logo-mobile">Kids<span>English</span></div>
-            <div style="display:flex; align-items:center; gap: 10px;">
-                <button class="theme-btn" onclick="toggleTheme()" id="themeIconBtn"><i class="fas fa-moon"></i></button>
-                <div style="width:40px; height:40px; border-radius:50%; background:var(--orange-dark); color:var(--white); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; border:2px solid var(--white); box-shadow: var(--shadow-sm);" id="stAvatarTop">B</div>
-            </div>
-        </div>
-        <h1 class="page-title" id="welcomeText">Chào bé! 👋</h1>
-        <div style="display:flex; align-items:center; gap: 15px;" class="nav-text">
-            <button class="theme-btn" onclick="toggleTheme()" id="themeIconBtnDesktop"><i class="fas fa-moon"></i></button>
-            <div style="display:flex; align-items:center; gap: 10px; background: var(--white); padding: 8px 20px; border-radius: 30px; box-shadow: var(--shadow-sm); border: 2px solid var(--border);">
-                <strong style="color: #2563eb; font-size: 1.1rem; font-weight:900;" id="stNameTop">Học Viên</strong>
-                <div style="width:40px; height:40px; border-radius:50%; background:var(--orange-dark); color:var(--white); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.4rem; border:2px solid var(--white); box-shadow: var(--shadow-sm);" id="stAvatarTopDesktop">B</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="content">
-        <div id="tab-home" class="tab-pane active">
-            <div style="display: grid; grid-template-columns: 1fr 350px; gap: 25px;" id="homeGrid">
-                <div>
-                    <div class="grade-box">
-                        <h2 style="font-family: 'Baloo 2'; font-size: 2.2rem; color: var(--gold); text-shadow: 2px 2px 0 rgba(0,0,0,0.3); margin-bottom: 10px;">🌟 Điểm Cà Rốt 🌟</h2>
-                        <div class="grade-score" id="myScore">--</div>
-                        <div class="grade-comment" id="myComment">Cô giáo chưa ghi chú thêm...</div>
-                    </div>
-                    
-                    <div class="card" style="padding:25px; border-color: var(--green-dark); border-width: 3px;">
-                        <div style="font-size: 1.3rem; font-weight: 900; color: var(--blue-dark); text-align: center; margin-bottom:10px;">📈 Mức Độ Hoàn Thành</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFillHome" style="width: 0%;">Bé đạt <span id="progressTextHome" style="margin-left: 5px;">0%</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" style="padding:25px; border-color: var(--blue-light); border-width: 4px;">
-                    <div class="card-title" style="font-size:1.5rem; justify-content:center; color: var(--blue-dark);">🏆 Bảng Vinh Danh</div>
-                    <div id="leaderboardList"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-lessons" class="tab-pane">
-            <div class="card" id="videoListCard">
-                <div class="card-title" style="color: var(--blue-dark);">📺 Bài Học Video</div>
-                <div id="realLessonsList"></div>
-            </div>
-
-            <div class="card" id="videoPlayerCard" style="display:none; padding: 25px; max-width: 1000px; margin: 0 auto;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h2 id="inlineVideoTitle" style="color: var(--blue-dark); font-size: 1.5rem; margin:0; font-weight: 900;">Tiêu đề video</h2>
-                    <button class="btn-learn" style="background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important;" onclick="closeInlineVideo()"><i class="fas fa-arrow-left"></i> Quay lại</button>
-                </div>
-                
-                <div style="width: 100%; aspect-ratio: 16/9; background: black; border-radius: 15px; overflow: hidden; box-shadow: var(--shadow-md); border: 3px solid var(--blue-dark);">
-                    <iframe id="inlineVideoIframe" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                    <div id="inlineVideoTimer" style="font-size: 1.1rem; font-weight: 800; color: var(--orange-dark); background: var(--white); padding: 8px 20px; border-radius: 15px; border: 2px dashed var(--orange-dark);">⏳ 00:00 / 20:00</div>
-                    <button id="inlineBtnSubmit" class="btn-learn" style="background: var(--text-gray) !important; box-shadow: 0 5px 0 #475569 !important; border-color:#475569!important; pointer-events: none;" onclick="submitInlineVideo()">🔒 Đang xem...</button>
-                </div>
-                
-                <hr style="border:1px solid var(--border); margin: 25px 0;">
-                
-                <h3 style="color: var(--blue-dark); margin-bottom: 15px; font-size: 1.2rem; font-weight: 900;"><i class="fas fa-comments"></i> Thảo luận bài học</h3>
-                <div id="inlineVideoChatBox" class="chat-container" style="height: 200px; background: var(--white); border-radius: 15px;"></div>
-                <div class="input-group">
-                    <input type="text" id="inlineVideoChatInput" placeholder="Viết bình luận của bé..." onkeypress="if(event.key==='Enter') sendInlineVideoChat()">
-                    <button class="btn-learn" onclick="sendInlineVideoChat()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-game" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color:var(--game-dark)">🎮 Trò Chơi Thử Thách</div>
-                <div id="realGameList"></div>
-            </div>
-        </div>
-
-        <div id="tab-quiz" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color: var(--green-dark);">📝 Bài Tập Cô Giao</div>
-                <div id="realAssignmentsList"></div>
-            </div>
-        </div>
-
-        <div id="tab-speaking" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color: var(--orange-dark);">🎤 Luyện Phát Âm Cùng AI</div>
-                <div id="realSpeakingList"></div>
-            </div>
-        </div>
-
-        <div id="tab-progress" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color: var(--blue-dark);">📊 Báo Cáo Tiến Độ Khóa Học</div>
-                <div style="background: var(--white); border-radius: 25px; padding: 30px; margin-bottom: 30px; border: 2px dashed var(--blue-dark); box-shadow: var(--shadow-sm);">
-                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--blue-dark); margin-bottom: 10px; text-align: center;">Mức Độ Hoàn Thành</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFillTab" style="width: 0%;">Bé đạt <span id="progressTextTab" style="margin-left: 5px;">0%</span></div>
-                    </div>
-                    <div style="text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--text-gray); margin-top: 15px;">
-                        Bé đã hoàn thành <span id="completedCountTab" style="color: var(--blue-dark); font-weight:900; font-size: 1.4rem;">0</span> / <span id="totalCountTab">0</span> nhiệm vụ 
-                    </div>
-                    
-                    <button class="btn-learn" style="width:100%; justify-content:center; margin-top: 25px; font-size: 1.1rem; padding: 12px; background: var(--green-dark)!important; border-color:#047857!important; box-shadow: 0 5px 0 #047857!important;" onclick="sendProgressToTeacher()">
-                        <i class="fas fa-paper-plane"></i> Gửi Báo Cáo Cho Cô Giáo
-                    </button>
-                </div>
-                
-                <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
-                    <thead><tr><th style="padding:15px; background:var(--white); border-radius:15px 0 0 15px;">Tên Nhiệm Vụ</th><th style="padding:15px; background:var(--white);">Loại</th><th style="padding:15px; background:var(--white); border-radius:0 15px 15px 0;">Trạng Thái</th></tr></thead>
-                    <tbody id="progressTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="tab-chat-teacher" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color: var(--blue-dark);">💬 Kênh Trò Chuyện</div>
-                <div style="margin-bottom: 20px;">
-                    <select id="chatTargetSelect" onchange="forceLoadChat()" style="width: 100%; padding: 15px 25px; border: 2px solid var(--border); border-radius: 20px; font-weight: 800; color:var(--blue-dark); outline:none; cursor:pointer; font-size:1.1rem; background: var(--white);">
-                        <option value="TEACHER">👩‍🏫 Nhắn riêng cho Cô Giáo</option>
-                        <option value="GROUP_CHAT">🏫 Phòng Chat Chung Lớp</option>
-                    </select>
-                </div>
-                <div id="teacherChatBox" class="chat-container"></div>
-                <div class="input-group">
-                    <input type="text" id="teacherChatInput" placeholder="Gõ tin nhắn..." onkeypress="if(event.key === 'Enter') sendToTeacher()">
-                    <button class="btn-learn" onclick="sendToTeacher()"><i class="fas fa-paper-plane"></i> Gửi</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="gameOverlay">
-    <div style="padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: absolute; top:0; left:0; width:100%; z-index: 100;">
-        <span style="color:white; font-family:'Baloo 2'; font-size:2rem; font-weight:900; text-shadow: 2px 2px 0 var(--blue-dark);">🐰 THỎ VỀ ĐÍCH</span>
-        <button class="btn-learn" style="background:var(--orange-dark)!important; box-shadow:0 5px 0 #C2410C!important; border-color:#C2410C!important; padding: 8px 20px;" onclick="closeGame()"><i class="fas fa-times"></i> Dừng Chơi</button>
-    </div>
-    
-    <div class="game-sky" id="gameTrack">
-        <div class="game-instruction" id="gameInstruction">Ấn ENTER hoặc MŨI TÊN (⬆️, ➡️) để nhảy!</div>
-        
-        <div id="inGameQuestionPanel">
-            <h2 id="inGameQTitle" style="font-size: 1.5rem; color: var(--blue-dark); margin-bottom: 20px; line-height:1.4;"></h2>
-            <div id="inGameQContent" style="display: flex; flex-direction: column; gap: 12px;"></div>
-        </div>
-        <div id="gameTrackContent" style="position: absolute; bottom: 0; left: 0; height: 100%; transition: transform 0.5s ease-in-out;"></div>
-    </div>
-    <div class="game-ground"></div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // ===== INIT & THEME =====
-    function toggleTheme() {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        localStorage.setItem('kids_theme', isDark ? 'dark' : 'light');
-        const icon = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        document.getElementById('themeIconBtn').innerHTML = icon;
-        if(document.getElementById('themeIconBtnDesktop')) document.getElementById('themeIconBtnDesktop').innerHTML = icon;
-    }
-    if (localStorage.getItem('kids_theme') === 'dark') { document.body.classList.add('dark-theme'); document.getElementById('themeIconBtn').innerHTML = '<i class="fas fa-sun"></i>'; if(document.getElementById('themeIconBtnDesktop')) document.getElementById('themeIconBtnDesktop').innerHTML = '<i class="fas fa-sun"></i>'; }
-
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('ks_user'));
-    if (!user || user.role !== 'student') window.location.href = 'login.html';
-
-    const uid = user.id || user.email || 'student';
-
-    const stName = user.fullName || user.name || 'Học Viên';
-    document.getElementById('welcomeText').innerText = `Góc của bé ${stName.split(' ').pop()}! 👋`;
-    document.getElementById('stNameTop').innerText = stName;
-    document.getElementById('stAvatarTop').innerText = stName.charAt(0).toUpperCase();
-    if(document.getElementById('stAvatarTopDesktop')) document.getElementById('stAvatarTopDesktop').innerText = stName.charAt(0).toUpperCase();
-
-    let currentDataHash = ""; let currentChatHash = "";
-
-    function switchTab(id, el) {
-        if(id !== 'lessons') closeInlineVideo(); 
-        document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-' + id).classList.add('active'); el.classList.add('active');
-    }
-
-    function getMyTeacherEmail() {
-        const db = JSON.parse(localStorage.getItem('ks_db')) || { users: [], classes: [] };
-        const classInfo = db.classes.find(c => c.name === user.class);
-        if (classInfo && classInfo.teacherName) {
-            const teacher = db.users.find(u => u.role === 'teacher' && u.fullName === classInfo.teacherName);
-            if (teacher) return teacher.email;
-        }
-        return null; 
-    }
-
-    // Gửi tự động vào Chat Nhóm nếu không có Cô giáo
-    function autoNotifyTeacher(msg) {
-        const teacherEmail = getMyTeacherEmail() || 'GROUP_CHAT'; 
-        const chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
-        chats.push({ senderEmail: user.email || 'student', receiverEmail: teacherEmail, message: msg, timestamp: new Date() });
-        localStorage.setItem('ks_chats', JSON.stringify(chats));
-        forceLoadChat();
-    }
-
-    function loadRealData() {
-        const rawDB = localStorage.getItem('ks_db');
-        if (!rawDB || rawDB === currentDataHash) return;
-        currentDataHash = rawDB;
-
-        const db = JSON.parse(rawDB);
-        const me = db.users.find(u => (u.id == user.id || u.email === user.email)) || {};
-        
-        document.getElementById('myScore').innerText = me.score || '0';
-        document.getElementById('myComment').innerText = me.comment || 'Cô giáo chưa ghi chú thêm...';
-
-        let classStudents = db.users.filter(u => u.role === 'student' && u.class === me.class);
-        classStudents.sort((a,b) => (b.score||0) - (a.score||0));
-        document.getElementById('leaderboardList').innerHTML = classStudents.slice(0, 5).map((st, i) => {
-            let medal = i===0 ? '🥇' : (i===1 ? '🥈' : (i===2 ? '🥉' : '⭐️'));
-            return `<div class="leaderboard-item ${st.id === me.id ? 'me' : ''}">
-                <div style="display:flex; align-items:center; gap:15px;"><span style="font-size:1.6rem;">${medal}</span><span>${st.fullName.split(' ').pop()}</span></div>
-                <span style="color:var(--blue-dark); font-size:1.2rem;">${st.score||0}đ</span></div>`;
-        }).join('') || '<div style="text-align:center; color:gray;">Chưa có dữ liệu lớp</div>';
-
-        const speakHistory = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
-        const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
-        const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}'); 
-
-        // RENDER BÀI GIẢNG
-        document.getElementById('realLessonsList').innerHTML = (db.lessons||[]).length ? db.lessons.map(l => {
-            const isVidDone = videoHistory[uid + '_' + l.id] ? `<span style="color:var(--green-dark); font-weight:900; margin-left: 10px; background:var(--green-light); padding:5px 12px; border-radius:15px; font-size:0.9rem;">✅ Đã xem xong</span>` : '';
-            return `<div class="real-item">
-                <div><strong style="font-size:1.2rem; color:var(--blue-dark);">${l.title}</strong> ${isVidDone}</div>
-                <button class="btn-learn" onclick="openInlineVideo(${l.id}, '${l.videoUrl}', '${l.title}')"><i class="fas fa-play"></i> Xem</button></div>`;
-        }).join('') : '<p style="text-align:center; font-weight:800;">📭 Chưa có bài giảng.</p>';
-
-        // RENDER GAME
-        const games = db.quizzes.filter(q => q.type === 'game');
-        document.getElementById('realGameList').innerHTML = games.length ? games.map(g => {
-            const isDone = quizHistory[uid + '_' + g.id] !== undefined ? `<span style="color:var(--green-dark); font-weight:900; margin-left: 10px; background:var(--green-light); padding:5px 12px; border-radius:15px; font-size:0.9rem;">✅ Đã Phá Đảo</span>` : '';
-            return `<div class="real-item" style="border-color:var(--game-dark); border-width:3px; flex-direction:column; align-items:flex-start; gap:15px;">
-                <div style="font-size:1.4rem; font-weight:900; color:var(--game-dark);">🎮 ${g.title} ${isDone}</div>
-                <button class="btn-learn" style="background:var(--game-dark)!important; border-color:#7E22CE!important; box-shadow:0 5px 0 #7E22CE!important; width:100%; justify-content:center;" onclick="playGame(${g.id})"><i class="fas fa-gamepad"></i> CHƠI NGAY</button></div>`;
-        }).join('') : '<p style="text-align:center; font-weight:800;">📭 Chưa có trò chơi.</p>';
-
-        // RENDER BÀI TẬP
-        const normalQuizzes = db.quizzes.filter(q => q.type === 'mcq' || q.type === 'fill');
-        document.getElementById('realAssignmentsList').innerHTML = normalQuizzes.length ? normalQuizzes.map(q => {
-            const myResult = quizHistory[uid + '_' + q.id];
-            let statusHtml = myResult !== undefined ? `<span style="color:var(--white); background:var(--green-dark); padding:5px 12px; border-radius:15px; margin-left:10px; font-weight:900; font-size:0.9rem;">Đã làm: ${myResult.score}đ</span>` : '';
-            return `<div class="real-item" style="border-color:var(--green-dark);">
-                <div><strong style="font-size:1.2rem; color:var(--green-dark);">${q.title}</strong>${statusHtml}<p style="font-size:0.95rem; color:var(--text-gray); margin-top:8px; font-weight:800;">${q.type === 'mcq' ? '📝 Trắc nghiệm' : '✍️ Điền khuyết'} - ${q.questions ? q.questions.length : 1} câu</p></div>
-                <button class="btn-learn" style="background:var(--green-dark)!important; border-color:#047857!important; box-shadow:0 5px 0 #047857!important;" onclick="openQuiz(${q.id}, '${q.title}')">Làm Bài</button></div>`;
-        }).join('') : '<p style="text-align:center; font-weight:800;">📭 Chưa có bài tập.</p>';
-
-        // RENDER SPEAKING
-        const speakingQuizzes = db.quizzes.filter(q => q.type === 'speak');
-        document.getElementById('realSpeakingList').innerHTML = speakingQuizzes.length ? speakingQuizzes.map(s => {
-            const myResult = speakHistory[uid + '_' + s.id];
-            let resultHtml = myResult ? `<div style="margin-top:20px; padding:20px; background:var(--white); border-radius:20px; border:2px dashed var(--border);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><span style="font-weight:900; color:var(--text-gray); font-size:1rem;">📌 Nộp gần nhất:</span><span style="background:var(--orange-dark); color:white; padding:5px 20px; border-radius:20px; font-weight:900; font-size:1.2rem;">${myResult.score}/100đ</span></div>
-                    <div style="font-weight:800; font-size:1.1rem; margin-bottom:10px; color:var(--blue-dark);">Bé đọc: "${myResult.transcript}"</div>
-                    <audio controls src="${myResult.audio}" style="height:35px; width:100%; margin-bottom:10px; border-radius: 15px; outline:none;"></audio>
-                    <div style="color:var(--green-dark); font-weight:900; font-size:1rem; background:var(--green-light); padding:10px; border-radius:15px; text-align:center;">${myResult.comment}</div></div>` : '';
-            return `<div class="real-item" style="display: block; border-color:var(--orange-dark);">
-                <strong style="font-size: 1.3rem; color:var(--orange-dark);">${s.title}</strong>
-                <h3 style="color: var(--blue-dark); font-size: 2.5rem; background:var(--white); padding:20px; border-radius:25px; text-align:center; margin: 20px 0; border:3px solid var(--border);">${s.word || ''}</h3>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <button class="btn-learn" style="flex: 1; justify-content:center;" onclick="playAudio('${s.word}', 1)"><i class="fas fa-volume-up"></i> Chuẩn</button>
-                    <button class="btn-learn" style="flex: 1; justify-content:center; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important;" onclick="playAudio('${s.word}', 0.5)"><i class="fas fa-turtle"></i> Chậm</button>
-                    <button class="btn-learn" style="flex: 1; justify-content:center; background:var(--green-dark)!important; border-color:#047857!important; box-shadow:0 5px 0 #047857!important;" onclick="startRecording('${s.word}', ${s.id})"><i class="fas fa-microphone"></i> Thu Âm</button>
-                </div>
-                ${resultHtml}
-            </div>`;
-        }).join('') : '<p style="text-align:center; font-weight:800;">📭 Chưa có bài luyện nói.</p>';
-
-        // CẬP NHẬT THANH TIẾN ĐỘ CHUẨN XÁC
-        let doneCount = 0;
-        const allItems = [...(db.lessons||[]), ...normalQuizzes, ...speakingQuizzes, ...games];
-        document.getElementById('progressTable').innerHTML = allItems.map(item => {
-            let isDone = false; 
-            if (item.type === 'speak') isDone = !!speakHistory[uid + '_' + item.id];
-            else if (item.type === 'game' || item.type === 'mcq' || item.type === 'fill') isDone = quizHistory[uid + '_' + item.id] !== undefined;
-            else isDone = !!videoHistory[uid + '_' + item.id];
+    <div class="container">
+        <div class="content">
+            <h1>🌟 Kids English</h1>
+            <p>Nền tảng học tiếng Anh trực tuyến cho trẻ em</p>
             
-            if (isDone) doneCount++;
-            return `<tr><td style="border-radius:15px 0 0 15px;"><strong>${item.title}</strong></td>
-                <td><span style="font-weight:bold; color:var(--text-gray);">${item.type==='speak'?'Luyện Nói':(item.type==='game'?'Trò Chơi':(item.type==='mcq'||item.type==='fill'?'Bài Tập':'Video'))}</span></td>
-                <td style="border-radius:0 15px 15px 0; color:${isDone?'var(--green-dark)':'var(--orange-dark)'}; font-weight:bold;">${isDone ? '✅ Xong' : '⏳ Chưa'}</td></tr>`;
-        }).join('') || '<tr><td colspan="3" style="text-align: center; border-radius:15px;">Trống</td></tr>';
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🎮</div>
+                    <div class="feature-text">Học qua trò chơi</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-text">Luyện nói với AI</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <div class="feature-text">Giáo viên hỗ trợ</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">Theo dõi tiến độ</div>
+                </div>
+            </div>
+        </div>
 
-        const total = allItems.length;
-        const pct = total === 0 ? 0 : Math.round((doneCount/total)*100);
-        const pctText = (pct > 100 ? 100 : pct) + '%';
-        
-        // Update UI Text & Width
-        if(document.getElementById('progressFillHome')) {
-            document.getElementById('progressFillHome').style.width = pctText;
-            document.getElementById('progressTextHome').innerText = pctText;
-        }
-
-        if(document.getElementById('progressFillTab')) {
-            document.getElementById('progressFillTab').style.width = pctText;
-            document.getElementById('progressTextTab').innerText = pctText;
-            document.getElementById('completedCountTab').innerText = doneCount;
-            document.getElementById('totalCountTab').innerText = total;
-        }
-    }
-
-    function updateStudentScore(addedScore) {
-        const db = JSON.parse(localStorage.getItem('ks_db'));
-        const index = db.users.findIndex(u => (u.id == user.id || u.email === user.email));
-        if(index > -1) {
-            // CỘNG NGUYÊN ĐIỂM, KHÔNG CHIA 10 ĐỂ ĐỒNG BỘ 100%
-            db.users[index].score = (parseInt(db.users[index].score) || 0) + parseInt(addedScore); 
-            localStorage.setItem('ks_db', JSON.stringify(db));
-            user.score = db.users[index].score; 
-            localStorage.setItem('user', JSON.stringify(user));
-            currentDataHash = ""; 
-            loadRealData(); 
-        }
-    }
-
-    function sendProgressToTeacher() {
-        const pct = document.getElementById('progressTextTab').innerText;
-        const score = document.getElementById('myScore').innerText;
-        autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct} tiến độ khóa học. Tổng điểm cà rốt hiện tại của con là ${score} ạ! 🌟`);
-        Swal.fire({title: 'Thành công!', text: 'Đã gửi báo cáo tiến độ cho Cô giáo!', icon: 'success', confirmButtonColor: '#4A81E8'});
-    }
-
-
-    // ===== VIDEO INLINE (20 PHÚT) =====
-    let currentVideoId = null; let videoWatchTime = 0; let videoInterval = null;
-
-    function extractVideoID(url) { var match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (match && match[2].length === 11) ? match[2] : null; }
-    
-    function openInlineVideo(lessonId, videoUrl, title) {
-        currentVideoId = lessonId;
-        const vid = extractVideoID(videoUrl);
-        const embedUrl = vid ? `https://www.youtube.com/embed/${vid}?autoplay=1` : videoUrl;
-        
-        // Hiện khung video, ẩn list
-        document.getElementById('videoListCard').style.display = 'none';
-        document.getElementById('videoPlayerCard').style.display = 'block';
-        
-        document.getElementById('inlineVideoIframe').src = embedUrl;
-        document.getElementById('inlineVideoTitle').innerText = title;
-        
-        const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
-        const isDone = !!videoHistory[uid + '_' + lessonId];
-        
-        videoWatchTime = 0;
-        const btnSubmit = document.getElementById('inlineBtnSubmit');
-        const timerDisplay = document.getElementById('inlineVideoTimer');
-        
-        if(isDone) {
-            btnSubmit.style.background = 'var(--green-dark)'; btnSubmit.style.pointerEvents = 'auto'; btnSubmit.innerText = '✅ Đã hoàn thành';
-            timerDisplay.innerHTML = '✅ <span style="color:var(--green-dark);">Bạn đã hoàn thành bài giảng này</span>';
-            timerDisplay.style.borderColor = 'var(--green-dark)'; timerDisplay.style.background = 'var(--green-light)';
-        } else {
-            btnSubmit.style.background = 'gray'; btnSubmit.style.pointerEvents = 'none'; btnSubmit.innerText = '🔒 Đang xem...';
-            timerDisplay.innerHTML = `⏳ Thời gian: 00:00 / 20:00`;
-            timerDisplay.style.color = 'var(--orange-dark)'; timerDisplay.style.borderColor = 'var(--orange-dark)'; timerDisplay.style.background = 'var(--orange-light)';
+        <div class="card">
+            <div class="logo">Kids<span style="color: #FF9A3C;">English</span></div>
             
-            clearInterval(videoInterval);
-            videoInterval = setInterval(() => {
-                videoWatchTime++;
-                let m = Math.floor(videoWatchTime/60).toString().padStart(2, '0'); let s = (videoWatchTime%60).toString().padStart(2, '0');
-                timerDisplay.innerText = `⏳ Thời gian xem: ${m}:${s} / 20:00`;
+            <h2 class="title">Đăng nhập</h2>
+            <p class="subtitle">Chào mừng bạn quay trở lại! 👋</p>
+
+            <div id="error-msg" class="error-msg"></div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
                 
-                if(videoWatchTime >= 1200) { 
-                    clearInterval(videoInterval);
-                    btnSubmit.style.background = 'var(--green-dark)'; btnSubmit.style.pointerEvents = 'auto'; btnSubmit.innerText = '✅ Nộp Điểm Bài Giảng';
-                    timerDisplay.innerText = '🎉 Bạn đã xem đủ thời gian!'; timerDisplay.style.color = 'var(--green-dark)'; timerDisplay.style.borderColor = 'var(--green-dark)'; timerDisplay.style.background = 'var(--green-light)';
-                }
-            }, 1000);
-        }
-        loadInlineVideoChat();
-    }
+                <div class="form-group">
+                    <label for="email">📧 Email đăng nhập</label>
+                    <input type="email" id="email" placeholder="Nhập email của bạn..." required>
+                </div>
 
-    function closeInlineVideo() {
-        document.getElementById('videoPlayerCard').style.display = 'none';
-        document.getElementById('videoListCard').style.display = 'block';
-        document.getElementById('inlineVideoIframe').src = '';
-        clearInterval(videoInterval);
-        currentVideoId = null;
-    }
+                <div class="form-group">
+                    <label for="password">🔑 Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
+                </div>
 
-    function submitInlineVideo() {
-        const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
-        if(!videoHistory[uid + '_' + currentVideoId]) {
-            videoHistory[uid + '_' + currentVideoId] = true;
-            localStorage.setItem('ks_video_history', JSON.stringify(videoHistory));
-            updateStudentScore(20);
-            Swal.fire({title:'Thành công!', text:'Bé đã nhận được 20 điểm!', icon:'success', confirmButtonColor: '#4A81E8'});
-            autoNotifyTeacher(`Con đã xem xong 20 phút video bài giảng "${document.getElementById('inlineVideoTitle').innerText}" ạ! 📺`);
-            document.getElementById('inlineBtnSubmit').innerText = '✅ Đã hoàn thành';
-        }
-    }
+                <div class="remember-forgot">
+                    <label style="cursor: pointer;">
+                        <input type="checkbox" id="remember" style="width: auto; cursor: pointer;">
+                        <span>Nhớ mật khẩu</span>
+                    </label>
+                    <a href="#" style="color: var(--primary); text-decoration: none;">Quên mật khẩu?</a>
+                </div>
 
-    window.addEventListener('beforeunload', function (e) {
-        if(currentVideoId && videoWatchTime < 1200) {
-            const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
-            if(!videoHistory[uid + '_' + currentVideoId]) { e.preventDefault(); e.returnValue = ''; }
-        }
-    });
+                <button type="submit" class="btn">Đăng nhập ngay 🚀</button>
+            </form>
 
-    function loadInlineVideoChat() {
-        if(!currentVideoId) return;
-        let commentsObj = JSON.parse(localStorage.getItem('ks_video_comments') || '{}');
-        let vComments = commentsObj[currentVideoId] || [];
-        const box = document.getElementById('inlineVideoChatBox');
-        
-        box.innerHTML = vComments.length ? vComments.map(c => {
-            let isMe = c.email === user.email;
-            let bgColor = isMe ? 'var(--blue-light)' : 'var(--white)';
-            return `<div style="background: ${bgColor}; padding: 15px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 10px;">
-                <div style="font-weight: 900; font-size: 0.9rem; color: var(--blue-dark); margin-bottom: 5px;">${c.name} <span style="color:gray; font-size:0.8rem; font-weight:normal;">• ${c.time}</span></div>
-                <div style="font-weight: 700; color: var(--text-dark); font-size: 1.05rem;">${c.text}</div>
-            </div>`;
-        }).join('') : '<div style="text-align:center; color:var(--text-gray); font-weight:800; margin-top:20px;">Bé hãy là người đầu tiên bình luận nhé!</div>';
-        box.scrollTop = box.scrollHeight;
-    }
+            <div class="register-link">
+                Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a>
+            </div>
+        </div>
+    </div>
 
-    function sendInlineVideoChat() {
-        const input = document.getElementById('inlineVideoChatInput'); const text = input.value.trim(); if(!text || !currentVideoId) return;
-        let commentsObj = JSON.parse(localStorage.getItem('ks_video_comments') || '{}');
-        if(!commentsObj[currentVideoId]) commentsObj[currentVideoId] = [];
-        commentsObj[currentVideoId].push({ email: user.email, name: user.fullName || user.name, text: text, time: new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) });
-        localStorage.setItem('ks_video_comments', JSON.stringify(commentsObj));
-        input.value = ''; loadInlineVideoChat();
-    }
-
-
-    // ===== GAME: THỎ VỀ ĐÍCH CẢI TIẾN CỜ 🏁 =====
-    let currentGame = null; let currentGameProgress = 0; let currentGameScore = 0; let isJumping = false;
-
-    function playGame(gameId) {
-        const db = JSON.parse(localStorage.getItem('ks_db'));
-        currentGame = db.quizzes.find(q => q.id == gameId);
-        if(!currentGame || !currentGame.questions || currentGame.questions.length === 0) return Swal.fire('Lỗi', 'Trò chơi rỗng!', 'warning');
-        
-        currentGameProgress = 0; currentGameScore = 0; isJumping = false;
-        document.getElementById('gameOverlay').style.display = 'flex';
-        document.getElementById('inGameQuestionPanel').style.display = 'none';
-        renderGameMap(-1); 
-    }
-
-    function closeGame() { document.getElementById('gameOverlay').style.display = 'none'; document.getElementById('inGameQuestionPanel').style.display = 'none'; currentGame = null; }
-
-    function renderGameMap(jumpingToTarget) {
-        let trackHtml = ''; let rabbitX = 50; 
-        if (jumpingToTarget !== -1) { rabbitX = (jumpingToTarget + 1) * 300 - 80; } 
-        else { if (currentGameProgress > 0) { rabbitX = (currentGameProgress) * 300 + 60; } }
-
-        let isWinningJump = (jumpingToTarget === currentGame.questions.length);
-        if (isWinningJump) rabbitX = (currentGame.questions.length + 1) * 300; 
-
-        trackHtml += `<div id="rabbitChar" class="rabbit-character ${jumpingToTarget !== -1 ? 'rabbit-jump' : ''}" style="left: ${rabbitX}px;">🐇</div>`;
-        
-        currentGame.questions.forEach((q, index) => {
-            let isDone = index < currentGameProgress;
-            let icon = isDone ? '🥕' : '🌵'; 
-            let leftPos = (index + 1) * 300;
-            trackHtml += `<div class="obstacle-item" style="left: ${leftPos}px;">${icon}</div>`;
-        });
-        
-        let finishPos = (currentGame.questions.length + 1) * 300;
-        trackHtml += `<div class="obstacle-item" style="left: ${finishPos}px; font-size: 6.5rem; bottom:15px;">🏁</div>`; 
-        
-        const trackContent = document.getElementById('gameTrackContent');
-        trackContent.innerHTML = trackHtml; trackContent.style.width = (finishPos + 500) + 'px';
-        
-        let cameraX = Math.max(0, rabbitX - 150);
-        trackContent.style.transform = `translateX(-${cameraX}px)`;
-        
-        const instr = document.getElementById('gameInstruction');
-        if (currentGameProgress >= currentGame.questions.length && jumpingToTarget === -1) { instr.innerText = 'Hoan hô! Thỏ đã tới đích! 🎉'; } 
-        else if (jumpingToTarget === -1) { instr.innerHTML = 'Bấm <strong>ENTER</strong> hoặc <strong>MŨI TÊN (➡️, ⬆️)</strong> để nhảy!'; } 
-        else { instr.innerText = 'Thỏ đang bay... 🐇💨'; }
-    }
-
-    window.addEventListener('keydown', function(e) {
-        const overlay = document.getElementById('gameOverlay');
-        const qPanel = document.getElementById('inGameQuestionPanel');
-        if (overlay.style.display === 'flex' && qPanel.style.display !== 'block') {
-            if (e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === ' ') {
-                if (!isJumping && !Swal.isVisible()) { e.preventDefault(); triggerRabbitJump(); }
-            }
-        }
-    });
-
-    function triggerRabbitJump() {
-        if (currentGameProgress >= currentGame.questions.length) return; 
-        isJumping = true; renderGameMap(currentGameProgress);
-        setTimeout(() => { isJumping = false; showInGameQuestion(currentGameProgress); }, 600); 
-    }
-
-    function showInGameQuestion(index) {
-        const q = currentGame.questions[index];
-        const panel = document.getElementById('inGameQuestionPanel');
-        document.getElementById('inGameQTitle').innerText = q.question;
-        const content = document.getElementById('inGameQContent');
-        let html = '';
-        
-        if(q.type === 'mcq') {
-            html = q.options.map((opt, i) => `<button class="btn-game-opt" onclick="checkInGameAnswer(${index}, ${i}, ${q.correctAnswer}, ${q.points})">${opt}</button>`).join('');
-        } else if (q.type === 'fill') {
-            html = `<input type="text" id="inGameFillAns" placeholder="Gõ đáp án vào đây..." style="padding:20px; font-size:1.5rem; text-align:center; border-radius:20px; border:4px solid var(--blue-dark); margin-bottom:20px; color:var(--text-dark); font-weight:900; width:100%;">
-                    <button class="btn-learn" style="width:100%; justify-content:center; font-size:1.4rem; padding:20px;" onclick="checkInGameFill(${index}, '${q.answers.join('|')}', ${q.points})">Xác nhận Vượt Ải</button>`;
-        } else if (q.type === 'speak') {
-            html = `<div style="font-size:3rem; margin-bottom:25px; color:var(--orange-dark); font-weight:900;">${q.word}</div>
-                    <button class="btn-learn" style="width:100%; justify-content:center; font-size:1.4rem; padding:20px; background:var(--orange-dark)!important; border-color:#FF948C!important; box-shadow:0 5px 0 #E87A72!important;" onclick="startInGameRecording('${q.word}', ${index}, ${q.points})"><i class="fas fa-microphone"></i> Bấm để đọc Thần chú</button>
-                    <div id="inGameSpeakStatus" style="font-size:1.3rem; margin-top:15px; color:var(--text-dark); font-weight:900;"></div>`;
-        }
-        content.innerHTML = html; panel.style.display = 'block';
-        if (q.type === 'fill') setTimeout(() => document.getElementById('inGameFillAns').focus(), 100);
-    }
-
-    function checkInGameAnswer(index, selected, correct, points) {
-        document.getElementById('inGameQuestionPanel').style.display = 'none';
-        if(selected == correct) { advanceGame(points); } 
-        else { Swal.fire({title:'Sai mất rồi 😢', text:'Thỏ bị vấp ngã, bé chọn lại nhé!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); }
-    }
-
-    function checkInGameFill(index, correctStr, points) {
-        const userAns = document.getElementById('inGameFillAns').value.trim().toLowerCase();
-        const correctArr = correctStr.split('|').map(s=>s.toLowerCase().trim());
-        document.getElementById('inGameQuestionPanel').style.display = 'none';
-        if(correctArr.includes(userAns)) { advanceGame(points); } 
-        else { Swal.fire({title:'Sai mất rồi 😢', text:'Bé kiểm tra lại chính tả nhé!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); }
-    }
-
-    function startInGameRecording(targetWord, index, points) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const statusDiv = document.getElementById('inGameSpeakStatus');
-        if (!SpeechRecognition) { statusDiv.innerText = 'Trình duyệt không hỗ trợ Mic. Hãy dùng Chrome!'; return; }
-
-        const recognition = new SpeechRecognition(); recognition.lang = 'en-US'; recognition.interimResults = false; recognition.maxAlternatives = 1;
-        statusDiv.innerHTML = '<span style="color:var(--orange-dark);">Đang thu âm... Bé đọc to lên nhé!</span>';
-        
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream); let audioChunks = [];
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.start(); recognition.start();
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
-                const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
-                recognition.stop(); mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop());
-
-                mediaRecorder.onstop = () => {
-                    const audioUrl = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/wav' }));
-                    const targetWords = target.split(/\s+/); const spokenWords = transcript.split(/\s+/);
-                    let matches = 0; targetWords.forEach(w => { if (spokenWords.includes(w)) matches++; });
-                    document.getElementById('inGameQuestionPanel').style.display = 'none';
-
-                    if((matches / targetWords.length) >= 0.5) { advanceGame(points); } 
-                    else { 
-                        Swal.fire({title:'Chưa đúng lắm 🤔', html:`<p>Bé vừa đọc: <strong>"${transcript}"</strong></p><audio controls src="${audioUrl}" style="width:100%; margin-top:10px;"></audio>`, icon:'info', showCancelButton:true, confirmButtonText:'Đọc Lại', cancelButtonText:'Bỏ qua', confirmButtonColor: '#4A81E8'}).then((r)=>{ if(r.isConfirmed) showInGameQuestion(index); }); 
-                    }
+    <script>
+        // ===== KHỞI TẠO DỮ LIỆU ẢO NẾU HỆ THỐNG TRỐNG =====
+        // Mặc dù ẩn bảng gợi ý, hệ thống vẫn cần tài khoản mẫu để bạn test
+        function initMockDB() {
+            let db = JSON.parse(localStorage.getItem('ks_db'));
+            if (!db || !db.users || db.users.length === 0) {
+                db = {
+                    users: [
+                        { id: 1, fullName: 'Admin Tổng', email: 'admin@kids.vn', password: '123', role: 'admin', createdAt: new Date() },
+                        { id: 888, fullName: 'Cô Lan', email: 'teacher@kids.vn', password: '123', role: 'teacher', classes: ['Lớp 2A'], createdAt: new Date() },
+                        { id: 999, fullName: 'Minh Anh', email: 'student@kids.vn', password: '123', role: 'student', class: 'Lớp 2A', score: 9, comment: 'Bé học tốt lắm', createdAt: new Date() }
+                    ],
+                    classes: [{ id: 111, name: 'Lớp 2A', teacherName: 'Cô Lan', capacity: 30, createdAt: new Date() }],
+                    quizzes: [], lessons: [], pending_users: []
                 };
-            };
-            recognition.onerror = () => { mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop()); document.getElementById('inGameQuestionPanel').style.display = 'none'; Swal.fire({title:'Lỗi Micro', text:'Không nghe rõ!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); };
-        }).catch(() => { statusDiv.innerText = 'Lỗi: Hãy cho phép Micro trên thanh địa chỉ!'; });
-    }
+                localStorage.setItem('ks_db', JSON.stringify(db));
+            }
+            return db;
+        }
 
-    function advanceGame(points) {
-        currentGameScore += parseInt(points) || 10; currentGameProgress++;
-        
-        if(currentGameProgress >= currentGame.questions.length) {
-            isJumping = true; renderGameMap(currentGame.questions.length); // Nhảy tới cờ đích
+        // Xóa sạch thông tin cũ khi mở lại trang Login
+        window.onload = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            initMockDB();
+        };
+
+        // ===== XỬ LÝ ĐĂNG NHẬP THÔNG MINH =====
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
             
-            setTimeout(() => {
-                isJumping = false;
-                
-                try {
-                    const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
-                    quizHistory[uid + '_' + currentGame.id] = { score: currentGameScore }; 
-                    localStorage.setItem('ks_quiz_history', JSON.stringify(quizHistory));
-                    updateStudentScore(currentGameScore); 
-                    autoNotifyTeacher(`Con vừa phá đảo Game "${currentGame.title}" siêu đỉnh và nhận được ${currentGameScore} điểm thưởng! 🎮🐰`);
-                } catch(e) { console.error("Lỗi lưu điểm game:", e); }
+            errorMsg.style.display = 'none';
 
-                // HIỆN LUN CHÚC MỪNG CHUẨN XÁC VÀ AN TOÀN
+            if (!email || !password) {
+                showError('Vui lòng nhập email và mật khẩu');
+                return;
+            }
+
+            // Kéo dữ liệu từ kho chứa
+            const db = initMockDB();
+
+            // 1. Hệ thống tự động tìm user và nhận diện vai trò (role)
+            const user = db.users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Đăng nhập thành công
+                localStorage.setItem('token', 'mock_token_' + user.id);
+                localStorage.setItem('user', JSON.stringify(user));
+                
                 Swal.fire({
-                    title:'VỀ ĐÍCH RỒI! 🎉', 
-                    html: `<h2 style="color:var(--blue-dark); font-family:'Baloo 2'; font-size:2.2rem;">Chúc mừng bé!</h2><p style="font-size:1.3rem; margin-top:15px; font-weight:800; color:var(--text-dark);">Bé nhận được <strong style="color:var(--orange-dark); font-size:2.8rem; display:block; margin-top:10px; text-shadow: 2px 2px 0 white;">${currentGameScore} 🥕</strong></p>`, 
-                    icon:'success', showCancelButton: true, confirmButtonText:'🔄 Chơi Lại', cancelButtonText:'🚪 Thoát Game', confirmButtonColor:'#4A81E8', cancelButtonColor: '#FF948C', allowOutsideClick: false, backdrop: `rgba(0,0,0,0.6)`
-                }).then((r)=>{
-                    if(r.isConfirmed) playGame(currentGame.id); else closeGame();
-                }).catch(() => { closeGame(); }); // Fallback an toàn nếu có lỗi
-            }, 800); 
-        } else {
-            Swal.fire({title:'Đúng rồi! 🎉', text:`Thỏ ăn được ${points} củ cà rốt!`, icon:'success', timer:1000, showConfirmButton:false}).then(() => renderGameMap(-1));
-        }
-    }
-
-    // ===== BÀI TẬP TRẮC NGHIỆM / ĐIỀN KHUYẾT =====
-    function openQuiz(quizId, quizTitle) {
-        const db = JSON.parse(localStorage.getItem('ks_db')); const quiz = db.quizzes.find(q => q.id === quizId); if(!quiz) return;
-        const questions = quiz.questions || [quiz]; let html = `<div style="text-align: left;">`;
-
-        questions.forEach((q, idx) => {
-            if(quiz.type === 'mcq') {
-                html += `<div style="margin-bottom: 25px; background:var(--white); padding:20px; border-radius:20px; border:2px solid var(--border); box-shadow:var(--shadow-sm);">
-                        <h4 style="margin-bottom: 15px; color: var(--blue-dark); font-size:1.2rem;">Câu ${idx+1}: ${q.question}</h4>
-                        ${q.options.map((opt, i) => `<label style="display:block; background:var(--white); padding:15px; border-radius:15px; margin-bottom:10px; cursor:pointer; border:1px solid var(--border); font-weight:800; transition:0.2s; font-size:1.05rem; color:var(--text-dark);"><input type="radio" name="q_${idx}" value="${i}" style="margin-right: 15px; transform:scale(1.3);"> ${opt}</label>`).join('')}
-                    </div>`;
-            } else if(quiz.type === 'fill') {
-                let formattedQ = q.question; const blanksCount = (formattedQ.match(/___/g) || []).length;
-                for(let i=0; i<blanksCount; i++) { formattedQ = formattedQ.replace('___', `<input type="text" style="border: 2px solid var(--orange-dark); padding: 5px 15px; border-radius: 10px; outline: none; color: var(--orange-dark); font-weight: 900; text-align: center; width: 150px; margin: 0 5px; font-size:1.1rem; background:var(--orange-light);" id="q_${idx}_ans_${i}" placeholder="...">`); }
-                html += `<div style="margin-bottom: 25px; background:var(--white); padding:20px; border-radius:20px; border:2px solid var(--border); box-shadow:var(--shadow-sm);">
-                        <h4 style="margin-bottom: 15px; color: var(--orange-dark); font-size:1.2rem;">Câu ${idx+1}:</h4><div style="font-size: 1.2rem; line-height: 2; font-weight:800; color:var(--text-dark);">${formattedQ}</div></div>`;
-            }
-        });
-        html += `</div>`;
-
-        Swal.fire({ title: `📝 ${quiz.title}`, html: html, width: '700px', showCancelButton: true, confirmButtonText: 'Nộp Bài', cancelButtonText: 'Hủy', confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C',
-            preConfirm: () => {
-                let score = 0; const pointPerQuestion = 100 / questions.length; let details = [];
-                questions.forEach((q, idx) => {
-                    if(quiz.type === 'mcq') {
-                        const selected = document.querySelector(`input[name="q_${idx}"]:checked`); const userAnsIdx = selected ? parseInt(selected.value) : -1;
-                        const isCorrect = userAnsIdx === parseInt(q.correctAnswer || 0); if(isCorrect) score += pointPerQuestion;
-                        details.push({ q: q.question, userAns: userAnsIdx !== -1 ? q.options[userAnsIdx] : "Bỏ trống", correctAns: q.options[parseInt(q.correctAnswer || 0)], isCorrect: isCorrect });
-                    } else if(quiz.type === 'fill') {
-                        let isCorrect = true; let userAnsArr = []; const blanksCount = q.answers ? q.answers.length : 0;
-                        for(let i=0; i<blanksCount; i++) {
-                            const ansInput = document.getElementById(`q_${idx}_ans_${i}`); const userVal = ansInput ? ansInput.value.trim() : "";
-                            userAnsArr.push(userVal); if(userVal.toLowerCase() !== q.answers[i].toLowerCase()) isCorrect = false;
-                        }
-                        if(isCorrect && blanksCount > 0) score += pointPerQuestion;
-                        details.push({ q: q.question.replace(/___/g, "[...]"), userAns: userAnsArr.join(', ') || "Bỏ trống", correctAns: q.answers.join(', '), isCorrect: isCorrect });
-                    }
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Đăng nhập thành công! Đang chuyển hướng...',
+                    timer: 1000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // Tự động phân luồng dựa vào chức vụ của tài khoản đó
+                    if (user.role === 'admin') window.location.href = 'admin.html';
+                    else if (user.role === 'teacher') window.location.href = 'giaovien.html';
+                    else if (user.role === 'student') window.location.href = 'hocvien.html';
+                    else window.location.href = 'index.html'; // Fallback
                 });
-                return { finalScore: Math.round(score), details: details };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const finalScore = result.value.finalScore; 
-                const quizHistory = JSON.parse(localStorage.getItem('ks_quiz_history') || '{}');
-                quizHistory[uid + '_' + quizId] = { score: finalScore, details: result.value.details };
-                localStorage.setItem('ks_quiz_history', JSON.stringify(quizHistory));
-                updateStudentScore(finalScore);
+
+            } else {
+                // 2. Nếu không tìm thấy trong danh sách chính thức, tìm trong hàng chờ duyệt
+                const isPending = db.pending_users && db.pending_users.some(u => u.email === email && u.password === password);
                 
-                Swal.fire({ title: finalScore >= 80 ? 'Tuyệt Vời! 🎉' : 'Cố gắng lên nhé! 💪', text: `Bé đạt được ${finalScore} / 100 điểm.`, icon: finalScore >= 80 ? 'success' : 'info', confirmButtonColor: '#4A81E8' });
-                autoNotifyTeacher(`Con vừa nộp bài tập "${quizTitle}" và đạt ${finalScore}/100 điểm ạ! 🎯`);
-            }
-        });
-    }
-
-    // ===== AUDIO LÀM BÀI NÓI =====
-    function playAudio(text, speed) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'en-US'; utterance.rate = speed; window.speechSynthesis.speak(utterance);
-        } else { Swal.fire('Lỗi', 'Trình duyệt không hỗ trợ đọc giọng nói!', 'error'); }
-    }
-
-    function startRecording(targetWord, quizId) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) { Swal.fire('Lỗi', 'Trình duyệt không hỗ trợ. Vui lòng dùng Chrome!', 'error'); return; }
-
-        const recognition = new SpeechRecognition(); recognition.lang = 'en-US'; recognition.interimResults = false; recognition.maxAlternatives = 1;
-
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream); let audioChunks = [];
-            mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
-            
-            Swal.fire({ title: '🎤 Đang nghe...', html: `<p>Bé hãy đọc to từ: <strong style="color: var(--blue-dark); font-size: 2.2rem; display:block; margin-top:15px; font-family:'Baloo 2';">"${targetWord}"</strong></p>`, showConfirmButton: false, allowOutsideClick: false, didOpen: () => { Swal.showLoading(); mediaRecorder.start(); recognition.start(); }});
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
-                const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
-                
-                recognition.stop(); mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop());
-
-                mediaRecorder.onstop = () => {
-                    const audioUrl = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/wav' }));
-                    const targetWords = target.split(/\s+/); const spokenWords = transcript.split(/\s+/);
-                    let matches = 0; targetWords.forEach(w => { if (spokenWords.includes(w)) matches++; });
-                    
-                    let score = Math.round((matches / targetWords.length) * 100); if (score > 100) score = 100; if (score === 0 && transcript !== "") score = 10;
-                    let comment = score === 100 ? "Tuyệt hảo! Bé phát âm siêu chuẩn. 🌟" : (score >= 80 ? "Rất tốt! Cố gắng xíu nữa nhé! 👍" : "Bé hãy nghe lại mẫu và đọc lại nhé! 💪");
-
-                    const history = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
-                    history[uid + '_' + quizId] = { score, transcript, comment, audio: audioUrl }; localStorage.setItem('ks_speak_history', JSON.stringify(history));
-                    
-                    Swal.fire({ 
-                        title: score >= 80 ? '🎉 Chúc mừng bé!' : '🤔 Cố lên nào!', 
-                        html: `<div style="font-size:3.5rem; color:var(--blue-dark); font-weight:900; margin-bottom:15px; font-family:'Baloo 2';">${score}/100</div>
-                               <p style="font-size:1.2rem; margin-bottom:10px;"><strong>Bé đọc:</strong> <span style="color:var(--orange-dark); font-weight:900;">"${transcript}"</span></p>
-                               <div style="background:var(--white); padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed var(--border);">
-                                   <p style="font-weight:800; margin-bottom:10px;">🔊 Nghe lại giọng bé:</p><audio controls src="${audioUrl}" style="width:100%; height:40px; border-radius:20px; outline:none;"></audio>
-                               </div>
-                               <button class="btn-learn" style="width:100%; justify-content:center; margin-bottom:15px; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important;" onclick="playAudio('${targetWord}', 0.5)">🐢 Nghe Mẫu Thật Chậm</button>
-                               <div style="background:var(--green-light); color:var(--green-dark); padding:15px; border-radius:15px; font-weight:900; font-size:1.1rem; border:2px solid var(--green-dark);">${comment}</div>`, 
-                        icon: score >= 80 ? 'success' : 'info', showCancelButton: true, confirmButtonText: '✅ Nộp Điểm', cancelButtonText: '🎤 Đọc Lại', confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C'
-                    }).then((result) => {
-                        if (result.isConfirmed) { updateStudentScore(score); autoNotifyTeacher(`Con vừa luyện đọc xong từ "${targetWord}" và đạt ${score}/100 điểm ạ! 🎤`); Swal.fire({title:'Đã Nộp!', icon:'success', timer:1500, showConfirmButton:false}); } 
-                        else if (result.dismiss === Swal.DismissReason.cancel) { setTimeout(() => startRecording(targetWord, quizId), 500); }
+                if (isPending) {
+                    Swal.fire({
+                        title: 'Đang chờ duyệt ⏳',
+                        text: 'Hồ sơ của bạn đang được Thầy/Cô xét duyệt. Vui lòng quay lại sau nhé!',
+                        icon: 'info',
+                        confirmButtonColor: '#4318FF'
                     });
-                };
-            };
-            recognition.onerror = (e) => { 
-                mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop());
-                if(e.error === 'not-allowed') Swal.fire('Lỗi Micro', 'Bé chưa cấp quyền Micro cho trang web. Vui lòng bấm vào Ổ khóa trên thanh địa chỉ và chọn "Cho phép Micro".', 'error');
-                else Swal.fire('Lỗi', 'Không nghe rõ, bé đọc lại nha!', 'error'); 
-            };
-        }).catch(() => Swal.fire('Lỗi', 'Bé phải bấm "Cho phép" Micro trên thanh địa chỉ nhé!', 'error'));
-    }
+                } else {
+                    showError('Email hoặc mật khẩu không chính xác!');
+                }
+            }
+        }
 
-    // ===== CHAT BO TRÒN FACEBOOK STYLE =====
-    function forceLoadChat() { currentChatHash = ""; loadChat(); }
-    function loadChat() {
-        const target = document.getElementById('chatTargetSelect').value; const teacherEmail = getMyTeacherEmail(); const box = document.getElementById('teacherChatBox');
-        const rawChats = localStorage.getItem('ks_chats') || '[]';
-        const hashKey = target + "_" + rawChats.length; if (rawChats === currentChatHash) return; currentChatHash = hashKey;
-        const chats = JSON.parse(rawChats); let msgs = [];
-
-        if (target === 'GROUP_CHAT') { msgs = chats.filter(c => c.receiverEmail === 'GROUP_CHAT'); } 
-        else { if(!teacherEmail) { box.innerHTML = '<p style="text-align:center; color:var(--text-gray); font-weight:800; font-size:1.1rem; margin-top:20px;">Bé chưa có cô giáo phụ trách!</p>'; return; }
-            msgs = chats.filter(c => (c.senderEmail === user.email && c.receiverEmail === teacherEmail) || (c.senderEmail === teacherEmail && c.receiverEmail === user.email)); }
-        
-        const isBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 10;
-        const dbLocal = JSON.parse(localStorage.getItem('ks_db'));
-        
-        box.innerHTML = msgs.length ? msgs.map(m => {
-            const isMe = m.senderEmail === user.email; let senderName = isMe ? "Tôi" : (dbLocal.users.find(u=>u.email===m.senderEmail)?.fullName || m.senderEmail);
-            return `<div class="message ${isMe ? 'student' : 'teacher'}">
-                <span class="chat-sender">${senderName}</span><span class="chat-text">${m.message}</span></div>`;
-        }).join('') : '<div style="text-align:center; color:var(--text-gray); font-weight:800; font-size:1.1rem; margin-top:20px;">Hãy gửi lời chào đầu tiên nhé! 👋</div>';
-        
-        if (isBottom) box.scrollTop = box.scrollHeight;
-    }
-
-    function sendToTeacher() {
-        const target = document.getElementById('chatTargetSelect').value; const teacherEmail = getMyTeacherEmail() || 'GROUP_CHAT';
-        const msg = document.getElementById('teacherChatInput').value.trim(); if(!msg) return;
-        document.getElementById('teacherChatInput').value = '';
-        const chats = JSON.parse(localStorage.getItem('ks_chats') || '[]');
-        chats.push({ senderEmail: user.email || 'student', receiverEmail: target === 'GROUP_CHAT' ? 'GROUP_CHAT' : teacherEmail, message: msg, timestamp: new Date() });
-        localStorage.setItem('ks_chats', JSON.stringify(chats)); forceLoadChat();
-    }
-
-    function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
-
-    window.onload = () => { loadRealData(); loadChat(); setInterval(() => { loadRealData(); loadChat(); if(document.getElementById('videoPlayerCard').style.display==='block') loadInlineVideoChat();}, 1500); };
-</script>
+        function showError(message) {
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.innerText = '❌ ' + message;
+            errorMsg.style.display = 'block';
+        }
+    </script>
 </body>
 </html>

@@ -8,16 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --blue: #70A1FF; --blue-light: #82cfd8; --blue-dark: #4A81E8;
-            --orange: #FFB7B2; --orange-light: #dcacac; --orange-dark: #FF948C;
-            --green: #70cfc5; --green-light: #F0FBF8; --green-dark: #6FC2B8;
-            --yellow: #FDFD96; --yellow-light: #e3e394; --yellow-dark: #E5E55A;
-            --gold: #f0d124;
+            --blue: #70A1FF; --blue-light: #EAF2FF; --blue-dark: #4A81E8;
+            --orange: #FFB7B2; --orange-light: #FFF0F0; --orange-dark: #FF948C;
+            --green: #A2E1DB; --green-light: #F0FBF8; --green-dark: #6FC2B8;
+            --yellow: #FDFD96; --yellow-light: #FFFFE0; --yellow-dark: #E5E55A;
+            --gold: #FFD700;
             --game: #C5A3FF; --game-light: #F5EFFF; --game-dark: #A378ED;
-            --bg: #F4F9FF; --text-dark: #2C3E50; --text-gray: #7F8C8D; --white: #FFFFFF; --border: #D5E1F2;
-            --shadow-sm: 0 4px 10px rgba(74, 129, 232, 0.15);
-            --shadow-md: 0 8px 25px rgba(74, 129, 232, 0.2);
-            --shadow-btn: 0 6px 0 rgb(75, 125, 231);
+            
+            /* TÔNG MÀU MỚI: NỀN XANH NGỌC NHẠT - CHỮ RÕ NÉT */
+            --bg: #E0F7FA; /* Nền xanh ngọc nhạt */
+            --text-dark: #0F172A; /* Chữ xanh đen cực kỳ rõ nét */
+            --text-gray: #475569; /* Chữ xám đậm dễ đọc */
+            --white: #FFFFFF; 
+            --border: #BCEBEB; /* Viền xanh ngọc đậm hơn một chút */
+            
+            --shadow-sm: 0 4px 10px rgba(13, 148, 136, 0.1);
+            --shadow-md: 0 8px 25px rgba(13, 148, 136, 0.15);
+            --shadow-btn: 0 6px 0 rgba(37, 99, 235, 1);
         }
 
         body.dark-theme {
@@ -32,20 +39,18 @@
         
         .sidebar { width: 280px; background: var(--white); padding: 30px 20px; display: flex; flex-direction: column; box-shadow: var(--shadow-md); border-radius: 0 45px 45px 0; overflow-y: auto; z-index: 100; transition: background 0.4s;}
         
-        /* ĐÃ SỬA: Logo thu nhỏ một xíu để không bị tràn làm mất chữ K */
-        .brand-logo { font-family: 'Baloo 2', cursive; font-size: 2.6rem; font-weight: 900; text-align: center; margin-bottom: 30px; line-height: 1.1; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(3px 3px 0px rgba(74, 129, 232, 0.2)); white-space: nowrap; display:flex; justify-content:center; align-items:center;}
-        .brand-logo span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 2.6rem; }
+        .brand-logo { font-family: 'Baloo 2', cursive; font-size: 3.5rem; font-weight: 900; text-align: center; margin-bottom: 30px; line-height: 1.1; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(3px 3px 0px rgba(74, 129, 232, 0.2)); white-space: nowrap; display:flex; justify-content:center; align-items:center;}
+        .brand-logo span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 3.5rem; }
         
-        /* ĐÃ SỬA: Chỉ áp dụng màu chữ vàng, nền xanh cho các nút bấm thật sự, không áp dụng cho thanh menu nav-item */
-        .btn-learn, .logout-btn {
+        button, .btn-learn, .logout-btn {
             background: #2563eb !important; color: var(--gold) !important; border: 2px solid #1e40af !important; transition: 0.3s ease; box-shadow: 0 6px 0 #1e3a8a !important; font-weight: 900; border-radius: 20px;
         }
-        .btn-learn:hover, .logout-btn:hover { background: #1d4ed8 !important; transform: translateY(2px) !important; box-shadow: 0 4px 0 #1e3a8a !important; filter: brightness(1.1); }
-        .btn-learn:active, .logout-btn:active { transform: translateY(6px) !important; box-shadow: 0 0 0 transparent !important; }
+        button:hover, .btn-learn:hover, .logout-btn:hover { background: #1d4ed8 !important; transform: translateY(2px) !important; box-shadow: 0 4px 0 #1e3a8a !important; filter: brightness(1.1); }
+        button:active, .btn-learn:active, .logout-btn:active { transform: translateY(6px) !important; box-shadow: 0 0 0 transparent !important; }
 
-        .nav-item { padding: 15px 20px; margin-bottom: 12px; border-radius: 20px; cursor: pointer; font-size: 1.15rem; font-weight: 800; color: var(--text-gray); transition: 0.3s; display: flex; align-items: center; gap: 15px; border: none; background: transparent; width: 100%; text-align: left; }
-        .nav-item:hover { color: #2563eb; background: var(--blue-light); transform: translateX(8px); }
-        .nav-item.active { background: #2563eb; color: var(--gold); box-shadow: var(--shadow-md); transform: scale(1.02); }
+        .nav-item { padding: 15px 20px; margin-bottom: 12px; border-radius: 20px; cursor: pointer; font-size: 1.15rem; font-weight: 800; color: var(--text-gray); transition: 0.3s; display: flex; align-items: center; gap: 15px; border: none; background: transparent !important; width: 100%; text-align: left; box-shadow: none !important;}
+        .nav-item:hover { color: #2563eb !important; background: #DBF4F7 !important; transform: translateX(8px) !important; }
+        .nav-item.active { background: #2563eb !important; color: var(--gold) !important; box-shadow: var(--shadow-md) !important; transform: scale(1.02) !important; }
         
         .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .header { padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -64,9 +69,9 @@
         .grade-comment { font-size: 1.2rem; font-weight: 800; color: #2563eb; background: var(--gold); padding: 12px 25px; border-radius: 25px; display: inline-block; box-shadow: var(--shadow-sm); margin-top: 10px; border: 2px solid var(--border); }
         
         .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 25px; background: var(--bg); border-radius: 25px; margin-bottom: 12px; font-weight: 800; font-size: 1.1rem; border: 2px solid transparent;}
-        .leaderboard-item.me { background: var(--blue-light); border-color: #2563eb; color: #2563eb;}
+        .leaderboard-item.me { background: #DBF4F7; border-color: #2563eb; color: #2563eb;}
 
-        .btn-learn { padding: 14px 25px; font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap:10px; text-transform: uppercase;}
+        .btn-learn { padding: 14px 25px; border-radius: 20px; font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap:10px; text-transform: uppercase;}
         
         .btn-game-opt { display: block; width: 100%; margin-bottom: 18px; font-size: 1.3rem; padding: 18px 25px; background: #2563eb !important; color: var(--gold) !important; border: 3px solid #1e40af !important; border-radius: 20px; box-shadow: 0 6px 0 #1e40af !important; font-weight: 900; transition: 0.15s; cursor: pointer; text-align: center; }
         .btn-game-opt:hover { filter: brightness(1.2); transform: translateY(2px) !important; box-shadow: 0 4px 0 #1e40af !important; }
@@ -88,8 +93,9 @@
         .theme-btn:active { transform: translateY(4px) !important; box-shadow: 0 0 0 transparent !important; }
         body.dark-theme .theme-btn { background: #2563eb !important; border-color: var(--blue-dark) !important; color: var(--gold) !important; box-shadow: 0 4px 0 var(--blue-dark) !important;}
 
+        /* TIẾN ĐỘ THEO YÊU CẦU MỚI NHẤT ĐẬM NÉT DỄ NHÌN */
         .progress-bar { width: 100%; height: 35px; background: var(--white); border-radius: 20px; overflow: hidden; margin: 15px 0; border: 3px solid var(--green-dark);}
-        .progress-fill { height: 100%; background: var(--green-light); transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: var(--blue-dark); font-weight: 900; font-size: 1.1rem;}
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark) 0%, #047857 100%); transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);}
 
         #gameOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; transition: background 0.5s; }
         .game-sky { flex: 1; position: relative; overflow: hidden; background: linear-gradient(to bottom, #A0C4FF, #E2F0FF); }
@@ -112,7 +118,7 @@
 
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 1.05rem;}
-        th { background: var(--bg); font-weight: 900; border-bottom: 2px solid var(--border); color: #2563eb;}
+        th { background: var(--white); font-weight: 900; border-bottom: 2px solid var(--border); color: #2563eb;}
 
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -128,8 +134,8 @@
             #tab-home > div { grid-template-columns: 1fr; }
             .header { flex-direction: column; gap: 15px; align-items: flex-start; padding: 20px; }
             .mobile-header-top { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-            .logo-mobile { display: flex; font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 900; text-align: center; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(2px 2px 0px rgba(74, 129, 232, 0.2)); line-height: 1; white-space: nowrap;}
-            .logo-mobile span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 2.2rem;}
+            .logo-mobile { display: flex; font-family: 'Baloo 2', cursive; font-size: 2.5rem; font-weight: 900; text-align: center; background: linear-gradient(135deg, #4A81E8 0%, #70A1FF 100%); -webkit-background-clip: text; color: transparent; filter: drop-shadow(2px 2px 0px rgba(74, 129, 232, 0.2)); line-height: 1; white-space: nowrap;}
+            .logo-mobile span { background: linear-gradient(135deg, #FF948C 0%, #FFB7B2 100%); -webkit-background-clip: text; color: transparent; font-size: 2.5rem;}
             .content { padding: 10px 20px 20px 20px; }
             .page-title { display: none; }
             .real-item { flex-direction: column; text-align: center; gap: 15px; }
@@ -166,7 +172,7 @@
         <div style="display:flex; align-items:center; gap: 15px;" class="nav-text">
             <button class="theme-btn" onclick="toggleTheme()" id="themeIconBtnDesktop"><i class="fas fa-moon"></i></button>
             <div style="display:flex; align-items:center; gap: 10px; background: var(--white); padding: 8px 20px; border-radius: 30px; box-shadow: var(--shadow-sm); border: 2px solid var(--border);">
-                <strong style="color: var(--blue-dark); font-size: 1.1rem; font-weight:900;" id="stNameTop">Học Viên</strong>
+                <strong style="color: #2563eb; font-size: 1.1rem; font-weight:900;" id="stNameTop">Học Viên</strong>
                 <div style="width:40px; height:40px; border-radius:50%; background:var(--orange-dark); color:var(--white); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.4rem; border:2px solid var(--white); box-shadow: var(--shadow-sm);" id="stAvatarTopDesktop">B</div>
             </div>
         </div>
@@ -213,7 +219,7 @@
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                    <div id="inlineVideoTimer" style="font-size: 1.1rem; font-weight: 800; color: var(--orange-dark); background: var(--orange-light); padding: 8px 20px; border-radius: 15px; border: 2px dashed var(--orange-dark);">⏳ 00:00 / 20:00</div>
+                    <div id="inlineVideoTimer" style="font-size: 1.1rem; font-weight: 800; color: var(--orange-dark); background: var(--white); padding: 8px 20px; border-radius: 15px; border: 2px dashed var(--orange-dark);">⏳ 00:00 / 20:00</div>
                     <button id="inlineBtnSubmit" class="btn-learn" style="background: var(--text-gray) !important; box-shadow: 0 5px 0 #475569 !important; border-color:#475569!important; pointer-events: none;" onclick="submitInlineVideo()">🔒 Đang xem...</button>
                 </div>
                 
@@ -267,7 +273,7 @@
                 </div>
                 
                 <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
-                    <thead><tr><th style="padding:15px; background:var(--bg); border-radius:15px 0 0 15px;">Tên Nhiệm Vụ</th><th style="padding:15px; background:var(--bg);">Loại</th><th style="padding:15px; background:var(--bg); border-radius:0 15px 15px 0;">Trạng Thái</th></tr></thead>
+                    <thead><tr><th style="padding:15px; background:var(--white); border-radius:15px 0 0 15px;">Tên Nhiệm Vụ</th><th style="padding:15px; background:var(--white);">Loại</th><th style="padding:15px; background:var(--white); border-radius:0 15px 15px 0;">Trạng Thái</th></tr></thead>
                     <tbody id="progressTable"></tbody>
                 </table>
             </div>
@@ -277,7 +283,7 @@
             <div class="card">
                 <div class="card-title" style="color: var(--blue-dark);">💬 Kênh Trò Chuyện</div>
                 <div style="margin-bottom: 20px;">
-                    <select id="chatTargetSelect" onchange="forceLoadChat()" style="width: 100%; padding: 15px 25px; border: 2px solid var(--border); border-radius: 20px; font-weight: 800; color:var(--blue-dark); outline:none; cursor:pointer; font-size:1.1rem; background: var(--bg);">
+                    <select id="chatTargetSelect" onchange="forceLoadChat()" style="width: 100%; padding: 15px 25px; border: 2px solid var(--border); border-radius: 20px; font-weight: 800; color:var(--blue-dark); outline:none; cursor:pointer; font-size:1.1rem; background: var(--white);">
                         <option value="TEACHER">👩‍🏫 Nhắn riêng cho Cô Giáo</option>
                         <option value="GROUP_CHAT">🏫 Phòng Chat Chung Lớp</option>
                     </select>
@@ -417,7 +423,7 @@
         const speakingQuizzes = db.quizzes.filter(q => q.type === 'speak');
         document.getElementById('realSpeakingList').innerHTML = speakingQuizzes.length ? speakingQuizzes.map(s => {
             const myResult = speakHistory[uid + '_' + s.id];
-            let resultHtml = myResult ? `<div style="margin-top:20px; padding:20px; background:var(--bg); border-radius:20px; border:2px dashed var(--border);">
+            let resultHtml = myResult ? `<div style="margin-top:20px; padding:20px; background:var(--white); border-radius:20px; border:2px dashed var(--border);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><span style="font-weight:900; color:var(--text-gray); font-size:1rem;">📌 Nộp gần nhất:</span><span style="background:var(--orange-dark); color:white; padding:5px 20px; border-radius:20px; font-weight:900; font-size:1.2rem;">${myResult.score}/100đ</span></div>
                     <div style="font-weight:800; font-size:1.1rem; margin-bottom:10px; color:var(--blue-dark);">Bé đọc: "${myResult.transcript}"</div>
                     <audio controls src="${myResult.audio}" style="height:35px; width:100%; margin-bottom:10px; border-radius: 15px; outline:none;"></audio>
@@ -471,7 +477,7 @@
         const db = JSON.parse(localStorage.getItem('ks_db'));
         const index = db.users.findIndex(u => (u.id == user.id || u.email === user.email));
         if(index > -1) {
-            // Cộng điểm trực tiếp không chia 10 để điểm đồng bộ chuẩn xác
+            // CỘNG NGUYÊN ĐIỂM, KHÔNG CHIA 10 ĐỂ ĐỒNG BỘ 100%
             db.users[index].score = (parseInt(db.users[index].score) || 0) + parseInt(addedScore); 
             localStorage.setItem('ks_db', JSON.stringify(db));
             user.score = db.users[index].score; 
@@ -485,7 +491,7 @@
         const pct = document.getElementById('progressTextTab').innerText;
         const score = document.getElementById('myScore').innerText;
         autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct} tiến độ khóa học. Tổng điểm cà rốt hiện tại của con là ${score} ạ! 🌟`);
-        Swal.fire({title: 'Thành công!', text: 'Đã gửi báo cáo tiến độ cho Cô giáo!', icon: 'success', confirmButtonColor: '#2563EB'});
+        Swal.fire({title: 'Thành công!', text: 'Đã gửi báo cáo tiến độ cho Cô giáo!', icon: 'success', confirmButtonColor: '#4A81E8'});
     }
 
 
@@ -528,7 +534,7 @@
                 let m = Math.floor(videoWatchTime/60).toString().padStart(2, '0'); let s = (videoWatchTime%60).toString().padStart(2, '0');
                 timerDisplay.innerText = `⏳ Thời gian xem: ${m}:${s} / 20:00`;
                 
-                if(videoWatchTime >= 1200) { // 20 phút
+                if(videoWatchTime >= 1200) { 
                     clearInterval(videoInterval);
                     btnSubmit.style.background = 'var(--green-dark)'; btnSubmit.style.pointerEvents = 'auto'; btnSubmit.innerText = '✅ Nộp Điểm Bài Giảng';
                     timerDisplay.innerText = '🎉 Bạn đã xem đủ thời gian!'; timerDisplay.style.color = 'var(--green-dark)'; timerDisplay.style.borderColor = 'var(--green-dark)'; timerDisplay.style.background = 'var(--green-light)';
@@ -552,20 +558,16 @@
             videoHistory[uid + '_' + currentVideoId] = true;
             localStorage.setItem('ks_video_history', JSON.stringify(videoHistory));
             updateStudentScore(20);
-            Swal.fire({title:'Thành công!', text:'Bé đã nhận được 20 điểm!', icon:'success', confirmButtonColor: '#2563EB'});
+            Swal.fire({title:'Thành công!', text:'Bé đã nhận được 20 điểm!', icon:'success', confirmButtonColor: '#4A81E8'});
             autoNotifyTeacher(`Con đã xem xong 20 phút video bài giảng "${document.getElementById('inlineVideoTitle').innerText}" ạ! 📺`);
-            
             document.getElementById('inlineBtnSubmit').innerText = '✅ Đã hoàn thành';
         }
     }
 
-    // Cảnh báo nếu thoát sớm
     window.addEventListener('beforeunload', function (e) {
         if(currentVideoId && videoWatchTime < 1200) {
             const videoHistory = JSON.parse(localStorage.getItem('ks_video_history') || '{}');
-            if(!videoHistory[uid + '_' + currentVideoId]) {
-                e.preventDefault(); e.returnValue = '';
-            }
+            if(!videoHistory[uid + '_' + currentVideoId]) { e.preventDefault(); e.returnValue = ''; }
         }
     });
 
@@ -684,7 +686,7 @@
     function checkInGameAnswer(index, selected, correct, points) {
         document.getElementById('inGameQuestionPanel').style.display = 'none';
         if(selected == correct) { advanceGame(points); } 
-        else { Swal.fire({title:'Sai mất rồi 😢', text:'Thỏ bị vấp ngã, bé chọn lại nhé!', icon:'error', confirmButtonColor: '#2563EB'}).then(()=>showInGameQuestion(index)); }
+        else { Swal.fire({title:'Sai mất rồi 😢', text:'Thỏ bị vấp ngã, bé chọn lại nhé!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); }
     }
 
     function checkInGameFill(index, correctStr, points) {
@@ -692,7 +694,7 @@
         const correctArr = correctStr.split('|').map(s=>s.toLowerCase().trim());
         document.getElementById('inGameQuestionPanel').style.display = 'none';
         if(correctArr.includes(userAns)) { advanceGame(points); } 
-        else { Swal.fire({title:'Sai mất rồi 😢', text:'Bé kiểm tra lại chính tả nhé!', icon:'error', confirmButtonColor: '#2563EB'}).then(()=>showInGameQuestion(index)); }
+        else { Swal.fire({title:'Sai mất rồi 😢', text:'Bé kiểm tra lại chính tả nhé!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); }
     }
 
     function startInGameRecording(targetWord, index, points) {
@@ -718,13 +720,14 @@
                     const targetWords = target.split(/\s+/); const spokenWords = transcript.split(/\s+/);
                     let matches = 0; targetWords.forEach(w => { if (spokenWords.includes(w)) matches++; });
                     document.getElementById('inGameQuestionPanel').style.display = 'none';
+
                     if((matches / targetWords.length) >= 0.5) { advanceGame(points); } 
                     else { 
-                        Swal.fire({title:'Chưa đúng lắm 🤔', html:`<p>Bé vừa đọc: <strong>"${transcript}"</strong></p><audio controls src="${audioUrl}" style="width:100%; margin-top:10px;"></audio>`, icon:'info', showCancelButton:true, confirmButtonText:'Đọc Lại', cancelButtonText:'Bỏ qua', confirmButtonColor: '#2563EB'}).then((r)=>{ if(r.isConfirmed) showInGameQuestion(index); }); 
+                        Swal.fire({title:'Chưa đúng lắm 🤔', html:`<p>Bé vừa đọc: <strong>"${transcript}"</strong></p><audio controls src="${audioUrl}" style="width:100%; margin-top:10px;"></audio>`, icon:'info', showCancelButton:true, confirmButtonText:'Đọc Lại', cancelButtonText:'Bỏ qua', confirmButtonColor: '#4A81E8'}).then((r)=>{ if(r.isConfirmed) showInGameQuestion(index); }); 
                     }
                 };
             };
-            recognition.onerror = () => { mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop()); document.getElementById('inGameQuestionPanel').style.display = 'none'; Swal.fire({title:'Lỗi Micro', text:'Không nghe rõ!', icon:'error', confirmButtonColor: '#2563EB'}).then(()=>showInGameQuestion(index)); };
+            recognition.onerror = () => { mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop()); document.getElementById('inGameQuestionPanel').style.display = 'none'; Swal.fire({title:'Lỗi Micro', text:'Không nghe rõ!', icon:'error', confirmButtonColor: '#4A81E8'}).then(()=>showInGameQuestion(index)); };
         }).catch(() => { statusDiv.innerText = 'Lỗi: Hãy cho phép Micro trên thanh địa chỉ!'; });
     }
 
@@ -734,7 +737,6 @@
         if(currentGameProgress >= currentGame.questions.length) {
             isJumping = true; renderGameMap(currentGame.questions.length); // Nhảy tới cờ đích
             
-            // Đợi nhảy xong rồi lưu điểm và bật chúc mừng ngay lập tức
             setTimeout(() => {
                 isJumping = false;
                 
@@ -749,11 +751,11 @@
                 // HIỆN LUN CHÚC MỪNG CHUẨN XÁC VÀ AN TOÀN
                 Swal.fire({
                     title:'VỀ ĐÍCH RỒI! 🎉', 
-                    html: `<h2 style="color:var(--blue-dark); font-family:'Baloo 2'; font-size:2rem;">Chúc mừng bé!</h2><p style="font-size:1.2rem; margin-top:10px; font-weight:800; color:var(--text-dark);">Bé nhận được <strong style="color:var(--orange-dark); font-size:2.5rem; display:block; margin-top:5px;">${currentGameScore} 🥕</strong></p>`, 
-                    icon:'success', showCancelButton: true, confirmButtonText:'🔄 Chơi Lại', cancelButtonText:'🚪 Thoát Game', confirmButtonColor:'#2563EB', cancelButtonColor: '#FF948C', allowOutsideClick: false, backdrop: `rgba(0,0,0,0.6)`
+                    html: `<h2 style="color:var(--blue-dark); font-family:'Baloo 2'; font-size:2.2rem;">Chúc mừng bé!</h2><p style="font-size:1.3rem; margin-top:15px; font-weight:800; color:var(--text-dark);">Bé nhận được <strong style="color:var(--orange-dark); font-size:2.8rem; display:block; margin-top:10px; text-shadow: 2px 2px 0 white;">${currentGameScore} 🥕</strong></p>`, 
+                    icon:'success', showCancelButton: true, confirmButtonText:'🔄 Chơi Lại', cancelButtonText:'🚪 Thoát Game', confirmButtonColor:'#4A81E8', cancelButtonColor: '#FF948C', allowOutsideClick: false, backdrop: `rgba(0,0,0,0.6)`
                 }).then((r)=>{
                     if(r.isConfirmed) playGame(currentGame.id); else closeGame();
-                }).catch(() => { closeGame(); }); 
+                }).catch(() => { closeGame(); }); // Fallback an toàn nếu có lỗi
             }, 800); 
         } else {
             Swal.fire({title:'Đúng rồi! 🎉', text:`Thỏ ăn được ${points} củ cà rốt!`, icon:'success', timer:1000, showConfirmButton:false}).then(() => renderGameMap(-1));
@@ -769,7 +771,7 @@
             if(quiz.type === 'mcq') {
                 html += `<div style="margin-bottom: 25px; background:var(--white); padding:20px; border-radius:20px; border:2px solid var(--border); box-shadow:var(--shadow-sm);">
                         <h4 style="margin-bottom: 15px; color: var(--blue-dark); font-size:1.2rem;">Câu ${idx+1}: ${q.question}</h4>
-                        ${q.options.map((opt, i) => `<label style="display:block; background:var(--bg); padding:15px; border-radius:15px; margin-bottom:10px; cursor:pointer; border:1px solid var(--border); font-weight:800; transition:0.2s; font-size:1.05rem; color:var(--text-dark);"><input type="radio" name="q_${idx}" value="${i}" style="margin-right: 15px; transform:scale(1.3);"> ${opt}</label>`).join('')}
+                        ${q.options.map((opt, i) => `<label style="display:block; background:var(--white); padding:15px; border-radius:15px; margin-bottom:10px; cursor:pointer; border:1px solid var(--border); font-weight:800; transition:0.2s; font-size:1.05rem; color:var(--text-dark);"><input type="radio" name="q_${idx}" value="${i}" style="margin-right: 15px; transform:scale(1.3);"> ${opt}</label>`).join('')}
                     </div>`;
             } else if(quiz.type === 'fill') {
                 let formattedQ = q.question; const blanksCount = (formattedQ.match(/___/g) || []).length;
@@ -780,7 +782,7 @@
         });
         html += `</div>`;
 
-        Swal.fire({ title: `📝 ${quiz.title}`, html: html, width: '700px', showCancelButton: true, confirmButtonText: 'Nộp Bài', cancelButtonText: 'Hủy', confirmButtonColor: '#2563EB', cancelButtonColor: '#FF948C',
+        Swal.fire({ title: `📝 ${quiz.title}`, html: html, width: '700px', showCancelButton: true, confirmButtonText: 'Nộp Bài', cancelButtonText: 'Hủy', confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C',
             preConfirm: () => {
                 let score = 0; const pointPerQuestion = 100 / questions.length; let details = [];
                 questions.forEach((q, idx) => {
@@ -808,7 +810,7 @@
                 localStorage.setItem('ks_quiz_history', JSON.stringify(quizHistory));
                 updateStudentScore(finalScore);
                 
-                Swal.fire({ title: finalScore >= 80 ? 'Tuyệt Vời! 🎉' : 'Cố gắng lên nhé! 💪', text: `Bé đạt được ${finalScore} / 100 điểm.`, icon: finalScore >= 80 ? 'success' : 'info', confirmButtonColor: '#2563EB' });
+                Swal.fire({ title: finalScore >= 80 ? 'Tuyệt Vời! 🎉' : 'Cố gắng lên nhé! 💪', text: `Bé đạt được ${finalScore} / 100 điểm.`, icon: finalScore >= 80 ? 'success' : 'info', confirmButtonColor: '#4A81E8' });
                 autoNotifyTeacher(`Con vừa nộp bài tập "${quizTitle}" và đạt ${finalScore}/100 điểm ạ! 🎯`);
             }
         });
@@ -831,7 +833,7 @@
             const mediaRecorder = new MediaRecorder(stream); let audioChunks = [];
             mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
             
-            Swal.fire({ title: '🎤 Đang nghe...', html: `<p>Bé hãy đọc to từ: <strong style="color: #2563eb; font-size: 2.2rem; display:block; margin-top:15px; font-family:'Baloo 2';">"${targetWord}"</strong></p>`, showConfirmButton: false, allowOutsideClick: false, didOpen: () => { Swal.showLoading(); mediaRecorder.start(); recognition.start(); }});
+            Swal.fire({ title: '🎤 Đang nghe...', html: `<p>Bé hãy đọc to từ: <strong style="color: var(--blue-dark); font-size: 2.2rem; display:block; margin-top:15px; font-family:'Baloo 2';">"${targetWord}"</strong></p>`, showConfirmButton: false, allowOutsideClick: false, didOpen: () => { Swal.showLoading(); mediaRecorder.start(); recognition.start(); }});
 
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
@@ -854,10 +856,10 @@
                         title: score >= 80 ? '🎉 Chúc mừng bé!' : '🤔 Cố lên nào!', 
                         html: `<div style="font-size:3.5rem; color:var(--blue-dark); font-weight:900; margin-bottom:15px; font-family:'Baloo 2';">${score}/100</div>
                                <p style="font-size:1.2rem; margin-bottom:10px;"><strong>Bé đọc:</strong> <span style="color:var(--orange-dark); font-weight:900;">"${transcript}"</span></p>
-                               <div style="background:var(--bg); padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed var(--blue);">
-                                   <p style="font-weight:800; margin-bottom:10px;">🔊 Nghe lại giọng bé:</p><audio controls src="${audioUrl}" style="width:100%; height:40px; border-radius:20px;"></audio>
+                               <div style="background:var(--white); padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed var(--border);">
+                                   <p style="font-weight:800; margin-bottom:10px;">🔊 Nghe lại giọng bé:</p><audio controls src="${audioUrl}" style="width:100%; height:40px; border-radius:20px; outline:none;"></audio>
                                </div>
-                               <button class="btn-learn" style="width:100%; justify-content:center; margin-bottom:15px; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 6px 0 #C2410C!important;" onclick="playAudio('${targetWord}', 0.5)">🐢 Nghe Mẫu Thật Chậm</button>
+                               <button class="btn-learn" style="width:100%; justify-content:center; margin-bottom:15px; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important;" onclick="playAudio('${targetWord}', 0.5)">🐢 Nghe Mẫu Thật Chậm</button>
                                <div style="background:var(--green-light); color:var(--green-dark); padding:15px; border-radius:15px; font-weight:900; font-size:1.1rem; border:2px solid var(--green-dark);">${comment}</div>`, 
                         icon: score >= 80 ? 'success' : 'info', showCancelButton: true, confirmButtonText: '✅ Nộp Điểm', cancelButtonText: '🎤 Đọc Lại', confirmButtonColor: '#4A81E8', cancelButtonColor: '#FF948C'
                     }).then((result) => {
@@ -907,7 +909,7 @@
         localStorage.setItem('ks_chats', JSON.stringify(chats)); forceLoadChat();
     }
 
-    function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#2563EB' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
+    function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
 
     window.onload = () => { loadRealData(); loadChat(); setInterval(() => { loadRealData(); loadChat(); if(document.getElementById('videoPlayerCard').style.display==='block') loadInlineVideoChat();}, 1500); };
 </script>
