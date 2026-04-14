@@ -942,5 +942,50 @@ if (currentUser && currentUser.role === 'student' && currentUser.status === 'pen
     });
 }
 </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getVertexAI, getGenerativeModel } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-vertexai-preview.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
+        authDomain: "kidsenglish2.firebaseapp.com",
+        projectId: "kidsenglish2",
+        storageBucket: "kidsenglish2.firebasestorage.app",
+        messagingSenderId: "25492249032",
+        appId: "1:25492249032:web:67502896b604909ee7c8fd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const vertexAI = getVertexAI(app);
+
+    const model = getGenerativeModel(vertexAI, { 
+        model: "gemini-1.5-flash",
+        systemInstruction: "Bạn là 'Gấu Giải Đáp AI', một chú gấu nhỏ thông minh. Giải đáp tiếng Anh cho trẻ lớp 2. Xưng 'Tớ', gọi bé là 'Bạn nhỏ'. Trả lời ngắn gọn, dùng icon 🧸, 🍯, 🌟 và luôn khen ngợi bé."
+    });
+
+    window.askGau = async () => {
+        const input = document.getElementById('userPrompt');
+        const history = document.getElementById('chat-history');
+        const question = input.value;
+        if (!question) return;
+
+        history.innerHTML += `<p><b>Bạn nhỏ:</b> ${question}</p>`;
+        input.value = "";
+        history.innerHTML += `<p id="loading-gau"><i>Gấu đang suy nghĩ... 🍯</i></p>`;
+
+        try {
+            const result = await model.generateContent(question);
+            const response = await result.response;
+            if(document.getElementById('loading-gau')) document.getElementById('loading-gau').remove();
+            history.innerHTML += `<p style="color: #D97706;"><b>Gấu Giải Đáp:</b> ${response.text()}</p>`;
+            history.scrollTop = history.scrollHeight;
+        } catch (e) {
+            console.error(e);
+            if(document.getElementById('loading-gau')) document.getElementById('loading-gau').innerText = "Tớ bận ăn mật ong tí, hỏi lại sau nhé!";
+        }
+    };
+</script>
 </body>
 </html>

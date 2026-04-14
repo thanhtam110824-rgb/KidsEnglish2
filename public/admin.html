@@ -714,7 +714,7 @@
 </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, where, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, where, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
@@ -728,21 +728,20 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- 1. QUẢN LÝ DANH SÁCH CHỜ DUYỆT (Bảng trên cùng) ---
     onSnapshot(query(collection(db, "users"), where("status", "==", "pending")), (snap) => {
         let html = "", count = 0;
         snap.forEach((d) => {
             const p = d.data(); count++;
             html += `<tr>
-                <td><strong>${p.fullName}</strong></td><td>${p.email}</td><td>Chờ duyệt</td>
+                <td><strong>${p.fullName}</strong></td><td>${p.email}</td>
+                <td><span class="badge" style="background: #F6AD55; color: white; padding: 4px 8px; border-radius: 4px;">Chờ duyệt</span></td>
                 <td>
-                    <button class="btn btn-success btn-small" onclick="duyetHocSinh('${d.id}', '${p.fullName}')">Duyệt</button>
-                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">Xóa</button>
+                    <button class="btn btn-success btn-small" onclick="duyetHocSinh('${d.id}', '${p.fullName}')">✅ Duyệt</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
                 </td>
             </tr>`;
         });
-        const table = document.getElementById('approvalTable');
-        if(table) table.innerHTML = count ? html : '<tr><td colspan="4">✅ Không có yêu cầu nào!</td></tr>';
+        document.getElementById('approvalTable').innerHTML = count ? html : '<tr><td colspan="4">✅ Không có yêu cầu nào!</td></tr>';
         const badge = document.getElementById('pendingBadge');
         if(badge) {
             badge.innerText = count;
@@ -750,49 +749,77 @@
         }
     });
 
-    // --- 2. QUẢN LÝ TẤT CẢ HỌC VIÊN (Tab Học Viên) ---
     onSnapshot(query(collection(db, "users"), where("role", "==", "student")), (snap) => {
-        const table = document.getElementById('studentTable');
-        if (!table) return;
-        table.innerHTML = snap.docs.map(d => {
+        document.getElementById('studentTable').innerHTML = snap.docs.map(d => {
             const u = d.data();
             const color = u.status === 'active' ? '#059669' : '#F6AD55';
             return `<tr>
-                <td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td>
-                <td>${u.score || 0}</td><td style="color:${color}">${u.status === 'active' ? 'Đã duyệt' : 'Chờ'}</td>
-                <td><button onclick="deleteItem('users','${d.id}')">Xóa</button></td>
+                <td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td><td>${u.score || 0}</td>
+                <td style="color: ${color}; font-weight: bold;">${u.status === 'active' ? 'Đã duyệt' : 'Chờ'}</td>
+                <td>
+                    <button class="btn btn-info btn-small" onclick="viewUser('${d.id}')">👁️ Xem</button>
+                    <button class="btn btn-primary btn-small" onclick="window.location.href='mailto:${u.email}'">📧 Email</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
+                </td>
             </tr>`;
         }).join('') || '<tr><td colspan="6">Trống</td></tr>';
     });
 
-    // --- 3. QUẢN LÝ GIÁO VIÊN (Tab Giáo Viên) ---
     onSnapshot(query(collection(db, "users"), where("role", "==", "teacher")), (snap) => {
-        const table = document.getElementById('teacherTable');
-        if (!table) return;
-        table.innerHTML = snap.docs.map(d => {
+        document.getElementById('teacherTable').innerHTML = snap.docs.map(d => {
             const u = d.data();
-            return `<tr><td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td><td>Dạy</td><td><button onclick="deleteItem('users','${d.id}')">Xóa</button></td></tr>`;
+            return `<tr>
+                <td>${u.fullName}</td><td>${u.email}</td><td>${u.classId || 'N/A'}</td>
+                <td><span class="badge" style="background: #4A90E2; color: white; padding: 4px 8px; border-radius: 4px;">Đang dạy</span></td>
+                <td>
+                    <button class="btn btn-info btn-small" onclick="viewUser('${d.id}')">👁️ Xem</button>
+                    <button class="btn btn-primary btn-small" onclick="window.location.href='mailto:${u.email}'">📧 Email</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteItem('users','${d.id}')">🗑️ Xóa</button>
+                </td>
+            </tr>`;
         }).join('') || '<tr><td colspan="5">Trống</td></tr>';
     });
 
-    // --- 4. QUẢN LÝ LỚP HỌC (Tab Lớp Học) ---
     onSnapshot(collection(db, "classes"), (snap) => {
-        const table = document.getElementById('classTable');
-        if (!table) return;
-        table.innerHTML = snap.docs.map(d => {
+        document.getElementById('classTable').innerHTML = snap.docs.map(d => {
             const c = d.data();
-            return `<tr><td>${c.name}</td><td>${c.teacher}</td><td>${c.studentsCount}</td><td>Mở</td><td><button onclick="deleteItem('classes','${d.id}')">Xóa</button></td></tr>`;
+            return `<tr>
+                <td>${c.name}</td><td>${c.teacher}</td><td>${c.studentsCount}</td>
+                <td><span style="color: #059669; font-weight: bold;">Mở</span></td>
+                <td>
+                    <button class="btn btn-danger btn-small" onclick="deleteItem('classes','${d.id}')">🗑️ Xóa</button>
+                </td>
+            </tr>`;
         }).join('') || '<tr><td colspan="5">Trống</td></tr>';
     });
 
-    // --- CÁC HÀM TƯƠNG TÁC ---
+    window.viewUser = async (id) => {
+        const userDoc = await getDoc(doc(db, "users", id));
+        if (userDoc.exists()) {
+            const u = userDoc.data();
+            Swal.fire({
+                title: 'Hồ sơ chi tiết',
+                html: `<div style="text-align: left;">
+                    <p><b>Họ tên:</b> ${u.fullName}</p>
+                    <p><b>Email:</b> ${u.email}</p>
+                    <p><b>Lớp:</b> ${u.classId || 'Chưa có'}</p>
+                    <p><b>Điểm:</b> ${u.score || 0}</p>
+                    <p><b>Trạng thái:</b> ${u.status === 'active' ? 'Hoạt động' : 'Đang chờ'}</p>
+                </div>`,
+                confirmButtonText: 'Đóng'
+            });
+        }
+    };
+
     window.duyetHocSinh = async (id, name) => {
-        const { value: lop } = await Swal.fire({ title: `Xếp lớp cho ${name}`, input: 'text', placeholder: 'Tên lớp (VD: 2A)' });
+        const { value: lop } = await Swal.fire({ title: `Xếp lớp cho ${name}`, input: 'text', placeholder: 'Tên lớp' });
         if (lop) {
             await updateDoc(doc(db, "users", id), { status: 'active', classId: lop, role: 'student' });
             Swal.fire('Thành công', '', 'success');
         }
     };
+
+    window.deleteItem = async (col, id) => { if (confirm("Xóa mục này?")) await deleteDoc(doc(db, col, id)); };
 
     window.addUser = async (role) => {
         const { value: f } = await Swal.fire({
@@ -816,14 +843,6 @@
             await addDoc(collection(db, "classes"), { ...c, studentsCount: 0, status: 'active' });
             Swal.fire('Xong', '', 'success');
         }
-    };
-
-    window.deleteItem = async (col, id) => { if (confirm("Xóa mục này?")) await deleteDoc(doc(db, col, id)); };
-
-    window.filterTable = (id, val) => {
-        const f = val.toUpperCase();
-        const rows = document.getElementById(id).getElementsByTagName("tr");
-        for (let r of rows) r.style.display = r.textContent.toUpperCase().includes(f) ? "" : "none";
     };
 </script>
 </body>
