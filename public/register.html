@@ -3,77 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập - KidsEnglish</title>
+    <title>Đăng ký - KidsEnglish</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* GIỮ NGUYÊN CSS CỦA TÂM */
-        :root { --primary: #4F8CFF; --secondary: #FF9A3C; --success: #10B981; --danger: #FF6B6B; --bg: #F4F7FE; --text-dark: #2B3674; --text-gray: #A3AED0; --white: #FFFFFF; --border: #E2E8F0; }
+        :root { --primary: #4F8CFF; --secondary: #FF9A3C; --bg: #F4F7FE; --text-dark: #2B3674; --text-gray: #A3AED0; --white: #FFFFFF; --border: #E2E8F0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1200px; width: 100%; align-items: center; }
         @media (max-width: 900px) { .container { grid-template-columns: 1fr; gap: 40px; } .content { display: none; } }
         .content { color: white; text-align: center; }
         .content h1 { font-family: 'Baloo 2', cursive; font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .content p { font-size: 1.2rem; opacity: 0.95; line-height: 1.8; margin-bottom: 40px; }
-        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .feature { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
-        .feature-icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .feature-text { font-size: 1rem; line-height: 1.5; }
         .card { background: var(--white); padding: 50px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; }
         .logo { font-family: 'Baloo 2', cursive; font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 30px; }
         .title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; text-align: center; }
-        .subtitle { color: var(--text-gray); font-size: 1rem; text-align: center; margin-bottom: 30px; font-weight: 600; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--text-dark); }
-        input { width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 600; color: var(--text-dark); outline: none; transition: all 0.3s ease; }
+        input { width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 600; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1); }
-        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s ease; }
+        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); }
-        .register-link { text-align: center; margin-top: 25px; color: var(--text-gray); font-weight: 600; }
-        .register-link a { color: var(--primary); font-weight: 800; text-decoration: none; }
+        .login-link { text-align: center; margin-top: 25px; color: var(--text-gray); font-weight: 600; }
+        .login-link a { color: var(--primary); font-weight: 800; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
             <h1>🌟 Kids English</h1>
-            <p>Nền tảng học tiếng Anh trực tuyến cho trẻ em</p>
-            <div class="features">
-                <div class="feature"><div class="feature-icon">🎮</div><div class="feature-text">Học qua trò chơi</div></div>
-                <div class="feature"><div class="feature-icon">🎤</div><div class="feature-text">Luyện nói với AI</div></div>
-                <div class="feature"><div class="feature-icon">👨‍🏫</div><div class="feature-text">Giáo viên hỗ trợ</div></div>
-                <div class="feature"><div class="feature-icon">📊</div><div class="feature-text">Theo dõi tiến độ</div></div>
-            </div>
+            <p>Tham gia cộng đồng học tiếng Anh vui nhộn!</p>
         </div>
-
         <div class="card">
             <div class="logo">Kids<span style="color: #FF9A3C;">English</span></div>
-            <h2 class="title">Đăng nhập</h2>
-            <p class="subtitle">Chào mừng bạn quay trở lại! 👋</p>
-
-            <form id="login-form">
+            <h2 class="title">Đăng ký</h2>
+            <form id="register-form">
                 <div class="form-group">
-                    <label>📧 Email đăng nhập</label>
-                    <input type="email" id="email" placeholder="Nhập email của bạn..." required>
+                    <label>👤 Họ và tên của bé</label>
+                    <input type="text" id="fullName" placeholder="VD: Nguyễn Văn A" required>
+                </div>
+                <div class="form-group">
+                    <label>📧 Email</label>
+                    <input type="email" id="email" placeholder="email@vi-du.com" required>
                 </div>
                 <div class="form-group">
                     <label>🔑 Mật khẩu</label>
-                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
+                    <input type="password" id="password" placeholder="Tối thiểu 6 ký tự..." required>
                 </div>
-                <button type="submit" class="btn">Đăng nhập ngay 🚀</button>
+                <button type="submit" class="btn">Tạo tài khoản ngay 🚀</button>
             </form>
-
-            <div class="register-link">
-                Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a>
+            <div class="login-link">
+                Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
@@ -88,38 +75,43 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            Swal.fire({ title: 'Đang xác thực...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ title: 'Đang tạo tài khoản...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
             try {
-                // 1. Đăng nhập qua Firebase Auth
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // 2. Lấy thông tin vai trò (role) từ Firestore
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    // Lưu vào localStorage để các trang sau biết ai đang đăng nhập
-                    localStorage.setItem('user', JSON.stringify({ ...userData, uid: user.uid }));
+                await setDoc(doc(db, "users", user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    role: 'student',
+                    status: 'pending',
+                    classId: null,
+                    score: 0,
+                    createdAt: new Date().toISOString()
+                });
 
-                    Swal.fire({ icon: 'success', title: 'Thành công!', timer: 1000, showConfirmButton: false }).then(() => {
-                        // Phân luồng trang theo Role
-                        if (userData.role === 'admin') window.location.href = 'admin.html';
-                        else if (userData.role === 'teacher') window.location.href = 'giaovien.html';
-                        else window.location.href = 'hocvien.html';
-                    });
-                } else {
-                    throw new Error("Tài khoản chưa có hồ sơ dữ liệu!");
-                }
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'Gửi hồ sơ thành công! 🎉', 
+                    text: 'Tài khoản đang được Thầy/Cô xét duyệt. Vui lòng chờ nhé!', 
+                    timer: 3500, 
+                    showConfirmButton: false 
+                }).then(() => {
+                    window.location.href = 'login.html';
+                });
             } catch (error) {
                 console.error(error);
-                Swal.fire({ icon: 'error', title: 'Lỗi!', text: 'Email hoặc mật khẩu không đúng!' });
+                let message = 'Lỗi không xác định!';
+                if (error.code === 'auth/email-already-in-use') message = 'Email này đã được đăng ký rồi!';
+                if (error.code === 'auth/weak-password') message = 'Mật khẩu quá yếu (cần ít nhất 6 ký tự)!';
+                Swal.fire({ icon: 'error', title: 'Lỗi!', text: message });
             }
         });
     </script>

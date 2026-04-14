@@ -909,9 +909,29 @@
         localStorage.setItem('ks_chats', JSON.stringify(chats)); forceLoadChat();
     }
 
-    function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
+     function logout() { Swal.fire({ title: 'Đăng xuất?', text: "Bé có muốn thoát khỏi Góc Học Tập?", icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'login.html'; } }); }
 
-    window.onload = () => { loadRealData(); loadChat(); setInterval(() => { loadRealData(); loadChat(); if(document.getElementById('videoPlayerCard').style.display==='block') loadInlineVideoChat();}, 1500); };
+     window.onload = () => { loadRealData(); loadChat(); setInterval(() => { loadRealData(); loadChat(); if(document.getElementById('videoPlayerCard').style.display==='block') loadInlineVideoChat();}, 1500); };
+     const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.role === 'student' && (!user.classId || user.status === 'pending')) {
+     Swal.fire({
+        title: 'Chào mừng con! 🎈',
+        text: 'Con đang ở phòng chờ. Thầy cô đang xếp lớp cho con, con chưa có bài tập đâu nhé. Hãy kiên nhẫn quay lại sau!',
+        icon: 'info',
+        allowOutsideClick: false, // Bắt buộc chặn, không cho bấm ra ngoài bảng thông báo
+        showConfirmButton: false  // Ẩn luôn nút OK để bé không tắt được bảng này đi
+    });
+     const userWait = JSON.parse(localStorage.getItem('user'));
+        if (userWait && userWait.role === 'student' && (!userWait.classId || userWait.status === 'pending')) {
+            Swal.fire({
+                title: 'Chào mừng con! 🎈',
+                text: 'Con đang ở phòng chờ. Thầy cô đang xếp lớp cho con, con chưa có bài tập đâu nhé. Hãy kiên nhẫn quay lại sau!',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false
+            });
+        }
+}
 </script>
 </body>
 </html>
