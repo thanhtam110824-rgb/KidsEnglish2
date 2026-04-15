@@ -162,7 +162,7 @@
                     <iframe id="inlineVideoIframe" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px">
-                    <div id="inlineVideoTimer" style="font-size:1.1rem;font-weight:800;color:var(--orange-dark);background:var(--white);padding:8px 20px;border-radius:15px;border:2px dashed var(--orange-dark)">⏳ 00:00 / 20:00</div>
+                    <div id="inlineVideoTimer" style="font-size:1.1rem;font-weight:800;color:var(--orange-dark);background:var(--white);padding:8px 20px;border-radius:15px;border:2px dashed var(--orange-dark)">⏳ 00:00 / 10:00</div>
                     <button id="inlineBtnSubmit" class="btn-learn" style="background:gray!important;box-shadow:0 5px 0 #475569!important;border-color:#475569!important;pointer-events:none" onclick="submitInlineVideo()">🔒 Đang xem...</button>
                 </div>
                 <hr style="border:1px solid var(--border);margin:25px 0">
@@ -785,7 +785,7 @@ function openInlineVideo(lessonId, encodedUrl, encodedTitle) {
             videoWatchTime++;
             const m = Math.floor(videoWatchTime / 60).toString().padStart(2, '0');
             const s = (videoWatchTime % 60).toString().padStart(2, '0');
-            tmr.innerText = `⏳ ${m}:${s} / 20:00`;
+            tmr.innerText = `⏳ ${m}:${s} / 10:00`;
             if (videoWatchTime >= 1200) {
                 clearInterval(videoInterval);
                 btn.style.background = 'var(--green-dark)'; btn.style.boxShadow = '0 5px 0 #047857'; btn.style.borderColor = '#047857'; btn.style.pointerEvents = 'auto'; btn.innerText = '✅ Nộp Điểm Bài Giảng';
