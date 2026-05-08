@@ -1,140 +1,413 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập - KidsEnglish</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        :root {
-            --primary: #4F8CFF; --secondary: #FF9A3C; --success: #10B981;
-            --danger: #FF6B6B; --bg: #F4F7FE; --text-dark: #2B3674;
-            --text-gray: #A3AED0; --white: #FFFFFF; --border: #E2E8F0;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh; display: flex; justify-content: center;
-            align-items: center; padding: 20px;
-        }
-        .container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-            max-width: 1200px; width: 100%; align-items: center;
-        }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; gap: 40px; } .content { display: none; } }
-        .content { color: white; text-align: center; }
-        .content h1 { font-family: 'Baloo 2', cursive; font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .content p { font-size: 1.2rem; opacity: 0.95; line-height: 1.8; margin-bottom: 40px; }
-        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .feature { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
-        .feature-icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .feature-text { font-size: 1rem; line-height: 1.5; }
-        .card { background: var(--white); padding: 50px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; }
-        .logo { font-family: 'Baloo 2', cursive; font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 30px; }
-        .title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; text-align: center; }
-        .subtitle { color: var(--text-gray); font-size: 1rem; text-align: center; margin-bottom: 30px; font-weight: 600; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 800; color: var(--text-dark); }
-        input { width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 600; color: var(--text-dark); outline: none; transition: all 0.3s ease; }
-        input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1); }
-        .remember-forgot { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.9rem; }
-        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s ease; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); }
-        .register-link { text-align: center; margin-top: 25px; color: var(--text-gray); font-weight: 600; }
-        .register-link a { color: var(--primary); font-weight: 800; text-decoration: none; transition: 0.3s; }
-        .register-link a:hover { color: #3311DB; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidsEnglish — Đăng Nhập</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root {
+  --sky: #dbeafe; --cloud: #ffffff; --sun: #fbbf24;
+  --grass: #4ade80; --grass2: #16a34a;
+  --blue: #3b82f6; --blue-dark: #1d4ed8;
+  --orange: #f97316; --orange-dark: #c2410c;
+  --purple: #a855f7; --pink: #ec4899;
+  --text: #1e293b; --gray: #64748b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Nunito',sans-serif;
+  background: linear-gradient(180deg, #bfdbfe 0%, #93c5fd 30%, #dbeafe 60%, #bbf7d0 85%, #4ade80 100%);
+  min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden;
+  position:relative;
+}
+/* ANIMATED SKY BACKGROUND */
+.sky-layer{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.cloud{position:absolute;background:white;border-radius:50px;opacity:.8;animation:floatCloud linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:white;border-radius:50%}
+.cloud1{width:120px;height:40px;top:8%;animation-duration:25s;animation-delay:-5s}
+.cloud1::before{width:60px;height:55px;top:-30px;left:20px}
+.cloud1::after{width:40px;height:40px;top:-20px;left:60px}
+.cloud2{width:80px;height:28px;top:20%;animation-duration:35s;animation-delay:-12s;opacity:.6}
+.cloud2::before{width:45px;height:40px;top:-25px;left:10px}
+.cloud2::after{width:30px;height:28px;top:-15px;left:40px}
+.cloud3{width:160px;height:50px;top:5%;animation-duration:28s;animation-delay:-20s;opacity:.7}
+.cloud3::before{width:80px;height:70px;top:-40px;left:30px}
+.cloud3::after{width:55px;height:50px;top:-28px;left:80px}
+@keyframes floatCloud{from{transform:translateX(-200px)}to{transform:translateX(110vw)}}
+/* SUN */
+.sun{position:fixed;top:30px;right:60px;width:70px;height:70px;background:var(--sun);border-radius:50%;box-shadow:0 0 0 15px rgba(251,191,36,.2),0 0 0 30px rgba(251,191,36,.1);animation:sunPulse 3s ease-in-out infinite;z-index:1}
+@keyframes sunPulse{0%,100%{box-shadow:0 0 0 15px rgba(251,191,36,.2),0 0 0 30px rgba(251,191,36,.1)}50%{box-shadow:0 0 0 20px rgba(251,191,36,.3),0 0 0 40px rgba(251,191,36,.15)}}
+/* GRASS */
+.grass-row{position:fixed;bottom:0;left:0;width:100%;height:80px;background:linear-gradient(to top,var(--grass2),var(--grass));z-index:1}
+.grass-row::before{content:'';position:absolute;top:-20px;left:0;width:100%;height:30px;background:radial-gradient(ellipse 20px 20px at 10px 20px,var(--grass) 50%,transparent 51%),radial-gradient(ellipse 20px 20px at 30px 20px,var(--grass) 50%,transparent 51%);background-repeat:repeat-x;background-size:40px 20px}
+/* MASCOT */
+.mascot{position:fixed;bottom:70px;left:60px;font-size:5rem;z-index:10;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(3px 5px 10px rgba(0,0,0,.15))}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+.mascot-bubble{position:fixed;bottom:200px;left:55px;background:white;border-radius:20px;padding:12px 18px;font-weight:800;font-size:1rem;color:var(--blue-dark);box-shadow:0 8px 25px rgba(0,0,0,.12);z-index:10;white-space:nowrap;animation:bubbleFade 4s ease-in-out infinite}
+.mascot-bubble::after{content:'';position:absolute;bottom:-10px;left:30px;border:10px solid transparent;border-top-color:white;border-bottom:none}
+@keyframes bubbleFade{0%,90%,100%{opacity:1}50%{opacity:.7}}
+/* DECORATIVE ELEMENTS */
+.star{position:fixed;font-size:1.5rem;animation:twinkle 2s ease-in-out infinite;z-index:1}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.7)}}
+/* MAIN CONTAINER */
+.main{position:relative;z-index:5;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:30px 20px 120px}
+.card-wrap{width:100%;max-width:460px}
+/* CARD */
+.card{
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);
+  border-radius:40px;
+  padding:48px 44px;
+  box-shadow:0 30px 80px rgba(59,130,246,.2),0 0 0 3px rgba(255,255,255,.8);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(236,72,153,.1));border-radius:50%}
+.card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(16,185,129,.1));border-radius:50%}
+.logo{text-align:center;margin-bottom:8px}
+.logo-text{font-family:'Fredoka One',cursive;font-size:3rem;color:var(--blue);letter-spacing:1px}
+.logo-text span{color:var(--orange)}
+.logo-star{font-size:1.4rem;display:inline-block;animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tagline{text-align:center;font-size:.95rem;color:var(--gray);font-weight:700;margin-bottom:30px}
+/* TABS */
+.tabs{display:flex;background:#f1f5f9;border-radius:20px;padding:5px;margin-bottom:28px;gap:5px}
+.tab-btn{flex:1;padding:11px;border:none;border-radius:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .3s;color:var(--gray);background:transparent}
+.tab-btn.active{background:white;color:var(--blue-dark);box-shadow:0 4px 15px rgba(59,130,246,.15)}
+/* FORM */
+.form-group{margin-bottom:18px;position:relative}
+.form-group label{display:block;font-weight:800;color:var(--text);margin-bottom:8px;font-size:.95rem}
+.input-wrap{position:relative}
+.input-wrap i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:1rem}
+.input-wrap input{
+  width:100%;padding:14px 16px 14px 45px;
+  border:2px solid #e2e8f0;border-radius:16px;
+  font-size:1rem;font-weight:700;color:var(--text);
+  outline:none;transition:all .3s;
+  font-family:'Nunito',sans-serif;
+  background:#fafbff;
+}
+.input-wrap input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,.12);background:white}
+.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray);font-size:1rem;padding:4px}
+/* REMEMBER */
+.extras{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:.9rem}
+.remember{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;color:var(--gray)}
+.remember input[type="checkbox"]{width:18px;height:18px;accent-color:var(--blue);cursor:pointer}
+.forgot{color:var(--blue);font-weight:800;text-decoration:none;transition:.2s}
+.forgot:hover{color:var(--blue-dark)}
+/* BUTTON */
+.btn-main{
+  width:100%;padding:16px;border:none;border-radius:18px;
+  font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;
+  cursor:pointer;transition:all .3s;letter-spacing:.3px;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
+  color:white;box-shadow:0 8px 20px rgba(29,78,216,.3);
+  position:relative;overflow:hidden;
+}
+.btn-main::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:.6s}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(29,78,216,.4)}
+.btn-main:hover::after{left:100%}
+.btn-main:active{transform:translateY(0)}
+.btn-main.loading{pointer-events:none;opacity:.8}
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:15px;margin:22px 0;color:var(--gray);font-size:.85rem;font-weight:700}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+/* REGISTER LINK */
+.register{text-align:center;font-weight:700;color:var(--gray);font-size:.95rem}
+.register a{color:var(--orange);font-weight:900;text-decoration:none}
+.register a:hover{color:var(--orange-dark)}
+/* ROLE BADGES */
+.role-hint{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.role-badge{padding:7px 14px;border-radius:20px;font-size:.8rem;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer;transition:.2s;border:2px solid transparent}
+.role-badge:hover{transform:scale(1.05)}
+.rb-student{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+.rb-teacher{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.rb-admin{background:#fef3c7;color:#92400e;border-color:#fde68a}
+/* TABS CONTENT */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* REGISTER EXTRA */
+.reg-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <h1>🌟 Kids English</h1>
-            <p>Nền tảng học tiếng Anh trực tuyến cho trẻ em</p>
-            <div class="features">
-                <div class="feature"><div class="feature-icon">🎮</div><div class="feature-text">Học qua trò chơi</div></div>
-                <div class="feature"><div class="feature-icon">🎤</div><div class="feature-text">Luyện nói với AI</div></div>
-                <div class="feature"><div class="feature-icon">👨‍🏫</div><div class="feature-text">Giáo viên hỗ trợ</div></div>
-                <div class="feature"><div class="feature-icon">📊</div><div class="feature-text">Theo dõi tiến độ</div></div>
+
+<!-- SKY ELEMENTS -->
+<div class="sky-layer">
+  <div class="cloud cloud1" style="left:-150px"></div>
+  <div class="cloud cloud2" style="left:30%"></div>
+  <div class="cloud cloud3" style="left:60%"></div>
+</div>
+<div class="sun"></div>
+<div class="star" style="top:15%;left:15%;animation-delay:0s">⭐</div>
+<div class="star" style="top:25%;right:20%;animation-delay:.7s">🌟</div>
+<div class="star" style="top:40%;left:8%;animation-delay:1.4s">✨</div>
+
+<!-- MASCOT -->
+<div class="mascot">🐰</div>
+<div class="mascot-bubble">Xin chào! Học tiếng Anh thôi! 🎉</div>
+
+<!-- GRASS -->
+<div class="grass-row"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="card-wrap">
+    <div class="card">
+      <div class="logo">
+        <div class="logo-text">Kids<span>English</span> <span class="logo-star">⭐</span></div>
+      </div>
+      <p class="tagline">🌈 Học tiếng Anh vui • Nhanh • Hiệu quả</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchLoginTab('login',this)">🔑 Đăng Nhập</button>
+        <button class="tab-btn" onclick="switchLoginTab('register',this)">📝 Đăng Ký</button>
+      </div>
+
+      <!-- LOGIN TAB -->
+      <div id="tab-login" class="tab-content active">
+        <div class="form-group">
+          <label>📧 Email</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="Nhập email của bạn...">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>🔑 Mật Khẩu</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPass" placeholder="Nhập mật khẩu...">
+            <button class="eye-btn" onclick="togglePass('loginPass',this)" type="button"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div class="extras">
+          <label class="remember"><input type="checkbox" id="rememberMe"> Ghi nhớ đăng nhập</label>
+          <a href="#" class="forgot" onclick="forgotPassword()">Quên mật khẩu?</a>
+        </div>
+        <button class="btn-main" onclick="handleLogin()" id="loginBtn">
+          🚀 Đăng Nhập Ngay
+        </button>
+        <div class="divider">Chọn vai trò demo nhanh</div>
+        <div class="role-hint">
+          <div class="role-badge rb-student" onclick="quickFill('student')">👨‍🎓 Học Viên</div>
+          <div class="role-badge rb-teacher" onclick="quickFill('teacher')">👩‍🏫 Giáo Viên</div>
+          <div class="role-badge rb-admin" onclick="quickFill('admin')">⚙️ Admin</div>
+        </div>
+      </div>
+
+      <!-- REGISTER TAB -->
+      <div id="tab-register" class="tab-content">
+        <div class="reg-row">
+          <div class="form-group">
+            <label>👦 Họ</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input type="text" id="regFirst" placeholder="Nguyễn">
             </div>
+          </div>
+          <div class="form-group">
+            <label>📛 Tên</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input type="text" id="regLast" placeholder="An">
+            </div>
+          </div>
         </div>
+        <div class="form-group">
+          <label>📧 Email</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="regEmail" placeholder="email@gmail.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 Số điện thoại phụ huynh</label>
+          <div class="input-wrap">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="regPhone" placeholder="0912 345 678">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>🔑 Mật Khẩu</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="regPass" placeholder="Ít nhất 6 ký tự">
+            <button class="eye-btn" onclick="togglePass('regPass',this)" type="button"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>🔒 Xác nhận mật khẩu</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="regPassConfirm" placeholder="Nhập lại mật khẩu">
+          </div>
+        </div>
+        <button class="btn-main" onclick="handleRegister()" style="background:linear-gradient(135deg,#f97316,#c2410c);box-shadow:0 8px 20px rgba(249,115,22,.3)">
+          🌟 Đăng Ký Ngay
+        </button>
+        <p style="text-align:center;font-size:.85rem;color:var(--gray);margin-top:15px;font-weight:700">
+          ✅ Sau khi đăng ký, Admin sẽ duyệt và xếp lớp cho bé
+        </p>
+      </div>
 
-        <div class="card">
-            <div class="logo">Kids<span style="color: #FF9A3C;">English</span></div>
-            <h2 class="title">Đăng nhập</h2>
-            <p class="subtitle">Chào mừng bạn quay trở lại! 👋</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">📧 Email đăng nhập</label>
-                    <input type="email" id="email" placeholder="Nhập email của bạn..." required>
-                </div>
-                <div class="form-group">
-                    <label for="password">🔑 Mật khẩu</label>
-                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
-                </div>
-                <div class="remember-forgot">
-                    <label style="cursor: pointer;"><input type="checkbox" id="remember" style="width: auto; cursor: pointer;"> <span>Nhớ mật khẩu</span></label>
-                    <a href="#" style="color: var(--primary); text-decoration: none;">Quên mật khẩu?</a>
-                </div>
-                <button type="submit" class="btn">Đăng nhập ngay 🚀</button>
-            </form>
-            <div class="register-link">Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a></div>
-        </div>
     </div>
+  </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
-            authDomain: "kidsenglish2.firebaseapp.com",
-            projectId: "kidsenglish2",
-            storageBucket: "kidsenglish2.firebasestorage.app",
-            messagingSenderId: "25492249032",
-            appId: "1:25492249032:web:67502896b604909ee7c8fd"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
+  authDomain: "kidsenglish2.firebaseapp.com",
+  projectId: "kidsenglish2",
+  storageBucket: "kidsenglish2.firebasestorage.app",
+  messagingSenderId: "25492249032",
+  appId: "1:25492249032:web:67502896b604909ee7c8fd"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-        document.getElementById('loginForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+// CHECK AUTO-LOGIN
+const savedUser = localStorage.getItem('ks_user_remember');
+if (savedUser) {
+  try {
+    const u = JSON.parse(savedUser);
+    if (u && u.role) redirectByRole(u.role, u);
+  } catch(e) {}
+}
 
-            Swal.fire({ title: 'Đang kiểm tra...', didOpen: () => Swal.showLoading() });
+function redirectByRole(role, userData) {
+  const storage = document.getElementById('rememberMe')?.checked ? localStorage : sessionStorage;
+  storage.setItem('ks_user', JSON.stringify(userData));
+  storage.setItem('ks_token', 'firebase_auth_active');
+  localStorage.setItem('user', JSON.stringify(userData));
+  localStorage.setItem('token', 'firebase_auth_active');
+  if (role === 'admin') window.location.href = 'admin.html';
+  else if (role === 'teacher') window.location.href = 'giaovien.html';
+  else window.location.href = 'hocvien.html';
+}
 
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    
-                    // Cho phép tất cả đăng nhập và lưu vào máy
-                    localStorage.setItem('user', JSON.stringify({ uid: user.uid, ...userData }));
-                    localStorage.setItem('token', 'firebase_auth_active');
+window.handleLogin = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const btn = document.getElementById('loginBtn');
+  if (!email || !pass) return Swal.fire({icon:'warning',title:'Thiếu thông tin!',text:'Vui lòng nhập email và mật khẩu!',confirmButtonColor:'#3b82f6'});
 
-                    Swal.fire({ icon: 'success', title: 'Thành công!', timer: 1000, showConfirmButton: false });
+  btn.classList.add('loading');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
 
-                    // Chuyển hướng thẳng theo vai trò
-                    setTimeout(() => {
-                        if (userData.role === 'admin') window.location.href = 'admin.html';
-                        else if (userData.role === 'teacher') window.location.href = 'giaovien.html';
-                        else window.location.href = 'hocvien.html'; 
-                        // ^ Khi sang hocvien.html, code chặn của Tâm sẽ tự bật thông báo nếu status là pending
-                    }, 1000);
-                } else {
-                    Swal.fire('Lỗi', 'Không tìm thấy hồ sơ người dùng!', 'error');
-                }
-            } catch (error) {
-                Swal.fire('Thất bại', 'Tài khoản hoặc mật khẩu không đúng!', 'error');
-            }
-        };
-    </script>
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
+    if (!userDoc.exists()) throw new Error('Không tìm thấy hồ sơ!');
+    const userData = { uid: cred.user.uid, firestoreId: cred.user.uid, ...userDoc.data() };
+    if (document.getElementById('rememberMe').checked) {
+      localStorage.setItem('ks_user_remember', JSON.stringify(userData));
+    }
+    await Swal.fire({icon:'success',title:'Chào mừng! 🎉',text:`Xin chào ${userData.fullName || 'bạn'}!`,timer:1200,showConfirmButton:false});
+    redirectByRole(userData.role, userData);
+  } catch(e) {
+    btn.classList.remove('loading');
+    btn.innerHTML = '🚀 Đăng Nhập Ngay';
+    const msg = e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential'
+      ? 'Email hoặc mật khẩu không đúng!' : (e.message || 'Đăng nhập thất bại!');
+    Swal.fire({icon:'error',title:'Thất bại!',text:msg,confirmButtonColor:'#ef4444'});
+  }
+};
+
+window.handleRegister = async function() {
+  const first = document.getElementById('regFirst').value.trim();
+  const last  = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  const passC = document.getElementById('regPassConfirm').value;
+
+  if (!first || !last || !email || !pass) return Swal.fire({icon:'warning',title:'Thiếu thông tin!',text:'Vui lòng điền đầy đủ thông tin!',confirmButtonColor:'#f97316'});
+  if (pass.length < 6) return Swal.fire({icon:'warning',title:'Mật khẩu quá ngắn!',text:'Cần ít nhất 6 ký tự!',confirmButtonColor:'#f97316'});
+  if (pass !== passC) return Swal.fire({icon:'warning',title:'Mật khẩu không khớp!',text:'Vui lòng kiểm tra lại!',confirmButtonColor:'#f97316'});
+
+  try {
+    Swal.fire({title:'Đang đăng ký...',didOpen:()=>Swal.showLoading()});
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      fullName: `${first} ${last}`, firstName: first, lastName: last,
+      email, phone, role: 'pending', score: 0, comment: '',
+      class: '', status: 'pending', createdAt: serverTimestamp()
+    });
+    Swal.fire({
+      icon:'success',title:'Đăng ký thành công! 🎉',
+      html:`<p>Hồ sơ của <strong>${first} ${last}</strong> đã được gửi đến Admin.</p><p style="margin-top:10px;color:#64748b">Admin sẽ duyệt và xếp lớp cho bé trong vòng 24 giờ! 🌟</p>`,
+      confirmButtonColor:'#f97316',confirmButtonText:'OK, tôi hiểu!'
+    }).then(()=>switchLoginTab('login', document.querySelector('.tab-btn')));
+  } catch(e) {
+    const msg = e.code === 'auth/email-already-in-use' ? 'Email này đã được đăng ký!' : e.message;
+    Swal.fire({icon:'error',title:'Lỗi!',text:msg,confirmButtonColor:'#ef4444'});
+  }
+};
+
+window.forgotPassword = async function() {
+  const {value: email} = await Swal.fire({
+    title:'🔑 Đặt lại mật khẩu',
+    input:'email',inputPlaceholder:'Nhập email của bạn...',
+    showCancelButton:true,confirmButtonText:'Gửi Link',cancelButtonText:'Hủy',
+    confirmButtonColor:'#3b82f6'
+  });
+  if (!email) return;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    Swal.fire({icon:'success',title:'Đã gửi!',text:'Kiểm tra email để đặt lại mật khẩu nhé!',confirmButtonColor:'#3b82f6'});
+  } catch(e) {
+    Swal.fire({icon:'error',title:'Lỗi!',text:'Không tìm thấy email này!',confirmButtonColor:'#ef4444'});
+  }
+};
+</script>
+
+<script>
+function switchLoginTab(id, el) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+}
+function togglePass(id, btn) {
+  const input = document.getElementById(id);
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+  btn.innerHTML = isPass ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+}
+function quickFill(role) {
+  const demos = {
+    student: {email:'hocvien@kids.vn', pass:'123456'},
+    teacher: {email:'giaovien@kids.vn', pass:'123456'},
+    admin:   {email:'admin@kids.vn',   pass:'123456'}
+  };
+  if(demos[role]) {
+    document.getElementById('loginEmail').value = demos[role].email;
+    document.getElementById('loginPass').value  = demos[role].pass;
+    Swal.fire({icon:'info',title:'Đã điền sẵn!',text:`Nhấn Đăng Nhập để vào vai ${role}`,toast:true,position:'top-end',showConfirmButton:false,timer:2000});
+  }
+}
+// Prevent tab switch on click without element
+window.switchLoginTab = switchLoginTab;
+// Enter key
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter') {
+    const activeTab = document.querySelector('.tab-content.active');
+    if(activeTab?.id === 'tab-login') handleLogin?.();
+    else handleRegister?.();
+  }
+});
+</script>
 </body>
 </html>
