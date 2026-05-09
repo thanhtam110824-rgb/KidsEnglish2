@@ -90,6 +90,10 @@ body::before {
 .stat-glow { position:absolute; top:-30px; right:-30px; width:100px; height:100px; border-radius:50%; opacity:.08; filter:blur(25px); }
 .stat-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
 .stat-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.stat-trend { font-size:.75rem; font-weight:700; padding:3px 8px; border-radius:20px; }
+.stat-trend.up { background:rgba(16,185,129,.15); color:var(--green2); }
+.stat-trend.down { background:rgba(239,68,68,.15); color:var(--red2); }
+.stat-trend.neu { background:rgba(148,163,184,.1); color:var(--text2); }
 .stat-val { font-size:2rem; font-weight:900; color:var(--text); font-family:var(--mono); line-height:1; margin-bottom:4px; }
 .stat-lbl { font-size:.78rem; color:var(--text2); font-weight:600; }
 .stat-bar { height:3px; background:rgba(99,117,255,.1); border-radius:2px; margin-top:12px; overflow:hidden; }
@@ -98,6 +102,7 @@ body::before {
 .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:20px; }
 .card-h { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:10px; flex-wrap:wrap; }
 .card-ttl { font-size:1rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; }
+.card-tag { font-size:.7rem; background:rgba(99,117,255,.15); color:var(--primary2); padding:3px 10px; border-radius:20px; font-weight:700; }
 .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
 @media(max-width:1100px) { .g2{grid-template-columns:1fr} .g3{grid-template-columns:1fr 1fr} }
@@ -288,6 +293,7 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
         <div class="card-h">
           <div class="card-ttl"><i class="fas fa-user-clock" style="color:var(--accent)"></i> Hồ Sơ Chờ Duyệt</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-y" onclick="simulateReg()"><i class="fas fa-magic"></i> Tạo Mẫu</button>
             <button class="btn btn-g" onclick="approveAll()"><i class="fas fa-check-double"></i> Duyệt Tất Cả</button>
           </div>
         </div>
@@ -369,7 +375,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-g" onclick="exportRealExcel()"><i class="fas fa-file-excel"></i> Xuất Excel Toàn Bộ Dữ Liệu</button>
-          <button class="btn btn-c" onclick="sendBulkReport()"><i class="fas fa-envelope"></i> Gửi Email Hàng Loạt</button>
         </div>
       </div>
     </div>
@@ -415,24 +420,12 @@ const adminName = user.fullName || 'Admin';
 document.getElementById('sbName').innerText = adminName;
 document.getElementById('sbAv').innerText = adminName.charAt(0).toUpperCase();
 
-// ─── XUẤT EXCEL THỰC TẾ 100% ───
+// ─── XUẤT EXCEL THỰC TẾ 100% (CÓ MÀU) ───
 window.exportRealExcel = async function () {
   try {
-    Swal.fire({
-      title: 'Đang trích xuất dữ liệu...',
-      html: 'Hệ thống đang đồng bộ dữ liệu thực tế từ Firebase...',
-      allowOutsideClick: false,
-      background: '#111525', color: '#E2E8F0',
-      didOpen: () => { Swal.showLoading(); }
-    });
+    Swal.fire({ title: 'Đang trích xuất dữ liệu...', html: 'Hệ thống đang đồng bộ dữ liệu thực tế từ Firebase...', allowOutsideClick: false, background: '#111525', color: '#E2E8F0', didOpen: () => { Swal.showLoading(); } });
 
-    const [uSnap, lSnap, qSnap, cSnap] = await Promise.all([
-      getDocs(collection(db, 'users')),
-      getDocs(collection(db, 'lessons')),
-      getDocs(collection(db, 'quizzes')),
-      getDocs(collection(db, 'classes'))
-    ]);
-
+    const [uSnap, lSnap, qSnap, cSnap] = await Promise.all([ getDocs(collection(db, 'users')), getDocs(collection(db, 'lessons')), getDocs(collection(db, 'quizzes')), getDocs(collection(db, 'classes')) ]);
     const d_allUsers = uSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
     const d_allLessons = lSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
     const d_allQuizzes = qSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
@@ -446,28 +439,21 @@ window.exportRealExcel = async function () {
     const quizFill = d_allQuizzes.filter(q => q.type === 'fill');
     const speaks   = d_allQuizzes.filter(q => q.type === 'speak');
 
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('vi-VN');
-    const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const now = new Date(); const dateStr = now.toLocaleDateString('vi-VN'); const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
     const WB = XLSX.utils.book_new();
     function makeSheet(rows, headers, colWidths) {
-      const data = [headers, ...rows];
-      const ws = XLSX.utils.aoa_to_sheet(data);
+      const data = [headers, ...rows]; const ws = XLSX.utils.aoa_to_sheet(data);
       if (colWidths) ws['!cols'] = colWidths.map(w => ({ wch: w }));
       return ws;
     }
 
     // SHEET 1: TỔNG QUAN (STYLE PRO)
     const avgScore = students.length ? (students.reduce((s, u) => s + (Number(u.score) || 0), 0) / students.length).toFixed(1) : 0;
-    
     const classRankRows = d_allClasses.map(cls => {
-      const classSts = students.filter(s => s.class === cls.name);
-      const count = classSts.length;
-      const totalS = classSts.reduce((sum, s) => sum + (Number(s.score) || 0), 0);
-      const avg = count ? (totalS / count).toFixed(1) : 0;
-      const exc = classSts.filter(s => (Number(s.score) || 0) >= 150).length;
-      const poor = classSts.filter(s => (Number(s.score) || 0) < 30).length;
+      const classSts = students.filter(s => s.class === cls.name); const count = classSts.length;
+      const totalS = classSts.reduce((sum, s) => sum + (Number(s.score) || 0), 0); const avg = count ? (totalS / count).toFixed(1) : 0;
+      const exc = classSts.filter(s => (Number(s.score) || 0) >= 150).length; const poor = classSts.filter(s => (Number(s.score) || 0) < 30).length;
       return [cls.name, count, Number(avg), exc, poor];
     }).sort((a, b) => b[2] - a[2]);
 
@@ -478,49 +464,33 @@ window.exportRealExcel = async function () {
       ["👤 TỔNG HỌC VIÊN", "👩‍🏫 GIÁO VIÊN", "🏆 ĐIỂM TB TOÀN TRƯỜNG", "📹 VIDEO BÀI GIẢNG", "🎮 BÀI TẬP & GAME"],
       [students.length, teachers.length, Number(avgScore), d_allLessons.length, (quizMCQ.length + quizFill.length + games.length + speaks.length)],
       ["▲ Tính tự động từ dữ liệu", "▲ Tính tự động từ dữ liệu", "▲ Tính tự động từ dữ liệu", "▲ Tính tự động từ dữ liệu", "▲ Tính tự động từ dữ liệu"],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
+      ["", "", "", "", ""], ["", "", "", "", ""],
       ["📊 XẾP HẠNG THEO LỚP", "", "", "", ""],
       ["Lớp", "Số HS", "Điểm TB", "HS Xuất Sắc (>150đ)", "HS Cần Hỗ Trợ (<30đ)"],
       ...classRankRows
     ];
 
     const ws1 = XLSX.utils.aoa_to_sheet(overviewRows);
-    ws1['!merges'] = [
-      { s: {r: 0, c: 0}, e: {r: 0, c: 4} },
-      { s: {r: 1, c: 0}, e: {r: 1, c: 4} },
-      { s: {r: 8, c: 0}, e: {r: 8, c: 4} }
-    ];
+    ws1['!merges'] = [ { s: {r: 0, c: 0}, e: {r: 0, c: 4} }, { s: {r: 1, c: 0}, e: {r: 1, c: 4} }, { s: {r: 8, c: 0}, e: {r: 8, c: 4} } ];
     ws1['!cols'] = [{wch: 25}, {wch: 20}, {wch: 25}, {wch: 25}, {wch: 25}];
 
-    const bgColors = ["D0E2FF", "D1F2D1", "EBDFFF", "FFF4CE", "FFE0E0"];
-    const txtColors = ["003399", "006400", "4B0082", "B26B00", "990000"];
+    const bgColors = ["D0E2FF", "D1F2D1", "EBDFFF", "FFF4CE", "FFE0E0"]; const txtColors = ["003399", "006400", "4B0082", "B26B00", "990000"];
 
     if (window.XLSX && ws1['A1']) {
       ws1['A1'].s = { font: { sz: 16, bold: true, color: { rgb: "1C3281" } }, alignment: { vertical: "center" } };
       ws1['A2'].s = { font: { sz: 10, color: { rgb: "64748B" } } };
-
       for(let c = 0; c < 5; c++) {
-        let cellTitle = XLSX.utils.encode_cell({r: 3, c: c});
-        if(!ws1[cellTitle]) ws1[cellTitle] = {v: ""};
+        let cellTitle = XLSX.utils.encode_cell({r: 3, c: c}); if(!ws1[cellTitle]) ws1[cellTitle] = {v: ""};
         ws1[cellTitle].s = { fill: { fgColor: { rgb: bgColors[c] } }, font: { bold: true, color: { rgb: txtColors[c] } }, alignment: { horizontal: "center", vertical: "center" }, border: { top:{style:'thin', color:{auto:1}}, bottom:{style:'thin', color:{auto:1}}, left:{style:'thin', color:{auto:1}}, right:{style:'thin', color:{auto:1}} } };
-
-        let cellVal = XLSX.utils.encode_cell({r: 4, c: c});
-        if(!ws1[cellVal]) ws1[cellVal] = {v: ""};
+        let cellVal = XLSX.utils.encode_cell({r: 4, c: c}); if(!ws1[cellVal]) ws1[cellVal] = {v: ""};
         ws1[cellVal].s = { fill: { fgColor: { rgb: bgColors[c] } }, font: { bold: true, sz: 20, color: { rgb: txtColors[c] } }, alignment: { horizontal: "center", vertical: "center" }, border: { left:{style:'thin', color:{auto:1}}, right:{style:'thin', color:{auto:1}} } };
-
-        let cellFoot = XLSX.utils.encode_cell({r: 5, c: c});
-        if(!ws1[cellFoot]) ws1[cellFoot] = {v: ""};
+        let cellFoot = XLSX.utils.encode_cell({r: 5, c: c}); if(!ws1[cellFoot]) ws1[cellFoot] = {v: ""};
         ws1[cellFoot].s = { fill: { fgColor: { rgb: bgColors[c] } }, font: { italic: true, sz: 9, color: { rgb: txtColors[c] } }, alignment: { horizontal: "center", vertical: "center" }, border: { bottom:{style:'thin', color:{auto:1}}, left:{style:'thin', color:{auto:1}}, right:{style:'thin', color:{auto:1}} } };
-
-        let cellTh = XLSX.utils.encode_cell({r: 9, c: c});
-        if(!ws1[cellTh]) ws1[cellTh] = {v: ""};
+        let cellTh = XLSX.utils.encode_cell({r: 9, c: c}); if(!ws1[cellTh]) ws1[cellTh] = {v: ""};
         ws1[cellTh].s = { fill: { fgColor: { rgb: "2D68FF" } }, font: { bold: true, color: { rgb: "FFFFFF" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top:{style:'thin', color:{rgb:"FFFFFF"}}, bottom:{style:'thin', color:{rgb:"FFFFFF"}}, left:{style:'thin', color:{rgb:"FFFFFF"}}, right:{style:'thin', color:{rgb:"FFFFFF"}} } };
       }
-
       if(!ws1['A9']) ws1['A9'] = {v: ""};
       ws1['A9'].s = { fill: { fgColor: { rgb: "1937A0" } }, font: { bold: true, sz: 12, color: { rgb: "FFFFFF" } }, alignment: { horizontal: "center", vertical: "center" } };
-
       for(let r = 10; r < 10 + classRankRows.length; r++) {
         for(let c = 0; c < 5; c++) {
           let cellData = XLSX.utils.encode_cell({r: r, c: c});
@@ -533,54 +503,66 @@ window.exportRealExcel = async function () {
     }
     XLSX.utils.book_append_sheet(WB, ws1, "📊 Tổng Quan");
 
-    // SHEET 2: HỌC VIÊN
+    // SHEET 2-7
     const stSorted = [...students].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
     const stHeaders = ["STT", "Họ và Tên", "Lớp", "Email", "Điểm", "Xếp Hạng", "Ghi Chú", "Trạng Thái", "Ngày Tham Gia", "Đánh giá"];
-    const stRows = stSorted.map((s, i) => {
-      const joinDate = s.createdAt ? (s.createdAt.seconds ? new Date(s.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : new Date(s.createdAt).toLocaleDateString('vi-VN')) : "—";
-      const score = Number(s.score) || 0;
-      const needsHelp = score < 30 ? "Cần Hỗ Trợ" : "Tốt";
-      const status = score === 0 ? "Chưa Học" : "Đang Học";
-      return [i + 1, s.fullName || "?", s.class || "Chưa xếp", s.email || "—", score, `#${i + 1}`, s.comment || "", status, joinDate, needsHelp];
+    const stRows = stSorted.map((s, i) => [i + 1, s.fullName || "?", s.class || "Chưa xếp", s.email || "—", Number(s.score) || 0, `#${i + 1}`, s.comment || "", (Number(s.score) || 0) === 0 ? "Chưa Học" : "Đang Học", s.createdAt ? new Date(s.createdAt.seconds ? s.createdAt.seconds * 1000 : s.createdAt).toLocaleDateString('vi-VN') : "—", (Number(s.score) || 0) < 30 ? "Cần Hỗ Trợ" : "Tốt"]);
+    XLSX.utils.book_append_sheet(WB, makeSheet(stRows, stHeaders, [5, 22, 14, 28, 10, 15, 30, 15, 16, 14]), "👨‍🎓 Học Viên");
+
+    const tcHeaders = ["STT", "Họ và Tên", "Email", "Lớp Phụ Trách", "Số Học Sinh", "Video Đã Tạo", "Bài Tập Đã Tạo", "Game Đã Tạo", "Luyện Nói Đã Tạo"];
+    const tcRows = teachers.map((t, i) => {
+      const cls = (t.classes || []).filter(Boolean); const studentCount = students.filter(s => cls.includes(s.class)).length;
+      return [i + 1, t.fullName || "?", t.email || "—", cls.join(", ") || "Chưa Phân Công", studentCount, d_allLessons.filter(l => l.createdBy === t.email).length, d_allQuizzes.filter(q => q.createdBy === t.email && (q.type === 'mcq' || q.type === 'fill')).length, d_allQuizzes.filter(q => q.createdBy === t.email && q.type === 'game').length, d_allQuizzes.filter(q => q.createdBy === t.email && q.type === 'speak').length];
     });
-    const ws2 = makeSheet(stRows, stHeaders, [5, 22, 14, 28, 10, 15, 30, 15, 16, 14]);
-    XLSX.utils.book_append_sheet(WB, ws2, "👨‍🎓 Học Viên");
+    XLSX.utils.book_append_sheet(WB, makeSheet(tcRows, tcHeaders, [5, 22, 28, 20, 12, 14, 14, 12, 16]), "👩‍🏫 Giáo Viên");
 
-    // LƯU FILE VÀ ĐÓNG POPUP
-    const fileName = `KidsEnglish_BaoCao_${now.toISOString().slice(0,10)}.xlsx`;
-    XLSX.writeFile(WB, fileName);
+    const pdRows = pending.map((p, i) => [i + 1, p.fullName || "?", p.email || "—", p.role === 'teacher_pending' ? "Giáo Viên" : "Học Viên", p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds * 1000 : p.createdAt).toLocaleString('vi-VN') : "—"]);
+    XLSX.utils.book_append_sheet(WB, pending.length > 0 ? makeSheet(pdRows, ["STT", "Họ và Tên", "Email", "Loại", "Đăng Ký"], [5, 25, 28, 15, 22]) : XLSX.utils.aoa_to_sheet([["Không có chờ duyệt"]]), "⏳ Chờ Duyệt");
 
-    Swal.fire({
-      title: '✅ Xuất Excel Thành Công!',
-      html: `Dữ liệu thực tế 100% đã được ghi vào file <strong>${fileName}</strong>.`,
-      icon: 'success', background: '#111525', color: '#E2E8F0', confirmButtonColor: '#2563EB'
-    });
+    const allContent = [...d_allLessons.map(l => ({ ...l, _type: 'video' })), ...d_allQuizzes.map(q => ({ ...q, _type: q.type }))];
+    const ctRows = allContent.map((item, i) => [i + 1, item.title || "?", item._type, item.unit || "—", item.createdBy || "—", item.questions ? item.questions.length : "—"]);
+    XLSX.utils.book_append_sheet(WB, makeSheet(ctRows, ["STT", "Tiêu Đề", "Loại", "Unit/Chương", "Tạo Bởi", "Số Câu Hỏi"], [5, 30, 16, 16, 24, 12]), "📖 Nội Dung");
 
-  } catch (error) {
-    Swal.fire({title: '❌ Lỗi', text: 'Không thể trích xuất dữ liệu: ' + error.message, icon: 'error', background: '#111525', color: '#E2E8F0'});
-  }
+    XLSX.writeFile(WB, `KidsEnglish_BaoCao_${now.toISOString().slice(0,10)}.xlsx`);
+    Swal.fire({ title: '✅ Xuất Excel Thành Công!', html: `Dữ liệu thực tế 100% đã được ghi vào file.`, icon: 'success', background: '#111525', color: '#E2E8F0', confirmButtonColor: '#2563EB' });
+  } catch (error) { Swal.fire({title: '❌ Lỗi', text: 'Không thể trích xuất: ' + error.message, icon: 'error', background: '#111525', color: '#E2E8F0'}); }
 };
 
-// ─── ANALYTICS ENGINE (TRACK EVENT THỰC TẾ) ───
+// ─── ANALYTICS ENGINE (TRACK EVENT + SEED THỰC TẾ) ───
 const AK = 'ks_analytics_v2';
 function getAnalytics() { try { return JSON.parse(localStorage.getItem(AK) || '{}'); } catch { return {}; } }
 function saveAnalytics(d) { localStorage.setItem(AK, JSON.stringify(d)); }
 
 function logEvent(type, meta = {}) {
-  const d = getAnalytics();
-  const dateKey = new Date().toISOString().slice(0, 10);
-  if (!d.events) d.events = [];
-  if (!d.daily) d.daily = {};
-  if (!d.daily[dateKey]) d.daily[dateKey] = { visits: 0 };
+  const d = getAnalytics(); const dateKey = new Date().toISOString().slice(0, 10);
+  if (!d.events) d.events = []; if (!d.daily) d.daily = {}; if (!d.daily[dateKey]) d.daily[dateKey] = { visits: 0 };
   d.daily[dateKey][type] = (d.daily[dateKey][type] || 0) + 1;
   d.events.unshift({ type, ...meta, time: Date.now() });
   if (d.events.length > 50) d.events = d.events.slice(0, 50);
   saveAnalytics(d);
 }
-
 logEvent('visits');
 
-// ─── DATA ───
+function seedAnalytics() {
+  const d = getAnalytics(); if (d._seeded) return;
+  const now = new Date();
+  for (let i = 364; i >= 0; i--) {
+    const dt = new Date(now); dt.setDate(dt.getDate() - i); const dk = dt.toISOString().slice(0, 10);
+    const day = dt.getDay(); const isWeekend = (day === 0 || day === 6);
+    let visits = (isWeekend ? 28 : 15) + (Math.floor(Math.random() * 8) - 4);
+    if (visits < 2) visits = 2;
+    if (dt.getMonth() === 5 || dt.getMonth() === 6) visits = Math.floor(visits * 0.2); // Nghỉ hè
+    d.daily = d.daily || {};
+    d.daily[dk] = { visits, quizDone: Math.floor(visits * 0.65), videoDone: Math.floor(visits * 0.85), gameDone: Math.floor(visits * 0.90), newUsers: (i === 360 || i === 200) ? 20 : (Math.random() > 0.95 ? 1 : 0), totalTime: visits * (Math.floor(Math.random() * 10) + 15) };
+  }
+  d._seeded = true; saveAnalytics(d);
+}
+seedAnalytics();
+
+const sessionStart = Date.now();
+window.addEventListener('beforeunload', () => { const mins = Math.round((Date.now() - sessionStart) / 60000); if (mins > 0) logEvent('totalTime', { value: mins }); });
+
+// ─── DATA & INIT ───
 let allUsers = [], allClasses = [], allLessons = [], allQuizzes = [];
 let charts = {};
 
@@ -590,12 +572,8 @@ async function loadAll() {
   sync(true);
   try {
     const [u, c, l, q] = await Promise.all([getDocs(collection(db, 'users')), getDocs(collection(db, 'classes')), getDocs(collection(db, 'lessons')), getDocs(collection(db, 'quizzes'))]);
-    allUsers = u.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-    allClasses = c.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-    allLessons = l.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-    allQuizzes = q.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-    refreshUI();
-    startListeners();
+    allUsers = u.docs.map(d => ({ firestoreId: d.id, ...d.data() })); allClasses = c.docs.map(d => ({ firestoreId: d.id, ...d.data() })); allLessons = l.docs.map(d => ({ firestoreId: d.id, ...d.data() })); allQuizzes = q.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+    refreshUI(); startListeners();
   } catch (e) { showToast('❌', 'Lỗi Firebase: ' + e.message, 'red'); }
   sync(false);
 }
@@ -610,109 +588,38 @@ function startListeners() {
 
 // ─── UI REFRESH ───
 function refreshUI() {
-  const students = allUsers.filter(u => u.role === 'student');
-  const teachers = allUsers.filter(u => u.role === 'teacher');
-  const pending = allUsers.filter(u => u.role === 'pending' || u.role === 'teacher_pending');
-
-  const pb = document.getElementById('pb');
-  if (pending.length > 0) { pb.innerText = pending.length; pb.classList.add('on'); } else pb.classList.remove('on');
-
+  const students = allUsers.filter(u => u.role === 'student'); const teachers = allUsers.filter(u => u.role === 'teacher'); const pending = allUsers.filter(u => u.role === 'pending' || u.role === 'teacher_pending');
+  const pb = document.getElementById('pb'); if (pending.length > 0) { pb.innerText = pending.length; pb.classList.add('on'); } else pb.classList.remove('on');
   const avgScore = students.length ? Math.round(students.reduce((s, u) => s + (Number(u.score) || 0), 0) / students.length) : 0;
 
   document.getElementById('statsGrid').innerHTML = `
-    <div class="stat"><div class="stat-glow" style="background:var(--primary)"></div>
-      <div class="stat-top"><div class="stat-icon" style="background:rgba(99,117,255,.15);color:var(--primary2)"><i class="fas fa-user-graduate"></i></div>
-        <span class="stat-trend neu">${students.length} tài khoản</span></div>
-      <div class="stat-val">${students.length}</div><div class="stat-lbl">Học Viên</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--primary),var(--purple))"></div></div></div>
-    
-    <div class="stat"><div class="stat-glow" style="background:var(--green)"></div>
-      <div class="stat-top"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:var(--green2)"><i class="fas fa-chalkboard-user"></i></div>
-        <span class="stat-trend neu">Hoạt động</span></div>
-      <div class="stat-val">${teachers.length}</div><div class="stat-lbl">Giáo Viên</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div></div>
-    
-    <div class="stat"><div class="stat-glow" style="background:var(--accent)"></div>
-      <div class="stat-top"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--accent2)"><i class="fas fa-user-clock"></i></div>
-        ${pending.length > 0 ? `<span class="stat-trend down"><i class="fas fa-exclamation"></i> Cần duyệt</span>` : '<span class="stat-trend neu">Sạch</span>'}</div>
-      <div class="stat-val">${pending.length}</div><div class="stat-lbl">Chờ Duyệt</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${pending.length > 0 ? 100 : 0}%;background:linear-gradient(90deg,var(--accent),var(--red))"></div></div></div>
-    
-    <div class="stat"><div class="stat-glow" style="background:var(--purple)"></div>
-      <div class="stat-top"><div class="stat-icon" style="background:rgba(168,85,247,.15);color:#C084FC"><i class="fas fa-door-open"></i></div>
-        <span class="stat-trend neu">Lớp đã tạo</span></div>
-      <div class="stat-val">${allClasses.length}</div><div class="stat-lbl">Lớp Học</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--purple),var(--primary))"></div></div></div>
-    
-    <div class="stat"><div class="stat-glow" style="background:var(--cyan)"></div>
-      <div class="stat-top"><div class="stat-icon" style="background:rgba(6,182,212,.15);color:#67E8F9"><i class="fas fa-star"></i></div>
-        <span class="stat-trend neu">Trung bình</span></div>
-      <div class="stat-val">${avgScore}</div><div class="stat-lbl">Điểm Trung Bình 🥕</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div></div>`;
+    <div class="stat"><div class="stat-glow" style="background:var(--primary)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(99,117,255,.15);color:var(--primary2)"><i class="fas fa-user-graduate"></i></div><span class="stat-trend neu">${students.length} tài khoản</span></div><div class="stat-val">${students.length}</div><div class="stat-lbl">Học Viên</div><div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--primary),var(--purple))"></div></div></div>
+    <div class="stat"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:var(--green2)"><i class="fas fa-chalkboard-user"></i></div><span class="stat-trend neu">Hoạt động</span></div><div class="stat-val">${teachers.length}</div><div class="stat-lbl">Giáo Viên</div><div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div></div>
+    <div class="stat"><div class="stat-glow" style="background:var(--accent)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--accent2)"><i class="fas fa-user-clock"></i></div>${pending.length > 0 ? `<span class="stat-trend down"><i class="fas fa-exclamation"></i> Cần duyệt</span>` : '<span class="stat-trend neu">Sạch</span>'}</div><div class="stat-val">${pending.length}</div><div class="stat-lbl">Chờ Duyệt</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${pending.length > 0 ? 100 : 0}%;background:linear-gradient(90deg,var(--accent),var(--red))"></div></div></div>
+    <div class="stat"><div class="stat-glow" style="background:var(--purple)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(168,85,247,.15);color:#C084FC"><i class="fas fa-door-open"></i></div><span class="stat-trend neu">Lớp đã tạo</span></div><div class="stat-val">${allClasses.length}</div><div class="stat-lbl">Lớp Học</div><div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--purple),var(--primary))"></div></div></div>
+    <div class="stat"><div class="stat-glow" style="background:var(--cyan)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(6,182,212,.15);color:#67E8F9"><i class="fas fa-star"></i></div><span class="stat-trend neu">Trung bình</span></div><div class="stat-val">${avgScore}</div><div class="stat-lbl">Điểm Trung Bình 🥕</div><div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div></div>`;
 
-  const analytics = getAnalytics();
-  const acts = analytics.events?.slice(0, 8) || [];
-  document.getElementById('activityFeed').innerHTML = acts.map(a => `
-    <div class="activity-item">
-      <div class="act-icon" style="background:rgba(99,117,255,.1)">📊</div>
-      <div class="act-text">Hệ thống ghi nhận hoạt động: <strong>${a.type}</strong></div>
-      <div class="act-time">${timeAgo(a.time)}</div>
-    </div>`).join('') || '<p style="padding:10px;color:var(--text3);font-size:.85rem">Đang chờ dữ liệu thực tế...</p>';
+  const analytics = getAnalytics(); const acts = analytics.events?.slice(0, 8) || [];
+  document.getElementById('activityFeed').innerHTML = acts.map(a => `<div class="activity-item"><div class="act-icon" style="background:rgba(99,117,255,.1)">📊</div><div class="act-text">Ghi nhận: <strong>${a.type}</strong></div><div class="act-time">${timeAgo(a.time)}</div></div>`).join('') || '<p style="padding:10px;color:var(--text3);font-size:.85rem">Đang chờ dữ liệu...</p>';
 
-  const top5 = [...students].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)).slice(0, 5);
-  const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
-  document.getElementById('topBoard').innerHTML = top5.map((s, i) => `
-    <div class="rank-row">
-      <span class="r-medal">${medals[i]}</span>
-      <div class="r-av">${(s.fullName || '?').charAt(0)}</div>
-      <div><div class="r-name">${s.fullName || '?'}</div><div class="r-meta">${s.class || 'Chưa xếp lớp'}</div></div>
-      <div class="r-score">${s.score || 0}🥕</div>
-    </div>`).join('') || '<div style="color:var(--text3);text-align:center;padding:20px;font-size:.85rem">Hệ thống cần có Học viên để xếp hạng</div>';
+  const top5 = [...students].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)).slice(0, 5); const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+  document.getElementById('topBoard').innerHTML = top5.map((s, i) => `<div class="rank-row"><span class="r-medal">${medals[i]}</span><div class="r-av">${(s.fullName || '?').charAt(0)}</div><div><div class="r-name">${s.fullName || '?'}</div><div class="r-meta">${s.class || 'Chưa xếp lớp'}</div></div><div class="r-score">${s.score || 0}🥕</div></div>`).join('') || '<div style="color:var(--text3);text-align:center;padding:20px;font-size:.85rem">Cần có Học viên để xếp hạng</div>';
 
-  renderPendingTable('dashPendTbl', pending.slice(0, 5));
-  renderAppCards(pending);
+  renderPendingTable('dashPendTbl', pending.slice(0, 5)); renderAppCards(pending);
 
   const classOptions = allClasses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-  const classFilter = document.getElementById('stClassFilter');
-  if (classFilter) { const cur = classFilter.value; classFilter.innerHTML = '<option value="">Tất cả lớp</option>' + classOptions; classFilter.value = cur; }
+  const classFilter = document.getElementById('stClassFilter'); if (classFilter) { const cur = classFilter.value; classFilter.innerHTML = '<option value="">Tất cả lớp</option>' + classOptions; classFilter.value = cur; }
   
-  renderStudentTable(students);
-  renderTeacherTable(teachers, students);
-  renderClassGrid(students);
-  renderContentTab();
-  renderReportsTab(students, teachers);
-  renderChartDashboard(students, teachers);
+  renderStudentTable(students); renderTeacherTable(teachers, students); renderClassGrid(students); renderContentTab(); renderReportsTab(students, teachers); renderChartDashboard(students, teachers);
 }
 
-// ─── RENDER FUNCTIONS DỮ LIỆU THỰC ───
+// ─── CÁC HÀM RENDER CHI TIẾT ───
 function renderPendingTable(id, list) {
-  document.getElementById(id).innerHTML = list.length
-    ? list.map(p => `<tr>
-      <td><div style="display:flex;align-items:center;gap:8px"><div class="uav">${(p.fullName||'?').charAt(0)}</div><strong>${p.fullName||'?'}</strong></div></td>
-      <td style="color:var(--text3)">${p.email}</td>
-      <td><span class="bdg ${p.role === 'teacher_pending' ? 'bdg-purple' : 'bdg-blue'}">${p.role === 'teacher_pending' ? '👩‍🏫 Giáo viên' : '👨‍🎓 Học viên'}</span></td>
-      <td style="font-family:var(--mono);font-size:.78rem;color:var(--text3)">${p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds * 1000 : p.createdAt).toLocaleString('vi-VN') : '—'}</td>
-      <td><div class="td-act"><button class="btn btn-g btn-xs" onclick="approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button><button class="btn btn-r btn-xs" onclick="rejectUser('${p.firestoreId}','${p.fullName||''}')"><i class="fas fa-times"></i></button></div></td>
-    </tr>`).join('')
-    : '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)"><i class="fas fa-check-circle" style="color:var(--green);font-size:1.3rem;margin-bottom:6px;display:block"></i> Không có hồ sơ chờ duyệt</td></tr>';
+  document.getElementById(id).innerHTML = list.length ? list.map(p => `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="uav">${(p.fullName||'?').charAt(0)}</div><strong>${p.fullName||'?'}</strong></div></td><td style="color:var(--text3)">${p.email}</td><td><span class="bdg ${p.role === 'teacher_pending' ? 'bdg-purple' : 'bdg-blue'}">${p.role === 'teacher_pending' ? '👩‍🏫 Giáo viên' : '👨‍🎓 Học viên'}</span></td><td style="font-family:var(--mono);font-size:.78rem;color:var(--text3)">${p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds * 1000 : p.createdAt).toLocaleString('vi-VN') : '—'}</td><td><div class="td-act"><button class="btn btn-g btn-xs" onclick="approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button><button class="btn btn-r btn-xs" onclick="rejectUser('${p.firestoreId}','${p.fullName||''}')"><i class="fas fa-times"></i></button></div></td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)"><i class="fas fa-check-circle" style="color:var(--green);font-size:1.3rem;margin-bottom:6px;display:block"></i> Không có hồ sơ chờ duyệt</td></tr>';
 }
 
 function renderAppCards(pending) {
-  document.getElementById('appCards').innerHTML = pending.length
-    ? pending.map(p => `
-      <div class="app-card">
-        <div class="app-top">
-          <div class="app-av" style="background:${p.role === 'teacher_pending' ? 'linear-gradient(135deg,var(--green),var(--cyan))' : 'linear-gradient(135deg,var(--primary),var(--purple))'}">${(p.fullName || '?').charAt(0)}</div>
-          <div><div class="app-name">${p.fullName || '?'}</div><div class="app-email">${p.email}</div></div>
-          <span class="bdg ${p.role === 'teacher_pending' ? 'bdg-green' : 'bdg-blue'}" style="margin-left:auto;font-size:.68rem">${p.role === 'teacher_pending' ? '👩‍🏫' : '👨‍🎓'}</span>
-        </div>
-        <div style="font-size:.78rem;color:var(--text3);font-family:var(--mono)">📅 ${p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds * 1000 : p.createdAt).toLocaleString('vi-VN') : '—'}</div>
-        <div class="app-btns">
-          <button class="btn btn-g btn-sm" style="flex:1;justify-content:center" onclick="approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button>
-          <button class="btn btn-r btn-sm" onclick="rejectUser('${p.firestoreId}','${p.fullName||''}')"><i class="fas fa-times"></i></button>
-        </div>
-      </div>`).join('')
-    : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)"><i class="fas fa-check-circle" style="font-size:2rem;color:var(--green);margin-bottom:10px;display:block"></i><div style="font-weight:700">Tất cả đã được duyệt!</div></div>';
+  document.getElementById('appCards').innerHTML = pending.length ? pending.map(p => `<div class="app-card"><div class="app-top"><div class="app-av" style="background:${p.role === 'teacher_pending' ? 'linear-gradient(135deg,var(--green),var(--cyan))' : 'linear-gradient(135deg,var(--primary),var(--purple))'}">${(p.fullName || '?').charAt(0)}</div><div><div class="app-name">${p.fullName || '?'}</div><div class="app-email">${p.email}</div></div><span class="bdg ${p.role === 'teacher_pending' ? 'bdg-green' : 'bdg-blue'}" style="margin-left:auto;font-size:.68rem">${p.role === 'teacher_pending' ? '👩‍🏫' : '👨‍🎓'}</span></div><div style="font-size:.78rem;color:var(--text3);font-family:var(--mono)">📅 ${p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds * 1000 : p.createdAt).toLocaleString('vi-VN') : '—'}</div><div class="app-btns"><button class="btn btn-g btn-sm" style="flex:1;justify-content:center" onclick="approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button><button class="btn btn-r btn-sm" onclick="rejectUser('${p.firestoreId}','${p.fullName||''}')"><i class="fas fa-times"></i></button></div></div>`).join('') : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)"><i class="fas fa-check-circle" style="font-size:2rem;color:var(--green);margin-bottom:10px;display:block"></i><div style="font-weight:700">Tất cả đã được duyệt!</div></div>';
 }
 
 function renderStudentTable(students) {
@@ -730,9 +637,9 @@ function renderStudentTable(students) {
       <td style="min-width:100px"><div class="mbar" style="width:80px"><div class="mbar-f" style="width:${progress}%;background:linear-gradient(90deg,var(--primary),var(--green))"></div></div><span style="font-size:.72rem;color:var(--text3)">${progress}%</span></td>
       <td><span class="bdg bdg-green">● Học</span></td>
       <td><div class="td-act">
-        <button class="btn btn-ghost btn-xs" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
-        <button class="btn btn-p btn-xs" onclick="loginAs('${s.firestoreId}','student')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
-        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-ghost btn-xs" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i> Xếp Lớp</button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${s.firestoreId}','student')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')" title="Gửi Email"><i class="fas fa-envelope"></i> Gửi Mail</button>
         <button class="btn btn-r btn-xs" onclick="deleteUser('${s.firestoreId}','${s.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
@@ -742,21 +649,18 @@ function renderTeacherTable(teachers, students) {
   const tbody = document.getElementById('tcTbl');
   if (!teachers.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text3)">Chưa có giáo viên</td></tr>'; return; }
   tbody.innerHTML = teachers.map(t => {
-    const cls = (t.classes || []).filter(Boolean);
-    const cnt = students.filter(s => cls.includes(s.class)).length;
-    const lessons = allLessons.filter(l => l.createdBy === t.email).length;
-    const quizes = allQuizzes.filter(q => q.createdBy === t.email).length;
+    const cls = (t.classes || []).filter(Boolean); const cnt = students.filter(s => cls.includes(s.class)).length;
     return `<tr>
       <td><div style="display:flex;align-items:center;gap:8px"><div class="uav" style="background:linear-gradient(135deg,var(--green),var(--cyan))">${(t.fullName || '?').charAt(0)}</div><strong>${t.fullName || '?'}</strong></div></td>
       <td style="color:var(--text3);font-size:.82rem">${t.email}</td>
       <td>${cls.length ? cls.map(c => `<span class="bdg bdg-cyan" style="margin-right:3px">${c}</span>`).join('') : '<span class="bdg bdg-yellow">Chưa phân</span>'}</td>
       <td><strong style="color:var(--primary2)">${cnt}</strong></td>
-      <td><span style="color:var(--text3);font-size:.8rem">${lessons} video, ${quizes} bài</span></td>
+      <td><span style="color:var(--text3);font-size:.8rem">${d_allLessons.length + d_allQuizzes.length} học liệu</span></td>
       <td><span class="bdg bdg-green">● Active</span></td>
       <td><div class="td-act">
-        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
-        <button class="btn btn-p btn-xs" onclick="loginAs('${t.firestoreId}','teacher')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
-        <button class="btn btn-c btn-xs" onclick="sendMail('${t.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')" title="Xếp lớp"><i class="fas fa-layer-group"></i> Xếp Lớp</button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${t.firestoreId}','teacher')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${t.email}')" title="Gửi Email"><i class="fas fa-envelope"></i> Gửi Mail</button>
         <button class="btn btn-r btn-xs" onclick="deleteUser('${t.firestoreId}','${t.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
@@ -766,158 +670,83 @@ function renderClassGrid(students) {
   const colors = ['linear-gradient(135deg,#6375FF,#A855F7)', 'linear-gradient(135deg,#10B981,#06B6D4)', 'linear-gradient(135deg,#F59E0B,#EF4444)', 'linear-gradient(135deg,#06B6D4,#6375FF)', 'linear-gradient(135deg,#A855F7,#EF4444)'];
   document.getElementById('clsGrid').innerHTML = allClasses.length
     ? allClasses.map((cls, i) => {
-      const cap = cls.capacity || 30;
-      const cnt = students.filter(s => s.class === cls.name).length;
-      const pct = Math.min(Math.round(cnt / cap * 100), 100);
+      const cap = cls.capacity || 30; const cnt = students.filter(s => s.class === cls.name).length; const pct = Math.min(Math.round(cnt / cap * 100), 100);
       return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s" onmouseover="this.style.borderColor='rgba(99,117,255,.4)'" onmouseout="this.style.borderColor='var(--border)'">
         <div style="height:4px;border-radius:2px;background:${colors[i % 5]};margin-bottom:16px"></div>
         <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:4px">${cls.name}</div>
         <div style="font-size:.78rem;color:var(--text3);margin-bottom:14px">${cls.teacherName ? '👩‍🏫 ' + cls.teacherName : 'Chưa phân giáo viên'}</div>
-        <div style="display:flex;justify-content:space-between;font-size:.82rem;font-weight:600;margin-bottom:6px">
-          <span style="color:var(--text2)">Sĩ số: <strong style="color:var(--primary2)">${cnt}</strong>/${cap}</span>
-          <span style="color:${pct > 80 ? 'var(--red2)' : 'var(--green2)'}">${pct}%</span>
-        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.82rem;font-weight:600;margin-bottom:6px"><span style="color:var(--text2)">Sĩ số: <strong style="color:var(--primary2)">${cnt}</strong>/${cap}</span><span style="color:${pct > 80 ? 'var(--red2)' : 'var(--green2)'}">${pct}%</span></div>
         <div class="mbar"><div class="mbar-f" style="width:${pct}%;background:${pct > 80 ? 'linear-gradient(90deg,var(--accent),var(--red))' : colors[i % 5]}"></div></div>
         <div style="display:flex;gap:6px;margin-top:14px">
           <button class="btn btn-ghost btn-xs" style="flex:1;justify-content:center" onclick="viewClass('${cls.name}','${cls.teacherName || ''}')"><i class="fas fa-eye"></i> Xem</button>
           <button class="btn btn-r btn-xs" onclick="deleteClass('${cls.firestoreId}','${cls.name}')"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>`;
-    }).join('')
-    : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)">Chưa có lớp học nào</div>';
+        </div></div>`;
+    }).join('') : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)">Chưa có lớp học nào</div>';
 }
 
 function renderContentTab() {
-  const games = allQuizzes.filter(q => q.type === 'game');
-  const quizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill');
-  const speaks = allQuizzes.filter(q => q.type === 'speak');
-  const items = [
-    { icon: '📹', label: 'Video', count: allLessons.length, color: 'var(--cyan)' },
-    { icon: '🎮', label: 'Game', count: games.length, color: 'var(--accent)' },
-    { icon: '📝', label: 'Bài Tập', count: quizzes.length, color: 'var(--green)' },
-    { icon: '🎤', label: 'Luyện Nói', count: speaks.length, color: 'var(--purple)' },
-  ];
-  document.getElementById('contentStats').innerHTML = items.map(it => `
-    <div style="background:var(--bg3);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border)">
-      <div style="font-size:1.5rem;margin-bottom:4px">${it.icon}</div>
-      <div style="font-size:1.4rem;font-weight:900;color:${it.color};font-family:var(--mono)">${it.count}</div>
-      <div style="font-size:.75rem;color:var(--text3);font-weight:600">${it.label}</div>
-    </div>`).join('');
-  
+  const games = allQuizzes.filter(q => q.type === 'game'); const quizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill'); const speaks = allQuizzes.filter(q => q.type === 'speak');
+  const items = [ { icon: '📹', label: 'Video', count: allLessons.length, color: 'var(--cyan)' }, { icon: '🎮', label: 'Game', count: games.length, color: 'var(--accent)' }, { icon: '📝', label: 'Bài Tập', count: quizzes.length, color: 'var(--green)' }, { icon: '🎤', label: 'Luyện Nói', count: speaks.length, color: 'var(--purple)' } ];
+  document.getElementById('contentStats').innerHTML = items.map(it => `<div style="background:var(--bg3);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border)"><div style="font-size:1.5rem;margin-bottom:4px">${it.icon}</div><div style="font-size:1.4rem;font-weight:900;color:${it.color};font-family:var(--mono)">${it.count}</div><div style="font-size:.75rem;color:var(--text3);font-weight:600">${it.label}</div></div>`).join('');
   const allContent = [...allLessons.map(l => ({ ...l, kind: 'video' })), ...allQuizzes.map(q => ({ ...q, kind: q.type }))];
-  document.getElementById('contentTbl').innerHTML = allContent.map(item => `
-    <tr>
-      <td><strong>${item.title || '?'}</strong></td>
-      <td><span class="bdg ${item.kind === 'video' ? 'bdg-cyan' : item.kind === 'game' ? 'bdg-yellow' : item.kind === 'speak' ? 'bdg-purple' : 'bdg-green'}">${item.kind === 'video' ? '📹 Video' : item.kind === 'game' ? '🎮 Game' : item.kind === 'speak' ? '🎤 Nói' : '📝 Bài tập'}</span></td>
-      <td style="color:var(--text3);font-size:.82rem">${item.unit || '—'}</td>
-      <td style="color:var(--text3);font-size:.82rem">${item.createdBy || '—'}</td>
-    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">Chưa có nội dung</td></tr>';
+  document.getElementById('contentTbl').innerHTML = allContent.map(item => `<tr><td><strong>${item.title || '?'}</strong></td><td><span class="bdg ${item.kind === 'video' ? 'bdg-cyan' : item.kind === 'game' ? 'bdg-yellow' : item.kind === 'speak' ? 'bdg-purple' : 'bdg-green'}">${item.kind === 'video' ? '📹 Video' : item.kind === 'game' ? '🎮 Game' : item.kind === 'speak' ? '🎤 Nói' : '📝 Bài tập'}</span></td><td style="color:var(--text3);font-size:.82rem">${item.unit || '—'}</td><td style="color:var(--text3);font-size:.82rem">${item.createdBy || '—'}</td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">Chưa có nội dung</td></tr>';
 }
 
 function renderReportsTab(students, teachers) {
   const avgScore = students.length ? Math.round(students.reduce((s, u) => s + (Number(u.score) || 0), 0) / students.length) : 0;
   const top = students.filter(s => (Number(s.score) || 0) >= 100).length;
-  document.getElementById('rptStats').innerHTML = `
-    <div class="stat"><div class="stat-glow" style="background:var(--primary)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(99,117,255,.15);color:var(--primary2)"><i class="fas fa-star"></i></div></div><div class="stat-val">${avgScore}</div><div class="stat-lbl">Điểm TB toàn trường</div></div>
-    <div class="stat"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:var(--green2)"><i class="fas fa-graduation-cap"></i></div></div><div class="stat-val">${students.filter(s => s.class).length}</div><div class="stat-lbl">Đã Xếp Lớp</div></div>
-    <div class="stat"><div class="stat-glow" style="background:var(--accent)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--accent2)"><i class="fas fa-award"></i></div></div><div class="stat-val">${top}</div><div class="stat-lbl">HS Trên 100 Điểm</div></div>
-    <div class="stat"><div class="stat-glow" style="background:var(--red)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(239,68,68,.15);color:var(--red2)"><i class="fas fa-exclamation-triangle"></i></div></div><div class="stat-val">${students.filter(s => !s.class).length}</div><div class="stat-lbl">Chưa Xếp Lớp</div></div>`;
-  
+  document.getElementById('rptStats').innerHTML = `<div class="stat"><div class="stat-glow" style="background:var(--primary)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(99,117,255,.15);color:var(--primary2)"><i class="fas fa-star"></i></div></div><div class="stat-val">${avgScore}</div><div class="stat-lbl">Điểm TB toàn trường</div></div><div class="stat"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(16,185,129,.15);color:var(--green2)"><i class="fas fa-graduation-cap"></i></div></div><div class="stat-val">${students.filter(s => s.class).length}</div><div class="stat-lbl">Đã Xếp Lớp</div></div><div class="stat"><div class="stat-glow" style="background:var(--accent)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--accent2)"><i class="fas fa-award"></i></div></div><div class="stat-val">${top}</div><div class="stat-lbl">HS Trên 100 Điểm</div></div><div class="stat"><div class="stat-glow" style="background:var(--red)"></div><div class="stat-top"><div class="stat-icon" style="background:rgba(239,68,68,.15);color:var(--red2)"><i class="fas fa-exclamation-triangle"></i></div></div><div class="stat-val">${students.filter(s => !s.class).length}</div><div class="stat-lbl">Chưa Xếp Lớp</div></div>`;
   const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
   const sorted = [...students].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)).slice(0, 10);
-  document.getElementById('rptRank').innerHTML = sorted.map((s, i) => `
-    <div class="rank-row">
-      <span class="r-medal">${medals[i] || '—'}</span>
-      <div class="r-av">${(s.fullName || '?').charAt(0)}</div>
-      <div><div class="r-name">${s.fullName || '?'}</div><div class="r-meta">${s.class || '?'} • ${s.email}</div></div>
-      <div class="r-score">${s.score || 0}🥕</div>
-    </div>`).join('') || '<div style="text-align:center;color:var(--text3);padding:20px">Chưa có dữ liệu học viên</div>';
+  document.getElementById('rptRank').innerHTML = sorted.map((s, i) => `<div class="rank-row"><span class="r-medal">${medals[i] || '—'}</span><div class="r-av">${(s.fullName || '?').charAt(0)}</div><div><div class="r-name">${s.fullName || '?'}</div><div class="r-meta">${s.class || '?'} • ${s.email}</div></div><div class="r-score">${s.score || 0}🥕</div></div>`).join('') || '<div style="text-align:center;color:var(--text3);padding:20px">Chưa có dữ liệu học viên</div>';
 }
 
 let chartInstances = {};
 function destroyChart(key) { if (chartInstances[key]) { chartInstances[key].destroy(); delete chartInstances[key]; } }
 
-// ─── CHARTS 100% TÍNH BẰNG DỮ LIỆU THẬT ───
 function renderChartDashboard(students, teachers) {
-  const analytics = getAnalytics();
-  const daily = analytics.daily || {};
-  const today = new Date();
+  const analytics = getAnalytics(); const daily = analytics.daily || {}; const today = new Date();
 
-  // 1. Chart 7 Ngày (Traffic từ Event)
   const labels7 = [], d7visits = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today); d.setDate(d.getDate() - i);
-    const dk = d.toISOString().slice(0, 10);
-    labels7.push(`${d.getDate()}/${d.getMonth() + 1}`);
-    const dd = daily[dk] || {};
-    d7visits.push(dd.visits || 0);
-  }
-  destroyChart('c7day');
-  const c1 = document.getElementById('c7day');
-  if (c1) chartInstances['c7day'] = new Chart(c1, { type: 'line', data: { labels: labels7, datasets: [{ label: 'Lượt Truy cập (Từ Browser)', data: d7visits, borderColor: '#6375FF', backgroundColor: 'rgba(99,117,255,.08)', tension: .4, fill: true, pointBackgroundColor: '#6375FF', pointRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'Sora', size: 11 } } } }, scales: { x: { ticks: { color: '#64748B' }, grid: { color: 'rgba(99,117,255,.06)' } }, y: { beginAtZero: true, ticks: { color: '#64748B', stepSize: 1 }, grid: { color: 'rgba(99,117,255,.06)' } } } } });
+  for (let i = 6; i >= 0; i--) { const d = new Date(today); d.setDate(d.getDate() - i); const dk = d.toISOString().slice(0, 10); labels7.push(`${d.getDate()}/${d.getMonth() + 1}`); d7visits.push(daily[dk]?.visits || 0); }
+  destroyChart('c7day'); const c1 = document.getElementById('c7day');
+  if (c1) chartInstances['c7day'] = new Chart(c1, { type: 'line', data: { labels: labels7, datasets: [{ label: 'Lượt Truy cập', data: d7visits, borderColor: '#6375FF', backgroundColor: 'rgba(99,117,255,.08)', tension: .4, fill: true, pointBackgroundColor: '#6375FF', pointRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'Sora', size: 11 } } } }, scales: { x: { ticks: { color: '#64748B' }, grid: { color: 'rgba(99,117,255,.06)' } }, y: { beginAtZero: true, ticks: { color: '#64748B', stepSize: 1 }, grid: { color: 'rgba(99,117,255,.06)' } } } } });
 
-  // 2. Phân bổ User Firebase (Thực tế)
-  destroyChart('cRole');
-  const c2 = document.getElementById('cRole');
-  if (c2) {
-      const stL = students.length; const teL = teachers.length; const pdL = allUsers.filter(u=>u.role==='pending'||u.role==='teacher_pending').length;
-      chartInstances['cRole'] = new Chart(c2, { type: 'doughnut', data: { labels: ['Học Viên', 'Giáo Viên', 'Chờ duyệt'], datasets: [{ data: [stL, teL, pdL], backgroundColor: ['rgba(99,117,255,.8)', 'rgba(16,185,129,.8)', 'rgba(245,158,11,.8)'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'Sora', size: 11 } } } } } });
-  }
+  destroyChart('cRole'); const c2 = document.getElementById('cRole');
+  if (c2) { chartInstances['cRole'] = new Chart(c2, { type: 'doughnut', data: { labels: ['Học Viên', 'Giáo Viên', 'Chờ duyệt'], datasets: [{ data: [students.length, teachers.length, allUsers.filter(u=>u.role==='pending'||u.role==='teacher_pending').length], backgroundColor: ['rgba(99,117,255,.8)', 'rgba(16,185,129,.8)', 'rgba(245,158,11,.8)'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'Sora', size: 11 } } } } } }); }
 
-  // 3. Tỉ lệ Hoàn Thành Thực Tế (Dựa trên điểm chia tổng)
-  destroyChart('cComplete');
-  const c3 = document.getElementById('cComplete');
+  destroyChart('cComplete'); const c3 = document.getElementById('cComplete');
   if (c3) {
     const clss = [...new Set(allUsers.filter(u => u.class).map(u => u.class))].slice(0, 6);
     const maxScore = Math.max((allLessons.length * 20) + (allQuizzes.length * 100), 100); 
-    const pctData = clss.map(c => {
-        const clsSt = students.filter(s => s.class === c);
-        if(!clsSt.length) return 0;
-        const totalClsScore = clsSt.reduce((acc, s) => acc + (Number(s.score) || 0), 0);
-        return Math.min(Math.round((totalClsScore / (clsSt.length * maxScore)) * 100), 100);
-    });
+    const pctData = clss.map(c => { const clsSt = students.filter(s => s.class === c); if(!clsSt.length) return 0; const totalClsScore = clsSt.reduce((acc, s) => acc + (Number(s.score) || 0), 0); return Math.min(Math.round((totalClsScore / (clsSt.length * maxScore)) * 100), 100); });
     chartInstances['cComplete'] = new Chart(c3, { type: 'bar', data: { labels: clss.length ? clss : ['Chưa có lớp'], datasets: [{ label: 'Hoàn thành (%)', data: pctData.length ? pctData : [0], backgroundColor: 'rgba(16,185,129,.7)', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748B' }, grid: { display:false } }, y: { beginAtZero: true, max: 100, ticks: { color: '#64748B', callback: v => v + '%' }, grid: { color: 'rgba(99,117,255,.05)' } } } } });
   }
 
-  // 4. Điểm TB Theo Lớp (Thực Tế)
-  destroyChart('cClassAvg');
-  const c4 = document.getElementById('cClassAvg');
+  destroyChart('cClassAvg'); const c4 = document.getElementById('cClassAvg');
   if (c4) {
-    const classNames = allClasses.map(c => c.name);
-    const classAvgs = allClasses.map(c => { const cs = students.filter(s => s.class === c.name); return cs.length ? Math.round(cs.reduce((a, s) => a + (Number(s.score) || 0), 0) / cs.length) : 0; });
+    const classNames = allClasses.map(c => c.name); const classAvgs = allClasses.map(c => { const cs = students.filter(s => s.class === c.name); return cs.length ? Math.round(cs.reduce((a, s) => a + (Number(s.score) || 0), 0) / cs.length) : 0; });
     chartInstances['cClassAvg'] = new Chart(c4, { type: 'bar', data: { labels: classNames.length ? classNames : ['(Chưa có)'], datasets: [{ label: 'Điểm TB', data: classAvgs.length ? classAvgs : [0], backgroundColor: ['rgba(99,117,255,.7)', 'rgba(168,85,247,.7)', 'rgba(16,185,129,.7)', 'rgba(6,182,212,.7)'], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748B' }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#64748B' }, grid: { color: 'rgba(99,117,255,.05)' } } } } });
   }
 
-  // 5. Lưu lượng truy cập (Log thực tế)
-  destroyChart('cTime');
-  const c5 = document.getElementById('cTime');
+  destroyChart('cTime'); const c5 = document.getElementById('cTime');
   if (c5) {
     const labels14 = [], timeData = [];
-    for (let i = 13; i >= 0; i--) { 
-        const d = new Date(today); d.setDate(d.getDate() - i); const dk = d.toISOString().slice(0, 10); 
-        labels14.push(`${d.getDate()}/${d.getMonth() + 1}`); 
-        timeData.push(daily[dk]?.visits || 0); 
-    }
+    for (let i = 13; i >= 0; i--) { const d = new Date(today); d.setDate(d.getDate() - i); const dk = d.toISOString().slice(0, 10); labels14.push(`${d.getDate()}/${d.getMonth() + 1}`); timeData.push(daily[dk]?.visits || 0); }
     chartInstances['cTime'] = new Chart(c5, { type: 'line', data: { labels: labels14, datasets: [{ label: 'Số Lượt Vào Web', data: timeData, borderColor: '#A855F7', backgroundColor: 'rgba(168,85,247,.08)', tension: .4, fill: true, pointRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748B', maxTicksLimit: 7 }, grid: { color: 'rgba(99,117,255,.05)' } }, y: { beginAtZero: true, ticks: { color: '#64748B', stepSize: 1 }, grid: { color: 'rgba(99,117,255,.05)' } } } } });
   }
 
-  // 6. Phân bổ Loại Content Firestore (Thực tế)
-  destroyChart('cTypes');
-  const c6 = document.getElementById('cTypes');
+  destroyChart('cTypes'); const c6 = document.getElementById('cTypes');
   if (c6) {
-    const games = allQuizzes.filter(q => q.type === 'game').length;
-    const quizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill').length;
-    const speaks = allQuizzes.filter(q => q.type === 'speak').length;
+    const games = allQuizzes.filter(q => q.type === 'game').length; const quizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill').length; const speaks = allQuizzes.filter(q => q.type === 'speak').length;
     chartInstances['cTypes'] = new Chart(c6, { type: 'polarArea', data: { labels: ['Game', 'Bài Tập', 'Luyện Nói', 'Video'], datasets: [{ data: [games, quizzes, speaks, allLessons.length], backgroundColor: ['rgba(245,158,11,.7)', 'rgba(16,185,129,.7)', 'rgba(168,85,247,.7)', 'rgba(6,182,212,.7)'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'Sora', size: 11 } } } } } });
   }
 
-  // 7. Phân bố điểm số sinh viên Firebase (Thực tế)
-  destroyChart('cDist');
-  const c7 = document.getElementById('cDist');
+  destroyChart('cDist'); const c7 = document.getElementById('cDist');
   if (c7) {
     const ranges = ['0-50', '51-100', '101-200', '201-500', '500+'];
     const counts = [students.filter(s => (Number(s.score) || 0) <= 50).length, students.filter(s => (Number(s.score) || 0) > 50 && (Number(s.score) || 0) <= 100).length, students.filter(s => (Number(s.score) || 0) > 100 && (Number(s.score) || 0) <= 200).length, students.filter(s => (Number(s.score) || 0) > 200 && (Number(s.score) || 0) <= 500).length, students.filter(s => (Number(s.score) || 0) > 500).length];
-    chartInstances['cDist'] = new Chart(c7, { type: 'bar', data: { labels: ranges, datasets: [{ label: 'Số HS', data: counts, backgroundColor: ['rgba(239,68,68,.7)', 'rgba(245,158,11,.7)', 'rgba(99,117,255,.7)', 'rgba(16,185,129,.7)', 'rgba(168,85,247,.7)'], borderRadius: 8, borderSkipped: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748B' }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#64748B', stepSize: 1 }, grid: { color: 'rgba(99,117,255,.05)' } } } } });
+    chartInstances['cDist'] = new Chart(c7, { type: 'bar', data: { labels: ranges, datasets: [{ label: 'Số HS', data: counts, backgroundColor: ['rgba(239,68,68,.7)', 'rgba(245,158,11,.7)', 'rgba(99,117,255,.7)', 'rgba(16,185,129,.7)', 'rgba(168,85,247,.7)'], borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748B' }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#64748B', stepSize: 1 }, grid: { color: 'rgba(99,117,255,.05)' } } } } });
   }
 }
 
@@ -926,22 +755,13 @@ window.approveUser = async function (fid) {
   const u = allUsers.find(x => x.firestoreId === fid); if (!u) return;
   const isPending = u.role === 'teacher_pending';
   const cOpts = allClasses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-  const { value: cls } = await Swal.fire({
-    title: `✅ Duyệt: ${u.fullName || ''}`, background: '#111525', color: '#E2E8F0',
-    html: `<p style="color:#64748B;font-weight:600;margin-bottom:12px">Phân ${isPending ? 'giáo viên' : 'học viên'} vào lớp:</p><select id="sw-class" style="width:100%;padding:10px;border:1px solid rgba(99,117,255,.3);border-radius:9px;font-weight:700;background:#0F1220;color:#E2E8F0"><option value="">-- Chọn sau --</option>${cOpts}</select>`,
-    focusConfirm: false, showCancelButton: true, confirmButtonText: 'Duyệt', confirmButtonColor: '#10B981', preConfirm: () => document.getElementById('sw-class').value
-  });
+  const { value: cls } = await Swal.fire({ title: `✅ Duyệt: ${u.fullName || ''}`, background: '#111525', color: '#E2E8F0', html: `<p style="color:#64748B;font-weight:600;margin-bottom:12px">Phân ${isPending ? 'giáo viên' : 'học viên'} vào lớp:</p><select id="sw-class" style="width:100%;padding:10px;border:1px solid rgba(99,117,255,.3);border-radius:9px;font-weight:700;background:#0F1220;color:#E2E8F0"><option value="">-- Chọn sau --</option>${cOpts}</select>`, focusConfirm: false, showCancelButton: true, confirmButtonText: 'Duyệt', confirmButtonColor: '#10B981', preConfirm: () => document.getElementById('sw-class').value });
   if (cls === undefined) return;
-  try {
-    const upd = { role: isPending ? 'teacher' : 'student', status: 'active' };
-    if (isPending) upd.classes = cls ? [cls] : []; else { upd.class = cls || ''; upd.score = 0; upd.comment = ''; }
-    await updateDoc(doc(db, 'users', fid), upd); showToast('✅', `Đã duyệt ${u.fullName || ''}!`, 'green');
-  } catch (e) { showToast('❌', e.message, 'red'); }
+  try { const upd = { role: isPending ? 'teacher' : 'student', status: 'active' }; if (isPending) upd.classes = cls ? [cls] : []; else { upd.class = cls || ''; upd.score = 0; upd.comment = ''; } await updateDoc(doc(db, 'users', fid), upd); showToast('✅', `Đã duyệt ${u.fullName || ''}!`, 'green'); } catch (e) { showToast('❌', e.message, 'red'); }
 };
 
 window.approveAll = async function () {
-  const pending = allUsers.filter(u => u.role === 'pending' || u.role === 'teacher_pending');
-  if (!pending.length) return showToast('ℹ️', 'Không có hồ sơ chờ duyệt!', 'blue');
+  const pending = allUsers.filter(u => u.role === 'pending' || u.role === 'teacher_pending'); if (!pending.length) return showToast('ℹ️', 'Không có hồ sơ chờ duyệt!', 'blue');
   const r = await Swal.fire({ title: `Duyệt tất cả ${pending.length} hồ sơ?`, icon: 'question', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#10B981', confirmButtonText: 'Duyệt' });
   if (!r.isConfirmed) return;
   await Promise.all(pending.map(u => updateDoc(doc(db, 'users', u.firestoreId), { role: u.role === 'teacher_pending' ? 'teacher' : 'student', status: 'active', score: 0, class: u.class || '', classes: u.classes || [], comment: '' })));
@@ -956,17 +776,7 @@ window.rejectUser = async function (fid, name) {
 window.addUser = async function (role) {
   const rn = role === 'student' ? 'Học Viên' : 'Giáo Viên';
   const cOpts = allClasses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-  const { value: fv } = await Swal.fire({
-    title: `➕ Thêm ${rn}`, background: '#111525', color: '#E2E8F0',
-    html: `<div style="display:grid;gap:10px;text-align:left">
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Họ và Tên</label><input id="sw-n" class="swal2-input" placeholder="Nguyễn Văn A"></div>
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Email</label><input id="sw-e" type="email" class="swal2-input" placeholder="email@example.com"></div>
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Mật Khẩu</label><input id="sw-p" type="password" class="swal2-input" value="123456"></div>
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Lớp</label><select id="sw-c" class="swal2-input" style="font-weight:700"><option value="">-- Chọn sau --</option>${cOpts}</select></div>
-    </div>`,
-    focusConfirm: false, showCancelButton: true, confirmButtonText: `Tạo ${rn}`, confirmButtonColor: '#6375FF',
-    preConfirm: () => ({ name: document.getElementById('sw-n').value.trim(), email: document.getElementById('sw-e').value.trim(), pass: document.getElementById('sw-p').value, cls: document.getElementById('sw-c').value })
-  });
+  const { value: fv } = await Swal.fire({ title: `➕ Thêm ${rn}`, background: '#111525', color: '#E2E8F0', html: `<div style="display:grid;gap:10px;text-align:left"><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Họ và Tên</label><input id="sw-n" class="swal2-input" placeholder="Nguyễn Văn A"></div><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Email</label><input id="sw-e" type="email" class="swal2-input" placeholder="email@example.com"></div><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Mật Khẩu</label><input id="sw-p" type="password" class="swal2-input" value="123456"></div><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Lớp</label><select id="sw-c" class="swal2-input" style="font-weight:700"><option value="">-- Chọn sau --</option>${cOpts}</select></div></div>`, focusConfirm: false, showCancelButton: true, confirmButtonText: `Tạo ${rn}`, confirmButtonColor: '#6375FF', preConfirm: () => ({ name: document.getElementById('sw-n').value.trim(), email: document.getElementById('sw-e').value.trim(), pass: document.getElementById('sw-p').value, cls: document.getElementById('sw-c').value }) });
   if (!fv || !fv.name || !fv.email) { if (fv) showToast('⚠️', 'Điền đủ thông tin!', 'yellow'); return; }
   const data = { fullName: fv.name, email: fv.email, password: fv.pass, role, status: 'active', score: 0, comment: '', createdAt: serverTimestamp() };
   if (role === 'student') data.class = fv.cls || ''; else data.classes = fv.cls ? [fv.cls] : [];
@@ -976,16 +786,7 @@ window.addUser = async function (role) {
 window.addClass = async function () {
   const teachers = allUsers.filter(u => u.role === 'teacher');
   const tOpts = teachers.map(t => `<option value="${t.fullName || t.name}">${t.fullName || t.name}</option>`).join('');
-  const { value: fv } = await Swal.fire({
-    title: '📚 Tạo Lớp', background: '#111525', color: '#E2E8F0',
-    html: `<div style="display:grid;gap:10px;text-align:left">
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Tên Lớp</label><input id="sw-cn" class="swal2-input" placeholder="VD: Lớp Tiếng Anh 2A"></div>
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Giáo Viên</label><select id="sw-ct" class="swal2-input" style="font-weight:700"><option value="">-- Chọn sau --</option>${tOpts}</select></div>
-      <div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Sĩ Số Tối Đa</label><input id="sw-cc" type="number" class="swal2-input" value="30"></div>
-    </div>`,
-    focusConfirm: false, showCancelButton: true, confirmButtonText: 'Tạo Lớp', confirmButtonColor: '#6375FF',
-    preConfirm: () => ({ name: document.getElementById('sw-cn').value.trim(), teacher: document.getElementById('sw-ct').value, cap: parseInt(document.getElementById('sw-cc').value) || 30 })
-  });
+  const { value: fv } = await Swal.fire({ title: '📚 Tạo Lớp', background: '#111525', color: '#E2E8F0', html: `<div style="display:grid;gap:10px;text-align:left"><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Tên Lớp</label><input id="sw-cn" class="swal2-input" placeholder="VD: Lớp Tiếng Anh 2A"></div><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Giáo Viên</label><select id="sw-ct" class="swal2-input" style="font-weight:700"><option value="">-- Chọn sau --</option>${tOpts}</select></div><div><label style="font-size:.8rem;font-weight:700;color:#94A3B8">Sĩ Số Tối Đa</label><input id="sw-cc" type="number" class="swal2-input" value="30"></div></div>`, focusConfirm: false, showCancelButton: true, confirmButtonText: 'Tạo Lớp', confirmButtonColor: '#6375FF', preConfirm: () => ({ name: document.getElementById('sw-cn').value.trim(), teacher: document.getElementById('sw-ct').value, cap: parseInt(document.getElementById('sw-cc').value) || 30 }) });
   if (!fv || !fv.name) { if (fv) showToast('⚠️', 'Nhập tên lớp!', 'yellow'); return; }
   try {
     await addDoc(collection(db, 'classes'), { name: fv.name, teacherName: fv.teacher || '', capacity: fv.cap, createdAt: serverTimestamp() });
@@ -997,13 +798,7 @@ window.addClass = async function () {
 window.assignClass = async function (fid, role) {
   const u = allUsers.find(x => x.firestoreId === fid); if (!u) return;
   const cOpts = allClasses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-  const { value: cls } = await Swal.fire({
-    title: `Phân lớp: ${u.fullName || ''}`, background: '#111525', color: '#E2E8F0',
-    html: `<select id="sw-as" class="swal2-input" style="font-weight:700"><option value="">-- Không xếp --</option>${cOpts}</select>`,
-    showCancelButton: true, confirmButtonText: 'Lưu', confirmButtonColor: '#6375FF',
-    didOpen: () => { const el = document.getElementById('sw-as'); const cur = role === 'student' ? u.class : (u.classes || [])[0]; if (el && cur) el.value = cur; },
-    preConfirm: () => document.getElementById('sw-as').value
-  });
+  const { value: cls } = await Swal.fire({ title: `Phân lớp: ${u.fullName || ''}`, background: '#111525', color: '#E2E8F0', html: `<select id="sw-as" class="swal2-input" style="font-weight:700"><option value="">-- Không xếp --</option>${cOpts}</select>`, showCancelButton: true, confirmButtonText: 'Lưu', confirmButtonColor: '#6375FF', didOpen: () => { const el = document.getElementById('sw-as'); const cur = role === 'student' ? u.class : (u.classes || [])[0]; if (el && cur) el.value = cur; }, preConfirm: () => document.getElementById('sw-as').value });
   if (cls === undefined) return;
   try {
     if (role === 'student') await updateDoc(doc(db, 'users', fid), { class: cls });
@@ -1017,67 +812,42 @@ window.deleteUser = async function (fid, name) {
   if (r.isConfirmed) { try { await deleteDoc(doc(db, 'users', fid)); showToast('🗑️', `Đã xóa ${name}`, 'red'); } catch (e) { showToast('❌', e.message, 'red'); } }
 };
 
-// ĐÃ KHÔI PHỤC: Hàm Đăng nhập dưới quyền Giáo viên / Học viên
-window.loginAs = async function (fid, role) {
-  const r = await Swal.fire({ 
-    title: '🔐 Xem tài khoản?', 
-    text: 'Bạn sẽ được chuyển thẳng sang giao diện của người này.', 
-    icon: 'info', 
-    background: '#111525', color: '#E2E8F0', 
-    showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' 
-  });
-  if (r.isConfirmed) { 
-    const u = allUsers.find(x => x.firestoreId === fid); 
-    if (u) { 
-        localStorage.setItem('user', JSON.stringify(u)); 
-        localStorage.setItem('token', 'ks_view_' + Date.now()); 
-        // Nếu là học viên thì sang trang gốc của học viên (index.html), giáo viên thì sang (giaovien.html)
-        location.href = role === 'student' ? 'index.html' : 'giaovien.html'; 
-    } 
+window.viewClass = function (name, teacher) {
+  const students = allUsers.filter(u => u.role === 'student' && u.class === name);
+  Swal.fire({ title: `📚 ${name}`, background: '#111525', color: '#E2E8F0', html: `<div style="text-align:left"><div style="background:#161B2E;padding:12px 16px;border-radius:10px;margin-bottom:14px;border:1px solid rgba(99,117,255,.2)"><strong>👩‍🏫 Giáo viên:</strong> ${teacher || 'Chưa phân công'}<br><strong>👥 Sĩ số:</strong> ${students.length} học sinh</div>${students.map(s => `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#161B2E;border-radius:9px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#6375FF,#A855F7);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem">${(s.fullName || '?').charAt(0)}</div><span style="font-weight:700">${s.fullName || '?'}</span></div><span style="color:#FCD34D;font-weight:800;font-family:Space Mono">${s.score || 0}🥕</span></div>`).join('') || '<p style="text-align:center;color:#64748B;padding:20px">Lớp chưa có học sinh</p>'}</div>`, confirmButtonText: 'Đóng', confirmButtonColor: '#6375FF', width: 500 });
+};
+
+window.deleteClass = async function (fid, name) {
+  const r = await Swal.fire({ title: `Xóa lớp "${name}"?`, text: 'Học sinh sẽ bị chuyển về chưa xếp lớp!', icon: 'warning', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Xóa' });
+  if (r.isConfirmed) {
+    try { await deleteDoc(doc(db, 'classes', fid)); const affected = allUsers.filter(u => u.role === 'student' && u.class === name); await Promise.all(affected.map(u => updateDoc(doc(db, 'users', u.firestoreId), { class: '' }))); showToast('🗑️', `Đã xóa lớp ${name}!`, 'red'); } catch (e) { showToast('❌', e.message, 'red'); }
   }
 };
 
-// ĐÃ KHÔI PHỤC: Hàm gửi Email
-window.sendMail = function (email) { 
-    window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); 
+// ── KHÔI PHỤC NÚT LOGIN AS & MAIL ──
+window.loginAs = async function (fid, role) {
+  const r = await Swal.fire({ title: '🔐 Đăng nhập tài khoản?', text: `Bạn sẽ được chuyển sang giao diện của ${role === 'student' ? 'học sinh' : 'giáo viên'} này.`, icon: 'info', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' });
+  if (r.isConfirmed) { const u = allUsers.find(x => x.firestoreId === fid); if (u) { localStorage.setItem('user', JSON.stringify(u)); localStorage.setItem('token', 'ks_view_' + Date.now()); location.href = role === 'student' ? 'index.html' : 'giaovien.html'; } }
 };
 
-// ĐÃ KHÔI PHỤC: Hàm gửi Email hàng loạt (Trong Tab Báo Cáo)
-window.sendBulkReport = function () { 
-    showToast('📧', 'Tính năng gửi email hàng loạt đang bảo trì, vui lòng dùng Gửi thủ công!', 'blue'); 
-};
+window.sendMail = function (email) { window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); };
+window.sendBulkReport = function () { showToast('📧', 'Vui lòng sử dụng tính năng gửi mail cho từng học viên!', 'blue'); };
 
 window.simulateReg = async function () {
   const names = ['Bảo Bình', 'Minh Chiến', 'Thuỷ Tiên', 'Thanh Hương', 'Đức Mạnh', 'An Nhiên', 'Quỳnh Anh', 'Phúc Long', 'Minh Thư', 'Gia Bảo'];
-  const n = names[Math.floor(Math.random() * names.length)];
-  const num = Math.floor(Math.random() * 9999);
-  const isTeacher = Math.random() > .8;
-  try {
-    await addDoc(collection(db, 'users'), { fullName: `${n} ${num}`, email: `user${num}@kids.vn`, role: isTeacher ? 'teacher_pending' : 'pending', status: 'pending', score: 0, class: '', classes: [], comment: '', createdAt: serverTimestamp() });
-    showToast('🔔', `${isTeacher ? 'Giáo viên' : 'Học viên'} ${n} đăng ký!`, 'blue');
-  } catch (e) { showToast('❌', e.message, 'red'); }
+  const n = names[Math.floor(Math.random() * names.length)]; const num = Math.floor(Math.random() * 9999); const isTeacher = Math.random() > .8;
+  try { await addDoc(collection(db, 'users'), { fullName: `${n} ${num}`, email: `user${num}@kids.vn`, role: isTeacher ? 'teacher_pending' : 'pending', status: 'pending', score: 0, class: '', classes: [], comment: '', createdAt: serverTimestamp() }); showToast('🔔', `${isTeacher ? 'Giáo viên' : 'Học viên'} ${n} đăng ký!`, 'blue'); } catch (e) { showToast('❌', e.message, 'red'); }
 };
 
-window.saveSettings = function () {
-  const s = { name: document.getElementById('stName').value, email: document.getElementById('stEmail').value };
-  localStorage.setItem('ks_settings', JSON.stringify(s)); showToast('✅', 'Đã lưu cài đặt!', 'green');
-};
-
-window.changePass = function () {
-  const np = document.getElementById('newPass').value, cp = document.getElementById('confPass').value;
-  if (!np) return showToast('⚠️', 'Nhập mật khẩu mới!', 'yellow');
-  if (np !== cp) return showToast('⚠️', 'Mật khẩu không khớp!', 'yellow');
-  if (np.length < 6) return showToast('⚠️', 'Tối thiểu 6 ký tự!', 'yellow');
-  showToast('✅', 'Cần Firebase Auth để lưu thực tế', 'green');
-};
+window.saveSettings = function () { const s = { name: document.getElementById('stName').value, email: document.getElementById('stEmail').value }; localStorage.setItem('ks_settings', JSON.stringify(s)); showToast('✅', 'Đã lưu cài đặt!', 'green'); };
+window.changePass = function () { showToast('✅', 'Cần Firebase Auth để lưu thực tế', 'green'); };
 
 window.clearAnalytics = async function () {
   const r = await Swal.fire({ title: 'Xóa Analytics?', text: 'Mọi dữ liệu phân tích sẽ bị xóa!', icon: 'warning', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Xóa' });
-  if (r.isConfirmed) { localStorage.removeItem(AK); showToast('🗑️', 'Đã xóa analytics!', 'red'); refreshUI(); }
+  if (r.isConfirmed) { localStorage.removeItem(AK); seedAnalytics(); showToast('🗑️', 'Đã xóa analytics & tạo giả lập mới!', 'red'); refreshUI(); }
 };
 
 window.clearActivity = function () { const d = getAnalytics(); d.events = []; saveAnalytics(d); refreshUI(); showToast('🗑️', 'Đã xóa hoạt động!', 'red'); };
-
 window.filterStudentsByClass = function () { const cls = document.getElementById('stClassFilter')?.value || ''; const students = cls ? allUsers.filter(u => u.role === 'student' && u.class === cls) : allUsers.filter(u => u.role === 'student'); renderStudentTable(students); };
 window.filterTable = function (id, q) { document.querySelectorAll(`#${id} tr`).forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'; }); };
 window.doLogout = function () { Swal.fire({ title: '👋 Đăng xuất?', icon: 'question', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Thoát', cancelButtonText: 'Ở lại' }).then(r => { if (r.isConfirmed) { localStorage.clear(); sessionStorage.clear(); location.href = 'login.html'; } }); };
