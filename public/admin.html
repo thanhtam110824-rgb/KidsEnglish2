@@ -91,9 +91,6 @@ body::before {
 .stat-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
 .stat-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
 .stat-trend { font-size:.75rem; font-weight:700; padding:3px 8px; border-radius:20px; }
-.stat-trend.up { background:rgba(16,185,129,.15); color:var(--green2); }
-.stat-trend.down { background:rgba(239,68,68,.15); color:var(--red2); }
-.stat-trend.neu { background:rgba(148,163,184,.1); color:var(--text2); }
 .stat-val { font-size:2rem; font-weight:900; color:var(--text); font-family:var(--mono); line-height:1; margin-bottom:4px; }
 .stat-lbl { font-size:.78rem; color:var(--text2); font-weight:600; }
 .stat-bar { height:3px; background:rgba(99,117,255,.1); border-radius:2px; margin-top:12px; overflow:hidden; }
@@ -637,9 +634,9 @@ function renderStudentTable(students) {
       <td style="min-width:100px"><div class="mbar" style="width:80px"><div class="mbar-f" style="width:${progress}%;background:linear-gradient(90deg,var(--primary),var(--green))"></div></div><span style="font-size:.72rem;color:var(--text3)">${progress}%</span></td>
       <td><span class="bdg bdg-green">● Học</span></td>
       <td><div class="td-act">
-        <button class="btn btn-ghost btn-xs" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i> Xếp Lớp</button>
-        <button class="btn btn-p btn-xs" onclick="loginAs('${s.firestoreId}','student')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
-        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')" title="Gửi Email"><i class="fas fa-envelope"></i> Gửi Mail</button>
+        <button class="btn btn-ghost btn-xs" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${s.firestoreId}','student')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
         <button class="btn btn-r btn-xs" onclick="deleteUser('${s.firestoreId}','${s.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
@@ -658,9 +655,9 @@ function renderTeacherTable(teachers, students) {
       <td><span style="color:var(--text3);font-size:.8rem">${d_allLessons.length + d_allQuizzes.length} học liệu</span></td>
       <td><span class="bdg bdg-green">● Active</span></td>
       <td><div class="td-act">
-        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')" title="Xếp lớp"><i class="fas fa-layer-group"></i> Xếp Lớp</button>
-        <button class="btn btn-p btn-xs" onclick="loginAs('${t.firestoreId}','teacher')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
-        <button class="btn btn-c btn-xs" onclick="sendMail('${t.email}')" title="Gửi Email"><i class="fas fa-envelope"></i> Gửi Mail</button>
+        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${t.firestoreId}','teacher')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${t.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
         <button class="btn btn-r btn-xs" onclick="deleteUser('${t.firestoreId}','${t.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
@@ -824,14 +821,13 @@ window.deleteClass = async function (fid, name) {
   }
 };
 
-// ── KHÔI PHỤC NÚT LOGIN AS & MAIL ──
 window.loginAs = async function (fid, role) {
-  const r = await Swal.fire({ title: '🔐 Đăng nhập tài khoản?', text: `Bạn sẽ được chuyển sang giao diện của ${role === 'student' ? 'học sinh' : 'giáo viên'} này.`, icon: 'info', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' });
+  const r = await Swal.fire({ title: '🔐 Xem tài khoản?', text: 'Bạn sẽ được chuyển thẳng sang giao diện của người này.', icon: 'info', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' });
   if (r.isConfirmed) { const u = allUsers.find(x => x.firestoreId === fid); if (u) { localStorage.setItem('user', JSON.stringify(u)); localStorage.setItem('token', 'ks_view_' + Date.now()); location.href = role === 'student' ? 'index.html' : 'giaovien.html'; } }
 };
 
 window.sendMail = function (email) { window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); };
-window.sendBulkReport = function () { showToast('📧', 'Vui lòng sử dụng tính năng gửi mail cho từng học viên!', 'blue'); };
+window.sendBulkReport = function () { showToast('📧', 'Tính năng gửi email hàng loạt đang bảo trì, vui lòng dùng Gửi thủ công!', 'blue'); };
 
 window.simulateReg = async function () {
   const names = ['Bảo Bình', 'Minh Chiến', 'Thuỷ Tiên', 'Thanh Hương', 'Đức Mạnh', 'An Nhiên', 'Quỳnh Anh', 'Phúc Long', 'Minh Thư', 'Gia Bảo'];
@@ -840,7 +836,7 @@ window.simulateReg = async function () {
 };
 
 window.saveSettings = function () { const s = { name: document.getElementById('stName').value, email: document.getElementById('stEmail').value }; localStorage.setItem('ks_settings', JSON.stringify(s)); showToast('✅', 'Đã lưu cài đặt!', 'green'); };
-window.changePass = function () { showToast('✅', 'Cần Firebase Auth để lưu thực tế', 'green'); };
+window.changePass = function () { showToast('✅', 'Chức năng cần kết nối Firebase Auth để lưu thực tế', 'green'); };
 
 window.clearAnalytics = async function () {
   const r = await Swal.fire({ title: 'Xóa Analytics?', text: 'Mọi dữ liệu phân tích sẽ bị xóa!', icon: 'warning', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Xóa' });
