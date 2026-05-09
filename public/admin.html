@@ -12,31 +12,18 @@
 
 <style>
 :root {
-  --bg: #0A0C14;
-  --bg2: #0F1220;
-  --bg3: #141827;
-  --card: #111525;
-  --card2: #161B2E;
-  --border: rgba(99,117,255,0.15);
-  --border2: rgba(99,117,255,0.08);
-  --primary: #6375FF;
-  --primary2: #818CF8;
-  --accent: #F59E0B;
-  --accent2: #FCD34D;
-  --green: #10B981;
-  --green2: #34D399;
-  --red: #EF4444;
-  --red2: #F87171;
-  --purple: #A855F7;
-  --cyan: #06B6D4;
-  --orange: #F97316;
-  --text: #E2E8F0;
-  --text2: #94A3B8;
-  --text3: #64748B;
+  --bg: #0A0C14; --bg2: #0F1220; --bg3: #141827;
+  --card: #111525; --card2: #161B2E;
+  --border: rgba(99,117,255,0.15); --border2: rgba(99,117,255,0.08);
+  --primary: #6375FF; --primary2: #818CF8;
+  --accent: #F59E0B; --accent2: #FCD34D;
+  --green: #10B981; --green2: #34D399;
+  --red: #EF4444; --red2: #F87171;
+  --purple: #A855F7; --cyan: #06B6D4; --orange: #F97316;
+  --text: #E2E8F0; --text2: #94A3B8; --text3: #64748B;
   --shadow: 0 8px 32px rgba(0,0,0,0.4);
   --glow: 0 0 20px rgba(99,117,255,0.15);
-  --font: 'Sora', sans-serif;
-  --mono: 'Space Mono', monospace;
+  --font: 'Sora', sans-serif; --mono: 'Space Mono', monospace;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { height:100%; overflow:hidden; }
@@ -48,16 +35,8 @@ body::before {
   pointer-events:none; z-index:0;
 }
 
-.sb {
-  width:260px; background:var(--card); border-right:1px solid var(--border);
-  display:flex; flex-direction:column; flex-shrink:0; z-index:100;
-  transition:width .3s cubic-bezier(.4,0,.2,1); overflow:hidden;
-  position:relative;
-}
-.sb::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--primary),transparent);
-}
+.sb { width:260px; background:var(--card); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; z-index:100; transition:width .3s cubic-bezier(.4,0,.2,1); overflow:hidden; position:relative; }
+.sb::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--primary),transparent); }
 .sb.col { width:70px; }
 .sb-head { padding:24px 20px 20px; border-bottom:1px solid var(--border2); }
 .sb-logo { display:flex; align-items:center; gap:12px; overflow:hidden; white-space:nowrap; }
@@ -111,10 +90,6 @@ body::before {
 .stat-glow { position:absolute; top:-30px; right:-30px; width:100px; height:100px; border-radius:50%; opacity:.08; filter:blur(25px); }
 .stat-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
 .stat-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
-.stat-trend { font-size:.75rem; font-weight:700; padding:3px 8px; border-radius:20px; }
-.stat-trend.up { background:rgba(16,185,129,.15); color:var(--green2); }
-.stat-trend.down { background:rgba(239,68,68,.15); color:var(--red2); }
-.stat-trend.neu { background:rgba(148,163,184,.1); color:var(--text2); }
 .stat-val { font-size:2rem; font-weight:900; color:var(--text); font-family:var(--mono); line-height:1; margin-bottom:4px; }
 .stat-lbl { font-size:.78rem; color:var(--text2); font-weight:600; }
 .stat-bar { height:3px; background:rgba(99,117,255,.1); border-radius:2px; margin-top:12px; overflow:hidden; }
@@ -123,7 +98,6 @@ body::before {
 .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:20px; }
 .card-h { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:10px; flex-wrap:wrap; }
 .card-ttl { font-size:1rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; }
-.card-tag { font-size:.7rem; background:rgba(99,117,255,.15); color:var(--primary2); padding:3px 10px; border-radius:20px; font-weight:700; }
 .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
 @media(max-width:1100px) { .g2{grid-template-columns:1fr} .g3{grid-template-columns:1fr 1fr} }
@@ -167,7 +141,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
 .fg label { display:block; font-size:.8rem; font-weight:700; color:var(--text2); margin-bottom:5px; }
 .fg input, .fg select, .fg textarea { width:100%; padding:10px 13px; background:var(--bg3); border:1px solid var(--border); border-radius:9px; color:var(--text); font-family:var(--font); font-size:.88rem; font-weight:600; outline:none; transition:.2s; resize:vertical; }
 .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--primary); background:var(--bg2); box-shadow:0 0 0 3px rgba(99,117,255,.1); }
-.fg select option { background:var(--card2); }
 
 .rank-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border2); }
 .rank-row:last-child { border-bottom:none; }
@@ -396,6 +369,7 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-g" onclick="exportRealExcel()"><i class="fas fa-file-excel"></i> Xuất Excel Toàn Bộ Dữ Liệu</button>
+          <button class="btn btn-c" onclick="sendBulkReport()"><i class="fas fa-envelope"></i> Gửi Email Hàng Loạt</button>
         </div>
       </div>
     </div>
@@ -415,6 +389,9 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
           <div class="fg"><label>Mật khẩu mới</label><input id="newPass" type="password" placeholder="••••••••"></div>
           <div class="fg"><label>Xác nhận</label><input id="confPass" type="password" placeholder="••••••••"></div>
           <button class="btn btn-y" style="margin-top:4px" onclick="changePass()"><i class="fas fa-lock"></i> Yêu cầu đổi Mật Khẩu</button>
+          <hr style="border:none;border-top:1px solid var(--border);margin:18px 0">
+          <div class="card-h" style="margin-bottom:12px"><div class="card-ttl"><i class="fas fa-database" style="color:var(--red)"></i> Nguy Hiểm</div></div>
+          <button class="btn btn-r" onclick="clearAnalytics()"><i class="fas fa-trash-alt"></i> Xóa Dữ Liệu Analytics</button>
         </div>
       </div>
     </div>
@@ -743,7 +720,6 @@ function renderStudentTable(students) {
   if (!students.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text3)">Chưa có học viên</td></tr>'; return; }
   const totalItems = allLessons.length + allQuizzes.length;
   tbody.innerHTML = students.map(s => {
-    // Không dùng fake data, tiến độ = Điểm hiện tại / Điểm tối đa có thể (giả định)
     const maxPoss = totalItems > 0 ? (allLessons.length * 20 + allQuizzes.length * 100) : 1;
     const progress = totalItems > 0 ? Math.min(Math.round(((Number(s.score) || 0) / maxPoss) * 100), 100) : 0;
     return `<tr>
@@ -755,8 +731,9 @@ function renderStudentTable(students) {
       <td><span class="bdg bdg-green">● Học</span></td>
       <td><div class="td-act">
         <button class="btn btn-ghost btn-xs" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
-        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')"><i class="fas fa-envelope"></i></button>
-        <button class="btn btn-r btn-xs" onclick="deleteUser('${s.firestoreId}','${s.fullName || ''}')"><i class="fas fa-trash"></i></button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${s.firestoreId}','student')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${s.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-r btn-xs" onclick="deleteUser('${s.firestoreId}','${s.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
 }
@@ -777,8 +754,10 @@ function renderTeacherTable(teachers, students) {
       <td><span style="color:var(--text3);font-size:.8rem">${lessons} video, ${quizes} bài</span></td>
       <td><span class="bdg bdg-green">● Active</span></td>
       <td><div class="td-act">
-        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')"><i class="fas fa-layer-group"></i></button>
-        <button class="btn btn-r btn-xs" onclick="deleteUser('${t.firestoreId}','${t.fullName || ''}')"><i class="fas fa-trash"></i></button>
+        <button class="btn btn-ghost btn-xs" onclick="assignClass('${t.firestoreId}','teacher')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
+        <button class="btn btn-p btn-xs" onclick="loginAs('${t.firestoreId}','teacher')" title="Đăng nhập tài khoản này"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-c btn-xs" onclick="sendMail('${t.email}')" title="Gửi Email"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-r btn-xs" onclick="deleteUser('${t.firestoreId}','${t.fullName || ''}')" title="Xóa"><i class="fas fa-trash"></i></button>
       </div></td></tr>`;
   }).join('');
 }
@@ -1038,36 +1017,34 @@ window.deleteUser = async function (fid, name) {
   if (r.isConfirmed) { try { await deleteDoc(doc(db, 'users', fid)); showToast('🗑️', `Đã xóa ${name}`, 'red'); } catch (e) { showToast('❌', e.message, 'red'); } }
 };
 
-window.viewClass = function (name, teacher) {
-  const students = allUsers.filter(u => u.role === 'student' && u.class === name);
-  Swal.fire({
-    title: `📚 ${name}`, background: '#111525', color: '#E2E8F0',
-    html: `<div style="text-align:left"><div style="background:#161B2E;padding:12px 16px;border-radius:10px;margin-bottom:14px;border:1px solid rgba(99,117,255,.2)"><strong>👩‍🏫 Giáo viên:</strong> ${teacher || 'Chưa phân công'}<br><strong>👥 Sĩ số:</strong> ${students.length} học sinh</div>${students.map(s => `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#161B2E;border-radius:9px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#6375FF,#A855F7);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem">${(s.fullName || '?').charAt(0)}</div><span style="font-weight:700">${s.fullName || '?'}</span></div><span style="color:#FCD34D;font-weight:800;font-family:Space Mono">${s.score || 0}🥕</span></div>`).join('') || '<p style="text-align:center;color:#64748B;padding:20px">Lớp chưa có học sinh</p>'}</div>`,
-    confirmButtonText: 'Đóng', confirmButtonColor: '#6375FF', width: 500
+// ĐÃ KHÔI PHỤC: Hàm Đăng nhập dưới quyền Giáo viên / Học viên
+window.loginAs = async function (fid, role) {
+  const r = await Swal.fire({ 
+    title: '🔐 Xem tài khoản?', 
+    text: 'Bạn sẽ được chuyển thẳng sang giao diện của người này.', 
+    icon: 'info', 
+    background: '#111525', color: '#E2E8F0', 
+    showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' 
   });
-};
-
-window.manageClassStudents = async function (className) {
-  const students = allUsers.filter(u => u.role === 'student');
-  const opts = students.map(s => `<option value="${s.firestoreId}">${s.fullName || '?'} (${s.class || 'Chưa xếp'})</option>`).join('');
-  const { value: sid } = await Swal.fire({
-    title: `➕ Thêm HS vào ${className}`, background: '#111525', color: '#E2E8F0',
-    html: `<select id="sw-mcs" class="swal2-input" style="font-weight:700"><option value="">-- Chọn học sinh --</option>${opts}</select>`,
-    showCancelButton: true, confirmButtonText: 'Xác nhận', confirmButtonColor: '#6375FF', preConfirm: () => document.getElementById('sw-mcs').value
-  });
-  if (sid) { try { await updateDoc(doc(db, 'users', sid), { class: className }); showToast('✅', 'Đã thêm học sinh vào lớp!', 'green'); } catch (e) { showToast('❌', e.message, 'red'); } }
-};
-
-window.deleteClass = async function (fid, name) {
-  const r = await Swal.fire({ title: `Xóa lớp "${name}"?`, text: 'Học sinh sẽ bị chuyển về chưa xếp lớp!', icon: 'warning', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Xóa' });
-  if (r.isConfirmed) {
-    try {
-      await deleteDoc(doc(db, 'classes', fid));
-      const affected = allUsers.filter(u => u.role === 'student' && u.class === name);
-      await Promise.all(affected.map(u => updateDoc(doc(db, 'users', u.firestoreId), { class: '' })));
-      showToast('🗑️', `Đã xóa lớp ${name}!`, 'red');
-    } catch (e) { showToast('❌', e.message, 'red'); }
+  if (r.isConfirmed) { 
+    const u = allUsers.find(x => x.firestoreId === fid); 
+    if (u) { 
+        localStorage.setItem('user', JSON.stringify(u)); 
+        localStorage.setItem('token', 'ks_view_' + Date.now()); 
+        // Nếu là học viên thì sang trang gốc của học viên (index.html), giáo viên thì sang (giaovien.html)
+        location.href = role === 'student' ? 'index.html' : 'giaovien.html'; 
+    } 
   }
+};
+
+// ĐÃ KHÔI PHỤC: Hàm gửi Email
+window.sendMail = function (email) { 
+    window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); 
+};
+
+// ĐÃ KHÔI PHỤC: Hàm gửi Email hàng loạt (Trong Tab Báo Cáo)
+window.sendBulkReport = function () { 
+    showToast('📧', 'Tính năng gửi email hàng loạt đang bảo trì, vui lòng dùng Gửi thủ công!', 'blue'); 
 };
 
 window.simulateReg = async function () {
@@ -1101,7 +1078,6 @@ window.clearAnalytics = async function () {
 
 window.clearActivity = function () { const d = getAnalytics(); d.events = []; saveAnalytics(d); refreshUI(); showToast('🗑️', 'Đã xóa hoạt động!', 'red'); };
 
-window.sendMail = function (email) { window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); };
 window.filterStudentsByClass = function () { const cls = document.getElementById('stClassFilter')?.value || ''; const students = cls ? allUsers.filter(u => u.role === 'student' && u.class === cls) : allUsers.filter(u => u.role === 'student'); renderStudentTable(students); };
 window.filterTable = function (id, q) { document.querySelectorAll(`#${id} tr`).forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'; }); };
 window.doLogout = function () { Swal.fire({ title: '👋 Đăng xuất?', icon: 'question', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#EF4444', confirmButtonText: 'Thoát', cancelButtonText: 'Ở lại' }).then(r => { if (r.isConfirmed) { localStorage.clear(); sessionStorage.clear(); location.href = 'login.html'; } }); };
