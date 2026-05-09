@@ -97,8 +97,94 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
 .chat-clear-btn{background:transparent;border:none;color:var(--text-gray);cursor:pointer;font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:10px;transition:.2s}
 .chat-clear-btn:hover{background:var(--orange-light);color:var(--orange-dark)}
 
-/* ── LIVE TRANSCRIPT BOX ── */
-.live-transcript-box{min-height:32px;color:var(--text-gray);font-size:.9rem;font-weight:700;padding:8px 12px;background:var(--white);border-radius:10px;border:1px solid var(--border);margin-top:8px;transition:all .3s}
+/* ════════════════════════════════════
+   MIC RECORDER UI — hoàn toàn mới
+════════════════════════════════════ */
+.rec-modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  z-index:9000;display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.rec-modal{
+  background:var(--white);border-radius:40px;padding:40px 35px;
+  width:min(480px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.4);
+  border:4px solid var(--border);text-align:center;
+  animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.rec-word{
+  font-family:'Baloo 2';font-size:3rem;font-weight:900;color:#2563eb;
+  margin:15px 0;text-shadow:2px 2px 0 rgba(37,99,235,.15);
+  letter-spacing:.04em;
+}
+.rec-status{font-size:1rem;font-weight:800;color:var(--text-gray);margin-bottom:20px;min-height:24px}
+/* Waveform bars */
+.rec-wave{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  height:60px;margin:10px 0 20px;
+}
+.rec-bar{
+  width:7px;border-radius:4px;background:#2563eb;opacity:.3;
+  height:12px;transition:height .1s ease,opacity .1s ease;
+}
+.rec-wave.active .rec-bar{opacity:1;animation:barBounce .5s ease-in-out infinite alternate}
+@keyframes barBounce{from{height:8px}to{height:48px}}
+.rec-bar:nth-child(1){animation-delay:0s}
+.rec-bar:nth-child(2){animation-delay:.07s}
+.rec-bar:nth-child(3){animation-delay:.14s}
+.rec-bar:nth-child(4){animation-delay:.21s}
+.rec-bar:nth-child(5){animation-delay:.28s}
+.rec-bar:nth-child(6){animation-delay:.35s}
+.rec-bar:nth-child(7){animation-delay:.28s}
+.rec-bar:nth-child(8){animation-delay:.21s}
+.rec-bar:nth-child(9){animation-delay:.14s}
+.rec-bar:nth-child(10){animation-delay:.07s}
+/* Timer ring */
+.rec-ring-wrap{position:relative;width:90px;height:90px;margin:0 auto 20px}
+.rec-ring-svg{transform:rotate(-90deg)}
+.rec-ring-bg{fill:none;stroke:#e5e7eb;stroke-width:7}
+.rec-ring-fg{fill:none;stroke:#ef4444;stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:220;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.rec-ring-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2';font-size:1.6rem;font-weight:900;color:#ef4444;
+}
+/* Live transcript */
+.rec-live{
+  background:#f8fafc;border:2px solid #e2e8f0;border-radius:18px;
+  padding:12px 18px;margin:12px 0;font-size:1rem;font-weight:700;
+  color:var(--text-dark);min-height:46px;text-align:left;line-height:1.5;
+  transition:all .2s;
+}
+.rec-live.has-text{border-color:#2563eb;background:#EAF2FF}
+.rec-live-label{font-size:.75rem;color:var(--text-gray);font-weight:900;
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:block}
+/* Buttons */
+.rec-btn-row{display:flex;gap:12px;margin-top:20px}
+.rec-btn{
+  flex:1;padding:16px;border-radius:22px;font-family:'Nunito';
+  font-size:1.05rem;font-weight:900;cursor:pointer;border:none;
+  transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.rec-btn-stop{background:#ef4444;color:white;box-shadow:0 5px 0 #b91c1c}
+.rec-btn-stop:hover{transform:translateY(2px);box-shadow:0 3px 0 #b91c1c}
+.rec-btn-stop:active{transform:translateY(5px);box-shadow:none}
+.rec-btn-cancel{background:var(--bg);color:var(--text-gray);box-shadow:0 5px 0 var(--border)}
+.rec-btn-cancel:hover{transform:translateY(2px);box-shadow:0 3px 0 var(--border)}
+/* Result modal */
+.res-score-big{font-family:'Baloo 2';font-size:5rem;font-weight:900;color:#2563eb;line-height:1}
+.res-stars{font-size:1.8rem;letter-spacing:4px;margin:8px 0 18px}
+.res-heard{background:#f8fafc;border:2px solid #e2e8f0;border-radius:18px;padding:14px 18px;text-align:left;margin-bottom:15px}
+.res-heard-label{font-size:.8rem;color:var(--text-gray);font-weight:900;text-transform:uppercase;margin-bottom:4px;display:block}
+.res-heard-text{font-size:1.15rem;font-weight:900;color:var(--orange-dark)}
+.res-comment{padding:16px;border-radius:18px;font-weight:900;font-size:1rem;border:2px solid}
+.res-btn-row{display:flex;gap:12px;margin-top:20px}
+.res-btn{flex:1;padding:15px;border-radius:20px;font-family:'Nunito';font-size:1rem;font-weight:900;cursor:pointer;border:none;transition:.2s}
+.res-btn-accept{background:#22c55e;color:white;box-shadow:0 5px 0 #15803d}
+.res-btn-accept:hover{transform:translateY(2px);box-shadow:0 3px 0 #15803d}
+.res-btn-retry{background:var(--orange-dark);color:white;box-shadow:0 5px 0 #C2410C}
+.res-btn-retry:hover{transform:translateY(2px);box-shadow:0 3px 0 #C2410C}
 
 /* ════════ GAME OVERLAY ════════ */
 #gameOverlay{
@@ -114,10 +200,6 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
 .game-title-bar{color:white;font-family:'Baloo 2';font-size:1.8rem;font-weight:900;text-shadow:2px 2px 0 rgba(0,0,0,.3);display:flex;align-items:center;gap:10px}
 .game-score-bar{font-family:'Baloo 2';font-size:1.5rem;font-weight:900;color:var(--gold);text-shadow:2px 2px 0 rgba(0,0,0,.3)}
 .game-sky{position:absolute;top:0;left:0;right:0;bottom:120px;overflow:hidden}
-.cloud{position:absolute;opacity:.7;animation:cloudFloat linear infinite}
-@keyframes cloudFloat{from{transform:translateX(110vw)}to{transform:translateX(-300px)}}
-.cloud::before,.cloud::after{content:'☁️';position:absolute;font-size:3rem}
-.cloud::after{top:-20px;left:30px;font-size:2rem}
 .game-ground{position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#7EC850 0%,#5A9E35 40%,#8B6914 100%);border-top:6px solid #5A9E35;z-index:5}
 #gameTrack{position:absolute;top:0;left:0;right:0;bottom:120px;overflow:hidden}
 #gameTrackInner{position:absolute;bottom:0;left:0;height:100%;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
@@ -890,299 +972,422 @@ function calculateSensitiveScore(transcript,targetWord){
   if(finalGrade<4&&result.length>0)finalGrade=Math.floor(Math.random()*3)+4;
   return finalGrade>10?10:finalGrade;
 }
-
-function waveDotHtml(){
-  return[0,1,2,3,4].map(i=>`<div style="width:12px;height:12px;background:#FF8C00;border-radius:50%;animation:dotBounce 0.6s ${i*0.1}s ease-in-out infinite"></div>`).join('');
-}
 </script>
 
 <!-- ══════════════════════════════════════════
-     RECORDING — ĐÃ FIX RACE CONDITION
+     🎤 RECORDING ENGINE — VIẾT LẠI HOÀN TOÀN
      
-     Thay đổi chính:
-     1. recognition.stop() trước → delay 600ms → rồi mới chấm điểm
-        (trước đây chấm ngay nên finalTranscript vẫn còn rỗng)
-     2. MediaRecorder tách riêng, chỉ để ghi audio phát lại
-     3. Transcript hiện trực tiếp trong popup để bé thấy máy đang nghe
-     4. maxAlternatives: 3 để nhận diện tốt hơn
+     Cách hoạt động mới:
+     ┌─────────────────────────────────────────┐
+     │  1. MediaRecorder → ghi raw audio blob  │
+     │  2. Gửi audio (base64 webm/ogg) lên     │
+     │     Claude API với prompt:               │
+     │     "Transcribe this English audio"      │
+     │  3. Claude trả về text đã nghe được      │
+     │  4. Levenshtein score vs target word     │
+     └─────────────────────────────────────────┘
+     → Không phụ thuộc Web Speech API nữa!
 ══════════════════════════════════════════ -->
 <script>
-function startRecording(targetWord, quizId) {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { Swal.fire('Lỗi', 'Bé nhớ mở bằng Google Chrome nhé!', 'error'); return; }
+/* ─────────────────────────────────────────────
+   Transcribe audio blob → text via Claude API
+   Claude nhận audio dạng base64, trả về text
+───────────────────────────────────────────── */
+async function transcribeWithClaude(audioBlob, targetWord) {
+  // Chuyển blob → base64
+  const base64Audio = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(audioBlob);
+  });
 
-  const recognition = new SR();
-  recognition.lang = 'en-US';
-  recognition.interimResults = true;
-  recognition.continuous = true;
-  recognition.maxAlternatives = 3;
+  const mimeType = audioBlob.type || 'audio/webm';
 
-  let finalTranscript = '';
-  let interimTranscript = '';
-  let isStopped = false;
-  let timerInterval;
-  let audioChunks = [];
-  let mediaRecorder = null;
-  let audioUrl = null;
-
-  navigator.mediaDevices.getUserMedia({
-    audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
-  }).then(stream => {
-
-    /* MediaRecorder chỉ để ghi audio phát lại — KHÔNG liên quan chấm điểm */
-    try {
-      mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-      mediaRecorder.onstop = () => {
-        audioUrl = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/wav' }));
-      };
-      mediaRecorder.start(100);
-    } catch(e) { console.warn('MediaRecorder không hỗ trợ (không ảnh hưởng chấm điểm):', e); }
-
-    /* Bắt SpeechRecognition NGAY */
-    try { recognition.start(); } catch(e) { console.error('SR start:', e); }
-
-    recognition.onresult = e => {
-      let interim = '', final = '';
-      for (let i = 0; i < e.results.length; i++) {
-        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
-        else interim += e.results[i][0].transcript;
-      }
-      if (final.trim()) finalTranscript = final.trim();
-      interimTranscript = interim;
-    };
-
-    recognition.onerror = e => {
-      /* Bỏ qua no-speech — bé có thể đang ngừng thở lấy hơi */
-      if (e.error === 'no-speech') return;
-      console.warn('SR error:', e.error);
-    };
-
-    Swal.fire({
-      title: '🎤 Đang lắng nghe...',
-      html: `
-        <div style="font-size:3.5rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin-bottom:20px;text-shadow:2px 2px 0 rgba(0,0,0,.1)">"${targetWord}"</div>
-        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
-        <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text">⏳ Còn lại: 10 giây</p>
-        <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:12px">
-          <div id="swal-timer-bar" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
-        </div>
-        <div id="live-transcript" style="min-height:34px;color:#475569;font-size:.9rem;font-weight:700;padding:8px 12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;text-align:center">
-          🎙️ Đang lắng nghe...
-        </div>
-      `,
-      showConfirmButton: true,
-      confirmButtonText: '⏹️ Đã đọc xong',
-      confirmButtonColor: '#ef4444',
-      allowOutsideClick: false,
-      didOpen: () => {
-        let timeLeft = 10;
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          const txt = document.getElementById('swal-timer-text');
-          const bar = document.getElementById('swal-timer-bar');
-          const live = document.getElementById('live-transcript');
-          if (txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
-          if (bar) bar.style.width = `${(timeLeft / 10) * 100}%`;
-          if (live) {
-            const display = finalTranscript || interimTranscript;
-            live.innerText = display ? `"${display}"` : '🎙️ Đang lắng nghe...';
+  // Gọi Claude API — gửi audio dưới dạng document base64
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 100,
+      system: `You are a speech transcription assistant for a kids English learning app.
+Your job: listen to the audio and transcribe ONLY what the child said in English.
+Rules:
+- Return ONLY the transcribed English words/phrase, nothing else
+- If you cannot hear any speech, return exactly: [silence]
+- If the audio has noise but no clear words, return exactly: [unclear]
+- Do NOT add punctuation, explanation, or quotes
+- The child is trying to say the word/phrase: "${targetWord}"`,
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'document',
+            source: {
+              type: 'base64',
+              media_type: mimeType,
+              data: base64Audio
+            }
+          },
+          {
+            type: 'text',
+            text: `Please transcribe what the child said in this audio recording. They should be saying the English word/phrase: "${targetWord}"`
           }
-          if (timeLeft <= 0 && !isStopped) { clearInterval(timerInterval); Swal.clickConfirm(); }
-        }, 1000);
-      }
-    }).then(res => {
-      if (res.isConfirmed && !isStopped) {
-        isStopped = true;
-        clearInterval(timerInterval);
+        ]
+      }]
+    })
+  });
 
-        /* ★ KEY FIX: dừng recognition TRƯỚC, đợi 600ms để onresult kịp fire */
-        try { recognition.stop(); } catch(e) {}
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  const text = (data.content?.[0]?.text || '').trim();
 
-        Swal.fire({ title: '✨ Đang chấm điểm...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-        setTimeout(() => {
-          /* Dừng MediaRecorder SAU khi đã chắc có transcript */
-          try { if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); } catch(e) {}
-          try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
-
-          /* Đợi thêm 350ms để onstop tạo xong audioUrl */
-          setTimeout(() => gradeAndShow(targetWord, quizId, finalTranscript, audioUrl), 350);
-        }, 600);
-      }
-    });
-
-  }).catch(() => Swal.fire('Lỗi Micro', 'Bố mẹ giúp bé bật Micro trên máy tính lên nhé! 🎤', 'error'));
+  // Nếu Claude báo không nghe được
+  if (text === '[silence]' || text === '[unclear]') return '';
+  return text;
 }
 
-function gradeAndShow(targetWord, quizId, transcript, audioUrl) {
+/* ─────────────────────────────────────────────
+   Hiển thị modal ghi âm — giao diện hoàn toàn mới
+───────────────────────────────────────────── */
+function createRecModal(targetWord, onDone, onCancel) {
+  // Tạo overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'rec-modal-overlay';
+  overlay.id = 'recModalOverlay';
+
+  overlay.innerHTML = `
+    <div class="rec-modal">
+      <div style="font-size:2rem;margin-bottom:5px">🎤</div>
+      <div style="font-size:.9rem;font-weight:800;color:var(--text-gray);margin-bottom:4px">Bé hãy đọc to từ này:</div>
+      <div class="rec-word">${targetWord}</div>
+
+      <!-- Vòng tròn đếm ngược -->
+      <div class="rec-ring-wrap">
+        <svg class="rec-ring-svg" width="90" height="90" viewBox="0 0 90 90">
+          <circle class="rec-ring-bg" cx="45" cy="45" r="35"/>
+          <circle class="rec-ring-fg" id="recRingFg" cx="45" cy="45" r="35"/>
+        </svg>
+        <div class="rec-ring-num" id="recRingNum">10</div>
+      </div>
+
+      <!-- Sóng âm thanh -->
+      <div class="rec-wave active" id="recWave">
+        ${Array.from({length:10},(_,i)=>`<div class="rec-bar" style="animation-delay:${i*0.07}s;height:${8+Math.random()*30}px"></div>`).join('')}
+      </div>
+
+      <div class="rec-status" id="recStatus">🔴 Đang ghi âm...</div>
+
+      <!-- Live transcript -->
+      <div id="recLiveWrap" style="display:none">
+        <span class="rec-live-label">Máy đang nghe:</span>
+        <div class="rec-live" id="recLiveText">...</div>
+      </div>
+
+      <div class="rec-btn-row">
+        <button class="rec-btn rec-btn-cancel" id="recCancelBtn">❌ Hủy</button>
+        <button class="rec-btn rec-btn-stop" id="recStopBtn">⏹️ Đã đọc xong</button>
+      </div>
+
+      <div style="font-size:.8rem;color:var(--text-gray);font-weight:700;margin-top:12px;text-align:center">
+        💡 Đọc to, rõ ràng và gần micro nhé!
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // Refs
+  const ringFg  = overlay.querySelector('#recRingFg');
+  const ringNum = overlay.querySelector('#recRingNum');
+  const status  = overlay.querySelector('#recStatus');
+  const wave    = overlay.querySelector('#recWave');
+  const liveWrap= overlay.querySelector('#recLiveWrap');
+  const liveText= overlay.querySelector('#recLiveText');
+  const stopBtn = overlay.querySelector('#recStopBtn');
+  const cancelBtn=overlay.querySelector('#recCancelBtn');
+
+  // Animate waveform bars randomly để trông như đang nghe
+  const CIRCUMFERENCE = 2 * Math.PI * 35; // ~220
+  ringFg.style.strokeDasharray = CIRCUMFERENCE;
+  ringFg.style.strokeDashoffset = 0;
+
+  let timeLeft = 10;
+  let stopped = false;
+  let timerID = null;
+
+  // Web Speech cho live preview (optional — không dùng để chấm điểm)
+  let srPreview = null;
+  try {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      srPreview = new SR();
+      srPreview.lang = 'en-US';
+      srPreview.interimResults = true;
+      srPreview.continuous = true;
+      srPreview.onresult = e => {
+        let txt = '';
+        for (let i = 0; i < e.results.length; i++) txt += e.results[i][0].transcript + ' ';
+        txt = txt.trim();
+        if (txt) {
+          liveWrap.style.display = 'block';
+          liveText.textContent = '"' + txt + '"';
+          liveText.classList.add('has-text');
+        }
+      };
+      srPreview.onerror = () => {};
+      srPreview.onend = () => { if (!stopped) { try { srPreview.start(); } catch(e){} } };
+      srPreview.start();
+    }
+  } catch(e) {}
+
+  function stopAll() {
+    if (stopped) return;
+    stopped = true;
+    clearInterval(timerID);
+    wave.classList.remove('active');
+    status.textContent = '✅ Đang xử lý...';
+    stopBtn.disabled = true;
+    try { if (srPreview) { srPreview.onend = null; srPreview.stop(); } } catch(e) {}
+  }
+
+  function closeModal() {
+    const el = document.getElementById('recModalOverlay');
+    if (el) el.remove();
+  }
+
+  // Countdown
+  timerID = setInterval(() => {
+    timeLeft--;
+    ringNum.textContent = timeLeft;
+    const offset = CIRCUMFERENCE * (1 - timeLeft / 10);
+    ringFg.style.strokeDashoffset = offset;
+    // Đổi màu khi còn ít thời gian
+    if (timeLeft <= 3) { ringFg.style.stroke = '#ef4444'; ringNum.style.color = '#ef4444'; }
+    else if (timeLeft <= 6) { ringFg.style.stroke = '#f59e0b'; ringNum.style.color = '#f59e0b'; }
+    if (timeLeft <= 0) {
+      clearInterval(timerID);
+      stopAll();
+      onDone(closeModal);
+    }
+  }, 1000);
+
+  stopBtn.onclick = () => { stopAll(); onDone(closeModal); };
+  cancelBtn.onclick = () => { stopAll(); closeModal(); onCancel && onCancel(); };
+
+  return { stopAll, closeModal };
+}
+
+/* ─────────────────────────────────────────────
+   Hiển thị kết quả chấm điểm
+───────────────────────────────────────────── */
+function showSpeakResult(targetWord, transcript, audioUrl, onAccept, onRetry) {
   const grade10 = calculateSensitiveScore(transcript, targetWord);
   const grade100 = grade10 * 10;
-  const displayTranscript = (!transcript || transcript.trim() === '') ? '*(Chưa nghe thấy bé nói)*' : transcript;
+  const displayTranscript = (!transcript || transcript.trim() === '')
+    ? '*(Chưa nghe thấy bé nói)*'
+    : transcript;
 
-  let comment = '', iconType = 'info';
-  if (grade10 >= 9)      { comment = 'Tuyệt vời! Bé phát âm chuẩn 10 điểm luôn! 🌟'; iconType = 'success'; }
-  else if (grade10 >= 7) { comment = 'Giỏi quá! Bé phát âm rất hay! 👍'; iconType = 'success'; }
-  else if (grade10 >= 4) { comment = 'Bé có cố gắng! Lần sau bé thử mở miệng to hơn một chút nhé! 💪'; }
-  else                   { comment = 'Mic chưa nghe rõ tiếng bé rồi. Bé bấm thử lại nhé! ❤️'; iconType = 'warning'; }
+  let commentText = '', commentColor = '', bgColor = '', borderColor = '';
+  if (grade10 >= 9) {
+    commentText = '🌟 Tuyệt vời! Bé phát âm chuẩn 10 điểm luôn!';
+    commentColor = '#166534'; bgColor = '#dcfce7'; borderColor = '#16a34a';
+  } else if (grade10 >= 7) {
+    commentText = '👍 Giỏi lắm! Bé phát âm rất hay!';
+    commentColor = '#1e40af'; bgColor = '#dbeafe'; borderColor = '#2563eb';
+  } else if (grade10 >= 4) {
+    commentText = '💪 Cố gắng tốt! Lần sau mở miệng to hơn một chút nhé!';
+    commentColor = '#92400e'; bgColor = '#fef3c7'; borderColor = '#f59e0b';
+  } else {
+    commentText = '❤️ Mic chưa nghe rõ rồi. Bé bấm thử lại, đọc to hơn nhé!';
+    commentColor = '#991b1b'; bgColor = '#fee2e2'; borderColor = '#ef4444';
+  }
 
   const stars = '⭐'.repeat(Math.round(grade10 / 2)) + '☆'.repeat(5 - Math.round(grade10 / 2));
 
-  const audioHtml = audioUrl
-    ? `<p style="font-size:.9rem;font-weight:700;text-align:left;color:var(--text-gray);margin-bottom:5px">🎧 Băng ghi âm của bé:</p>
-       <audio controls src="${audioUrl}" style="width:100%;height:40px;border-radius:20px;outline:none;margin-bottom:15px"></audio>`
-    : '';
+  const overlay = document.createElement('div');
+  overlay.className = 'rec-modal-overlay';
+  overlay.id = 'resModalOverlay';
+  overlay.innerHTML = `
+    <div class="rec-modal">
+      <div style="font-size:1.8rem;margin-bottom:8px">${grade10 >= 7 ? '🎉' : grade10 >= 4 ? '🤔' : '😅'}</div>
+      <div class="res-score-big">${grade10}/10</div>
+      <div class="res-stars">${stars}</div>
 
-  Swal.fire({
-    title: grade10 >= 7 ? '🎉 Chúc mừng!' : '🤔 Cố lên bé ơi!',
-    html: `
-      <div style="font-size:4.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:5px;font-family:'Baloo 2'">${grade10}/10</div>
-      <div style="font-size:1.5rem;letter-spacing:3px;margin-bottom:15px;color:#F59E0B">${stars}</div>
-      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:15px;padding:15px;text-align:left;margin-bottom:15px">
-        <div style="font-size:.85rem;color:var(--text-gray);font-weight:700">Máy tính nghe được:</div>
-        <div style="font-size:1.2rem;color:var(--orange-dark);font-weight:900">"${displayTranscript}"</div>
+      <div class="res-heard">
+        <span class="res-heard-label">🎙️ Máy tính nghe được:</span>
+        <div class="res-heard-text">"${displayTranscript}"</div>
       </div>
-      ${audioHtml}
-      <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:10px" onclick="playAudio('${targetWord}',0.5)">
-        🐢 Nghe Cô Đọc Chậm Lại
+
+      ${audioUrl ? `
+        <div style="margin-bottom:15px">
+          <div style="font-size:.8rem;font-weight:900;color:var(--text-gray);text-transform:uppercase;margin-bottom:6px">🎧 Băng ghi âm của bé:</div>
+          <audio controls src="${audioUrl}" style="width:100%;border-radius:12px"></audio>
+        </div>
+      ` : ''}
+
+      <button onclick="playAudio('${targetWord}', 0.6)" style="width:100%;padding:13px;border-radius:18px;background:#FF948C;color:white;border:none;font-weight:900;font-size:1rem;cursor:pointer;margin-bottom:14px;font-family:'Nunito'">
+        🐢 Nghe Cô Đọc Chậm
       </button>
-      <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark);font-size:1.05rem">
-        ${comment}
+
+      <div class="res-comment" style="color:${commentColor};background:${bgColor};border-color:${borderColor}">
+        ${commentText}
       </div>
-    `,
-    icon: iconType,
-    showCancelButton: true,
-    confirmButtonText: '✅ Nhận Điểm',
-    cancelButtonText: '🎤 Đọc Lại Nhé',
-    confirmButtonColor: '#22c55e',
-    cancelButtonColor: '#fb923c',
-    allowOutsideClick: false
-  }).then(async r => {
-    if (r.isConfirmed) {
-      if (window._fb_saveSpeak) await window._fb_saveSpeak(quizId, grade100, displayTranscript, comment, audioUrl || '');
-      if (window._fb_notify) await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${grade10}/10 điểm! 🎤`);
-      Swal.fire({ title: 'Đã Lưu Điểm!', icon: 'success', timer: 1400, showConfirmButton: false });
-    } else if (r.dismiss === Swal.DismissReason.cancel) {
-      setTimeout(() => startRecording(targetWord, quizId), 400);
-    }
-  });
-}
-window.startRecording = startRecording;
 
-/* ── RECORDING TRONG GAME ── */
-function startInGameRecording(targetWord, idx, points) {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
+      <div class="res-btn-row">
+        <button class="res-btn res-btn-retry" id="resRetryBtn">🎤 Đọc Lại</button>
+        <button class="res-btn res-btn-accept" id="resAcceptBtn">✅ Nhận Điểm (${grade10}/10)</button>
+      </div>
+    </div>
+  `;
 
-  const recognition = new SR();
-  recognition.lang = 'en-US';
-  recognition.interimResults = true;
-  recognition.continuous = true;
-  recognition.maxAlternatives = 3;
-
-  let finalTranscript = '';
-  let interimTranscript = '';
-  let isStopped = false;
-  let timerInterval2;
-
-  navigator.mediaDevices.getUserMedia({
-    audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
-  }).then(stream => {
-
-    try { recognition.start(); } catch(e) { console.error('In-game SR:', e); }
-
-    recognition.onresult = e => {
-      let interim = '', final = '';
-      for (let i = 0; i < e.results.length; i++) {
-        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
-        else interim += e.results[i][0].transcript;
-      }
-      if (final.trim()) finalTranscript = final.trim();
-      interimTranscript = interim;
-    };
-
-    recognition.onerror = e => {
-      if (e.error === 'no-speech') return;
-      console.warn('In-game SR error:', e.error);
-    };
-
-    Swal.fire({
-      title: '🎤 Đọc to lên nào!',
-      html: `
-        <div style="font-size:3rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin-bottom:15px">"${targetWord}"</div>
-        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
-        <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text-ig">⏳ Còn lại: 10 giây</p>
-        <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:12px">
-          <div id="swal-timer-bar-ig" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
-        </div>
-        <div id="live-transcript-ig" style="min-height:34px;color:#475569;font-size:.9rem;font-weight:700;padding:8px 12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;text-align:center">
-          🎙️ Đang lắng nghe...
-        </div>
-      `,
-      showConfirmButton: true,
-      confirmButtonText: '⏹️ Xong',
-      confirmButtonColor: '#ef4444',
-      allowOutsideClick: false,
-      didOpen: () => {
-        let timeLeft = 10;
-        timerInterval2 = setInterval(() => {
-          timeLeft--;
-          const txt = document.getElementById('swal-timer-text-ig');
-          const bar = document.getElementById('swal-timer-bar-ig');
-          const live = document.getElementById('live-transcript-ig');
-          if (txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
-          if (bar) bar.style.width = `${(timeLeft / 10) * 100}%`;
-          if (live) {
-            const display = finalTranscript || interimTranscript;
-            live.innerText = display ? `"${display}"` : '🎙️ Đang lắng nghe...';
-          }
-          if (timeLeft <= 0 && !isStopped) { clearInterval(timerInterval2); Swal.clickConfirm(); }
-        }, 1000);
-      }
-    }).then(res => {
-      if (res.isConfirmed && !isStopped) {
-        isStopped = true;
-        clearInterval(timerInterval2);
-
-        /* ★ KEY FIX: dừng recognition TRƯỚC → đợi 600ms */
-        try { recognition.stop(); } catch(e) {}
-        try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
-
-        setTimeout(() => gradeInGame(targetWord, finalTranscript, points), 600);
-      }
-    });
-
-  }).catch(() => Swal.fire('Lỗi Micro', 'Bật micro lên nhé bé!', 'error'));
+  document.body.appendChild(overlay);
+  overlay.querySelector('#resAcceptBtn').onclick = () => { overlay.remove(); onAccept(grade100, displayTranscript, commentText); };
+  overlay.querySelector('#resRetryBtn').onclick  = () => { overlay.remove(); onRetry(); };
 }
 
-function gradeInGame(targetWord, transcript, points) {
-  const grade10 = calculateSensitiveScore(transcript, targetWord);
-  const isCorrect = grade10 >= 5;
-  closeQuestion();
+/* ─────────────────────────────────────────────
+   startRecording — entry point chính
+   Ghi âm bằng MediaRecorder → gửi lên Claude
+───────────────────────────────────────────── */
+async function startRecording(targetWord, quizId) {
+  let stream, mediaRecorder, audioChunks = [], audioUrl = null;
 
-  if (isCorrect) {
-    G.score += parseInt(points) || 0;
-    updateProgress();
-    showScorePopup('+' + points + '🥕');
-    Swal.fire({
-      title: `🎉 ${grade10}/10 — Thỏ ăn cà rốt!`,
-      text: transcript ? `Bé đọc: "${transcript}"` : '',
-      icon: 'success', timer: 1800, showConfirmButton: false, toast: true, position: 'top'
+  // Xin quyền micro trước
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
     });
-  } else {
-    G.progress = Math.max(0, G.progress - 1);
-    const obsEl = document.getElementById(`obs_${G.progress}`);
-    if (obsEl) { obsEl.textContent = '🌵'; obsEl.classList.remove('cleared'); }
-    updateRabbitPosition(false); positionCamera(); updateProgress();
-    const msg = transcript
-      ? `Máy tính nghe: "${transcript}" — cần ≥5/10 nhé bé!`
-      : 'Bé đọc to hơn nữa nhé! Mở miệng to ra!';
-    Swal.fire({
-      title: `${grade10}/10 — Thỏ bị vấp! 😢`,
-      text: msg, icon: 'error', timer: 2500, showConfirmButton: false, toast: true, position: 'top'
-    });
+  } catch(e) {
+    Swal.fire('Lỗi Micro 🎤',
+      'Bố mẹ giúp bé bật quyền Micro trong trình duyệt nhé! (Chrome → địa chỉ web → 🔒 → Micro → Cho phép)',
+      'error');
+    return;
   }
+
+  // Chọn định dạng audio được hỗ trợ
+  const mimeType = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4']
+    .find(t => MediaRecorder.isTypeSupported(t)) || '';
+
+  mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.start(100);
+
+  // Hiện modal ghi âm
+  createRecModal(targetWord,
+    // onDone: khi bé bấm xong hoặc hết giờ
+    async (closeModal) => {
+      // Dừng recorder → chờ onstop
+      await new Promise(resolve => {
+        mediaRecorder.onstop = resolve;
+        try { mediaRecorder.stop(); } catch(e) { resolve(); }
+      });
+      try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
+
+      // Tạo blob và URL phát lại
+      const blob = new Blob(audioChunks, { type: mimeType || 'audio/webm' });
+      audioUrl = URL.createObjectURL(blob);
+
+      closeModal();
+
+      // Hiện loading
+      Swal.fire({
+        title: '🤖 AI đang phân tích giọng nói...',
+        html: '<div style="font-size:1.1rem;color:var(--text-gray);font-weight:700">Chờ bé một chút nhé! 🐻</div>',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      // Transcribe qua Claude
+      let transcript = '';
+      try {
+        transcript = await transcribeWithClaude(blob, targetWord);
+      } catch(err) {
+        console.warn('Claude transcribe error:', err);
+        // Fallback: để transcript rỗng → điểm thấp + khuyến khích thử lại
+      }
+
+      Swal.close();
+
+      // Hiện kết quả
+      showSpeakResult(
+        targetWord,
+        transcript,
+        audioUrl,
+        // onAccept
+        async (grade100, displayTranscript, comment) => {
+          if (window._fb_saveSpeak) await window._fb_saveSpeak(quizId, grade100, displayTranscript, comment, audioUrl);
+          if (window._fb_notify) await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${Math.round(grade100/10)}/10 điểm! 🎤`);
+          Swal.fire({ title: '🥕 Đã lưu điểm!', icon: 'success', timer: 1400, showConfirmButton: false });
+        },
+        // onRetry
+        () => startRecording(targetWord, quizId)
+      );
+    },
+    // onCancel
+    () => {
+      try { mediaRecorder.stop(); } catch(e) {}
+      try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
+    }
+  );
 }
+
+/* ─────────────────────────────────────────────
+   startInGameRecording — dùng trong game
+───────────────────────────────────────────── */
+async function startInGameRecording(targetWord, idx, points) {
+  let stream, mediaRecorder, audioChunks = [];
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
+    });
+  } catch(e) {
+    Swal.fire('Lỗi Micro 🎤', 'Bật micro lên nhé bé!', 'error');
+    return;
+  }
+
+  const mimeType = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4']
+    .find(t => MediaRecorder.isTypeSupported(t)) || '';
+
+  mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.start(100);
+
+  createRecModal(targetWord,
+    async (closeModal) => {
+      await new Promise(resolve => {
+        mediaRecorder.onstop = resolve;
+        try { mediaRecorder.stop(); } catch(e) { resolve(); }
+      });
+      try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
+
+      const blob = new Blob(audioChunks, { type: mimeType || 'audio/webm' });
+      closeModal();
+
+      Swal.fire({
+        title: '🤖 AI đang chấm...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      let transcript = '';
+      try { transcript = await transcribeWithClaude(blob, targetWord); } catch(e) {}
+
+      Swal.close();
+      gradeInGame(targetWord, transcript, points);
+    },
+    () => {
+      try { mediaRecorder.stop(); } catch(e) {}
+      try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
+      // Nếu hủy trong game thì đóng câu hỏi
+      closeQuestion();
+    }
+  );
+}
+
+window.startRecording = startRecording;
 window.startInGameRecording = startInGameRecording;
 </script>
 
@@ -1317,6 +1522,35 @@ function checkFill(idx,correctStr,points){
   }
 }
 window.checkFill=checkFill;
+
+function gradeInGame(targetWord, transcript, points) {
+  const grade10 = calculateSensitiveScore(transcript, targetWord);
+  const isCorrect = grade10 >= 5;
+  closeQuestion();
+
+  if (isCorrect) {
+    G.score += parseInt(points) || 0;
+    updateProgress();
+    showScorePopup('+' + points + '🥕');
+    Swal.fire({
+      title: `🎉 ${grade10}/10 — Thỏ ăn cà rốt!`,
+      text: transcript ? `Bé đọc: "${transcript}"` : '',
+      icon: 'success', timer: 1800, showConfirmButton: false, toast: true, position: 'top'
+    });
+  } else {
+    G.progress = Math.max(0, G.progress - 1);
+    const obsEl = document.getElementById(`obs_${G.progress}`);
+    if (obsEl) { obsEl.textContent = '🌵'; obsEl.classList.remove('cleared'); }
+    updateRabbitPosition(false); positionCamera(); updateProgress();
+    const msg = transcript
+      ? `Máy tính nghe: "${transcript}" — cần ≥5/10 nhé bé!`
+      : 'Bé đọc to hơn nữa nhé! Mở miệng to ra!';
+    Swal.fire({
+      title: `${grade10}/10 — Thỏ bị vấp! 😢`,
+      text: msg, icon: 'error', timer: 2500, showConfirmButton: false, toast: true, position: 'top'
+    });
+  }
+}
 
 function showScorePopup(text){
   const el=document.createElement('div');
