@@ -97,6 +97,9 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
 .chat-clear-btn{background:transparent;border:none;color:var(--text-gray);cursor:pointer;font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:10px;transition:.2s}
 .chat-clear-btn:hover{background:var(--orange-light);color:var(--orange-dark)}
 
+/* ── LIVE TRANSCRIPT BOX ── */
+.live-transcript-box{min-height:32px;color:var(--text-gray);font-size:.9rem;font-weight:700;padding:8px 12px;background:var(--white);border-radius:10px;border:1px solid var(--border);margin-top:8px;transition:all .3s}
+
 /* ════════ GAME OVERLAY ════════ */
 #gameOverlay{
   display:none;position:fixed;top:0;left:0;width:100%;height:100%;
@@ -197,6 +200,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
   </div>
 
   <div class="content">
+    <!-- HOME -->
     <div id="tab-home" class="tab-pane active">
       <div style="display:grid;grid-template-columns:1fr 350px;gap:25px" id="homeGrid">
         <div>
@@ -218,6 +222,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- LESSONS -->
     <div id="tab-lessons" class="tab-pane">
       <div class="card" id="videoListCard" style="background:transparent;border:none;box-shadow:none;padding:0">
         <div class="card-title" style="color:var(--blue-dark);background:var(--white);padding:20px 30px;border-radius:25px;box-shadow:var(--shadow-md)">📺 Bài Học Video (Theo Chương)</div>
@@ -245,6 +250,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- GAME -->
     <div id="tab-game" class="tab-pane">
       <div class="card" style="background:transparent;border:none;box-shadow:none;padding:0">
         <div class="card-title" style="color:var(--game-dark);background:var(--white);padding:20px 30px;border-radius:25px;box-shadow:var(--shadow-md)">🎮 Trò Chơi Thử Thách</div>
@@ -252,6 +258,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- QUIZ -->
     <div id="tab-quiz" class="tab-pane">
       <div class="card" style="background:transparent;border:none;box-shadow:none;padding:0">
         <div class="card-title" style="color:var(--green-dark);background:var(--white);padding:20px 30px;border-radius:25px;box-shadow:var(--shadow-md)">📝 Bài Tập Cô Giao</div>
@@ -259,6 +266,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- SPEAKING -->
     <div id="tab-speaking" class="tab-pane">
       <div class="card" style="background:transparent;border:none;box-shadow:none;padding:0">
         <div class="card-title" style="color:var(--orange-dark);background:var(--white);padding:20px 30px;border-radius:25px;box-shadow:var(--shadow-md)">🎤 Luyện Phát Âm Cùng AI</div>
@@ -266,6 +274,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- PROGRESS -->
     <div id="tab-progress" class="tab-pane">
       <div class="card">
         <div class="card-title" style="color:var(--blue-dark)">📊 Báo Cáo Tiến Độ</div>
@@ -279,6 +288,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
       </div>
     </div>
 
+    <!-- CHAT -->
     <div id="tab-chat-teacher" class="tab-pane">
       <div class="card">
         <div class="card-title" style="color:var(--blue-dark)">💬 Kênh Trò Chuyện</div>
@@ -316,6 +326,7 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
   </div>
 </div>
 
+<!-- GAME OVERLAY -->
 <div id="gameOverlay">
   <div class="game-topbar">
     <div class="game-title-bar">🐰 <span id="gameTitleBar">Thỏ Về Đích</span></div>
@@ -336,6 +347,9 @@ th{background:var(--white);font-weight:900;border-bottom:2px solid var(--border)
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     FIREBASE MODULE
+══════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -355,7 +369,7 @@ document.getElementById('stAvatarTop').innerText = stName.charAt(0).toUpperCase(
 if(document.getElementById('stAvatarMobile')) document.getElementById('stAvatarMobile').innerText = stName.charAt(0).toUpperCase();
 
 if (user && user.role === 'pending') {
-  Swal.fire({ title:'Chào mừng! 🎈', html:`<p style="font-size:1.2rem;font-weight:700">Thầy cô đang xếp lớp cho con! ✨</p>`, icon:'info', allowOutsideClick:false, showConfirmButton:true, confirmButtonText: 'Đã Hiểu', footer:`<a href="javascript:void(0)" onclick="logout()" style="color:#ef4444;text-decoration:none;font-weight:700">Thoát ra</a>` });
+  Swal.fire({ title:'Chào mừng! 🎈', html:`<p style="font-size:1.2rem;font-weight:700">Thầy cô đang xếp lớp cho con! ✨</p>`, icon:'info', allowOutsideClick:false, showConfirmButton:true, confirmButtonText:'Đã Hiểu', footer:`<a href="javascript:void(0)" onclick="logout()" style="color:#ef4444;text-decoration:none;font-weight:700">Thoát ra</a>` });
 }
 
 let allUsers=[],allLessons=[],allQuizzes=[],allChats=[];
@@ -366,7 +380,7 @@ function scheduleRefresh(){if(_refreshTimer)clearTimeout(_refreshTimer);_refresh
 function getQuizHistory(){try{return JSON.parse(localStorage.getItem('ks_quiz_history')||'{}');}catch{return{};}}
 function getSpeakHistory(){try{return JSON.parse(localStorage.getItem('ks_speak_history')||'{}');}catch{return{};}}
 function getVideoHistory(){try{return JSON.parse(localStorage.getItem('ks_video_history')||'{}');}catch{return{};}}
-const uid=user ? (user.firestoreId||user.id||user.email) : '';
+const uid = user ? (user.firestoreId||user.id||user.email) : '';
 
 async function loadAll(){
   try{
@@ -376,11 +390,11 @@ async function loadAll(){
     allQuizzes=qS.docs.map(d=>({firestoreId:d.id,...d.data()}));
     allChats=cS.docs.map(d=>({firestoreId:d.id,...d.data()}));
     updateMyData();refreshUI();startListeners();
-  }catch(e){console.log('Firebase load error:', e.message);}
+  }catch(e){console.log('Firebase load error:',e.message);}
 }
 
 function updateMyData(){
-  if(!user) return;
+  if(!user)return;
   myData=allUsers.find(u=>(user.firestoreId&&u.firestoreId===user.firestoreId)||(u.email===user.email))||{};
   if(myData.class){const t=allUsers.find(u=>u.role==='teacher'&&(u.classes||[]).includes(myData.class));myTeacherEmail=t?t.email:null;}
 }
@@ -393,7 +407,7 @@ function startListeners(){
 }
 
 function checkNewMessages(prevCount){
-  if(!user || !myTeacherEmail||document.getElementById('tab-chat-teacher').classList.contains('active'))return;
+  if(!user||!myTeacherEmail||document.getElementById('tab-chat-teacher').classList.contains('active'))return;
   const myMsgs=allChats.filter(c=>(c.senderEmail===myTeacherEmail&&c.receiverEmail===user.email)||c.receiverId==='GROUP_CHAT');
   if(myMsgs.length>unreadChatCount&&unreadChatCount>0){document.getElementById('chatNotifDot').classList.add('active');Swal.fire({title:'💬 Cô giáo nhắn!',text:'Con có tin nhắn mới!',icon:'info',toast:true,position:'top-end',timer:4000,showConfirmButton:false});}
   unreadChatCount=myMsgs.length;
@@ -464,8 +478,8 @@ function refreshUI(){
   const speaks=allQuizzes.filter(q=>q.type==='speak');
   renderGroupedItems(speaks,'realSpeakingList',s=>{
     const res=sH[myUid+'_'+s.firestoreId];
-    const grade10 = res ? Math.round(res.score / 10) : null;
-    const starStr = grade10 !== null ? '⭐'.repeat(Math.round(grade10/2))+'☆'.repeat(5-Math.round(grade10/2)) : '';
+    const grade10=res?Math.round(res.score/10):null;
+    const starStr=grade10!==null?'⭐'.repeat(Math.round(grade10/2))+'☆'.repeat(5-Math.round(grade10/2)):'';
     const resultHtml=res?`<div style="margin-top:10px;padding:15px;background:var(--orange-light);border-radius:15px;border:2px dashed var(--orange-dark)">
       <div style="font-weight:900;color:var(--orange-dark);font-size:1.2rem;text-align:center;margin-bottom:4px">${grade10}/10 ${starStr}</div>
       <div style="font-size:.9rem;font-weight:700;text-align:center;color:var(--text-gray)">Đã đọc: "${res.transcript}"</div>
@@ -517,173 +531,150 @@ async function autoNotifyTeacher(msg){
   try{await addDoc(collection(db,'chats'),{senderEmail:user.email,senderName:myData.fullName||stName,receiverEmail:receiver,receiverId:receiver,message:msg,timestamp:serverTimestamp()});}catch(e){}
 }
 
-// ══════════════════════════════════════════════════
-// CHAT GẤUBROWN — AI THỰC TẾ
-// ══════════════════════════════════════════════════
-const BEAR_STORAGE = 'ks_ai_bear_v3';
-const BEAR_MAX_HISTORY = 20;
+/* ── BEAR CHAT AI ── */
+const BEAR_STORAGE='ks_ai_bear_v3';
+const BEAR_MAX_HISTORY=20;
+function getBearHistory(){try{return JSON.parse(localStorage.getItem(BEAR_STORAGE)||'[]');}catch{return[];}}
+function saveBearHistory(arr){localStorage.setItem(BEAR_STORAGE,JSON.stringify(arr));}
 
-function getBearHistory() {
-  try { return JSON.parse(localStorage.getItem(BEAR_STORAGE) || '[]'); } catch { return []; }
-}
-function saveBearHistory(arr) {
-  localStorage.setItem(BEAR_STORAGE, JSON.stringify(arr));
-}
-
-function renderBearChat(history) {
-  const box = document.getElementById('teacherChatBox');
-  if (!box) return;
-  if (history.length === 0) {
-    box.innerHTML = `
-      <div style="text-align:center;padding:30px">
-        <div style="font-size:3rem;margin-bottom:10px">🐻🍯</div>
-        <div style="font-weight:900;font-size:1.2rem;color:var(--orange-dark);margin-bottom:8px">Xin chào! Tớ là Gấu Nâu!</div>
-        <div style="color:var(--text-gray);font-weight:700">Hỏi tớ bất cứ điều gì về tiếng Anh nhé!<br>Tớ luôn ở đây giúp bé học! 🌟</div>
-      </div>`;
+function renderBearChat(history){
+  const box=document.getElementById('teacherChatBox');
+  if(!box)return;
+  if(history.length===0){
+    box.innerHTML=`<div style="text-align:center;padding:30px">
+      <div style="font-size:3rem;margin-bottom:10px">🐻🍯</div>
+      <div style="font-weight:900;font-size:1.2rem;color:var(--orange-dark);margin-bottom:8px">Xin chào! Tớ là Gấu Nâu!</div>
+      <div style="color:var(--text-gray);font-weight:700">Hỏi tớ bất cứ điều gì về tiếng Anh nhé!<br>Tớ luôn ở đây giúp bé học! 🌟</div>
+    </div>`;
     return;
   }
-  box.innerHTML = history.map(m => {
-    const isMe = m.role === 'user';
-    const timeStr = m.ts ? new Date(m.ts).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '';
-    return `<div class="message ${isMe ? 'student' : 'teacher'}">
-      <span class="chat-sender" style="${isMe ? '' : 'color:#FF8C00'}">
-        ${isMe ? (myData.fullName || 'Bé').split(' ').pop() : 'Gấu Nâu 🐻'}
-      </span>
+  box.innerHTML=history.map(m=>{
+    const isMe=m.role==='user';
+    const timeStr=m.ts?new Date(m.ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'';
+    return`<div class="message ${isMe?'student':'teacher'}">
+      <span class="chat-sender" style="${isMe?'':'color:#FF8C00'}">${isMe?(myData.fullName||'Bé').split(' ').pop():'Gấu Nâu 🐻'}</span>
       <span class="chat-text">${m.content}</span>
       <span class="chat-time">${timeStr}</span>
     </div>`;
   }).join('');
-  box.scrollTop = box.scrollHeight;
+  box.scrollTop=box.scrollHeight;
 }
 
-function showTyping() {
-  const box = document.getElementById('teacherChatBox');
-  const el = document.createElement('div');
-  el.id = 'bear-typing';
-  el.className = 'typing-bubble';
-  el.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div><span style="font-size:.9rem;color:var(--text-gray);font-weight:700;margin-left:4px">Gấu Nâu đang nghĩ...</span>`;
-  box.appendChild(el);
-  box.scrollTop = box.scrollHeight;
+function showTyping(){
+  const box=document.getElementById('teacherChatBox');
+  const el=document.createElement('div');
+  el.id='bear-typing';el.className='typing-bubble';
+  el.innerHTML=`<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div><span style="font-size:.9rem;color:var(--text-gray);font-weight:700;margin-left:4px">Gấu Nâu đang nghĩ...</span>`;
+  box.appendChild(el);box.scrollTop=box.scrollHeight;
 }
-function hideTyping() {
-  const el = document.getElementById('bear-typing');
-  if (el) el.remove();
-}
+function hideTyping(){const el=document.getElementById('bear-typing');if(el)el.remove();}
 
-function smartFallback(userMsg) {
-  const msg = (userMsg || '').toLowerCase();
-  const responses = {
-    greet: ['Xin chào bạn nhỏ! 🐻 Hôm nay muốn học gì nào?', 'Chào bé! 🍯 Gấu Nâu rất vui được gặp bé!'],
-    color: ['Màu sắc tiếng Anh: 🔴 Red - đỏ, 🔵 Blue - xanh, 🟡 Yellow - vàng, 🟢 Green - lục! Bé thích màu nào? 🌈'],
-    animal: ['Động vật tiếng Anh: 🐱 Cat - mèo, 🐶 Dog - chó, 🐰 Rabbit - thỏ, 🐘 Elephant - voi! Bé muốn học thêm không? 🐾'],
-    number: ['Đếm số: One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten! Bé thử đếm thử không? 🔢'],
-    hello: ['Hello! = Xin chào\nGood morning! = Chào buổi sáng\nGoodbye! = Tạm biệt\nSee you! = Gặp lại sau! 👋'],
-    a_an: ['"A" trước phụ âm: a cat, a dog\n"AN" trước nguyên âm (a,e,i,o,u): an apple, an elephant! 🍎🐘'],
-    thanks: ['Không có gì bạn nhỏ! 🍯 Gấu Nâu lúc nào cũng ở đây! 🐻⭐'],
-    default: ['Câu hỏi hay lắm! 🐻 Bé thử hỏi về từ vựng, màu sắc, hay động vật nhé!', 'Ồ! 🍯 Gấu Nâu đang suy nghĩ... Bé hỏi thêm nhé!']
+function smartFallback(userMsg){
+  const msg=(userMsg||'').toLowerCase();
+  const responses={
+    greet:['Xin chào bạn nhỏ! 🐻 Hôm nay muốn học gì nào?','Chào bé! 🍯 Gấu Nâu rất vui được gặp bé!'],
+    color:['Màu sắc tiếng Anh: 🔴 Red - đỏ, 🔵 Blue - xanh, 🟡 Yellow - vàng, 🟢 Green - lục! Bé thích màu nào? 🌈'],
+    animal:['Động vật tiếng Anh: 🐱 Cat - mèo, 🐶 Dog - chó, 🐰 Rabbit - thỏ, 🐘 Elephant - voi! Bé muốn học thêm không? 🐾'],
+    number:['Đếm số: One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten! Bé thử đếm thử không? 🔢'],
+    hello:['Hello! = Xin chào\nGood morning! = Chào buổi sáng\nGoodbye! = Tạm biệt\nSee you! = Gặp lại sau! 👋'],
+    a_an:['"A" trước phụ âm: a cat, a dog\n"AN" trước nguyên âm (a,e,i,o,u): an apple, an elephant! 🍎🐘'],
+    thanks:['Không có gì bạn nhỏ! 🍯 Gấu Nâu lúc nào cũng ở đây! 🐻⭐'],
+    default:['Câu hỏi hay lắm! 🐻 Bé thử hỏi về từ vựng, màu sắc, hay động vật nhé!','Ồ! 🍯 Gấu Nâu đang suy nghĩ... Bé hỏi thêm nhé!']
   };
-  if (msg.match(/xin chào|hello|hi|chào/)) return responses.greet[Math.floor(Math.random()*responses.greet.length)];
-  if (msg.match(/màu|color/)) return responses.color[0];
-  if (msg.match(/động vật|animal/)) return responses.animal[0];
-  if (msg.match(/số|number|đếm/)) return responses.number[0];
-  if (msg.match(/chào hỏi|greeting/)) return responses.hello[0];
-  if (msg.match(/a và an|a\/an/)) return responses.a_an[0];
-  if (msg.match(/cảm ơn|thank/)) return responses.thanks[0];
+  if(msg.match(/xin chào|hello|hi|chào/))return responses.greet[Math.floor(Math.random()*responses.greet.length)];
+  if(msg.match(/màu|color/))return responses.color[0];
+  if(msg.match(/động vật|animal/))return responses.animal[0];
+  if(msg.match(/số|number|đếm/))return responses.number[0];
+  if(msg.match(/chào hỏi|greeting/))return responses.hello[0];
+  if(msg.match(/a và an|a\/an/))return responses.a_an[0];
+  if(msg.match(/cảm ơn|thank/))return responses.thanks[0];
   return responses.default[Math.floor(Math.random()*responses.default.length)];
 }
 
-async function callBearAPI(history) {
-  const studentName = (myData.fullName || stName).split(' ').pop();
-  const studentScore = myData.score || 0;
-  const studentClass = myData.class || 'chưa xếp lớp';
-  const apiMessages = history.slice(-BEAR_MAX_HISTORY).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }));
-  const resp = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 300,
-      system: `Bạn là Gấu Nâu — trợ lý học tiếng Anh vui nhộn dành cho trẻ em trên KidsEnglish.
+async function callBearAPI(history){
+  const studentName=(myData.fullName||stName).split(' ').pop();
+  const studentScore=myData.score||0;
+  const studentClass=myData.class||'chưa xếp lớp';
+  const apiMessages=history.slice(-BEAR_MAX_HISTORY).map(m=>({role:m.role==='user'?'user':'assistant',content:m.content}));
+  const resp=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      model:"claude-sonnet-4-20250514",max_tokens:300,
+      system:`Bạn là Gấu Nâu — trợ lý học tiếng Anh vui nhộn dành cho trẻ em trên KidsEnglish.
 Thông tin bé: Tên=${studentName}, Lớp=${studentClass}, Điểm🥕=${studentScore}
 Nguyên tắc: Vui vẻ, thân thiện, ngôn ngữ đơn giản cho trẻ 5-12 tuổi. Dùng emoji (🐻🍯🥕🌟) tối đa 3/tin. Ngắn gọn 2-4 câu. Tiếng Anh: giải thích rõ + ví dụ đơn giản. Luôn khuyến khích. Xưng "Tớ", gọi là "bạn" hoặc ${studentName}.`,
-      messages: apiMessages
+      messages:apiMessages
     })
   });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.content?.[0]?.text || '🍯 Tớ chưa nghĩ ra, thử lại nhé!';
+  const data=await resp.json();
+  if(data.error)throw new Error(data.error.message);
+  return data.content?.[0]?.text||'🍯 Tớ chưa nghĩ ra, thử lại nhé!';
 }
 
-async function sendBearMessage(msg) {
-  if (!msg.trim()) return;
-  let history = getBearHistory();
-  history.push({ role: 'user', content: msg, ts: Date.now() });
-  saveBearHistory(history);
-  renderBearChat(history);
-  showTyping();
-  try {
-    const reply = await callBearAPI(history);
-    hideTyping();
-    history = getBearHistory();
-    history.push({ role: 'assistant', content: reply, ts: Date.now() });
-    saveBearHistory(history);
-    renderBearChat(history);
-  } catch (err) {
-    hideTyping();
-    const fallback = smartFallback(msg);
-    history = getBearHistory();
-    history.push({ role: 'assistant', content: fallback, ts: Date.now() });
-    saveBearHistory(history);
-    renderBearChat(history);
+async function sendBearMessage(msg){
+  if(!msg.trim())return;
+  let history=getBearHistory();
+  history.push({role:'user',content:msg,ts:Date.now()});
+  saveBearHistory(history);renderBearChat(history);showTyping();
+  try{
+    const reply=await callBearAPI(history);
+    hideTyping();history=getBearHistory();
+    history.push({role:'assistant',content:reply,ts:Date.now()});
+    saveBearHistory(history);renderBearChat(history);
+  }catch(err){
+    hideTyping();const fallback=smartFallback(msg);
+    history=getBearHistory();
+    history.push({role:'assistant',content:fallback,ts:Date.now()});
+    saveBearHistory(history);renderBearChat(history);
   }
 }
 
-function loadChatInternal() {
-  const target = document.getElementById('chatTargetSelect').value;
-  currentChatTarget = target;
-  const bearHeader = document.getElementById('bearHeader');
-  const quickQ = document.getElementById('quickQuestions');
-  if (target === 'AI_BEAR') {
-    if (bearHeader) bearHeader.style.display = 'flex';
-    if (quickQ) quickQ.style.display = 'flex';
-    renderBearChat(getBearHistory());
-    return;
+function loadChatInternal(){
+  const target=document.getElementById('chatTargetSelect').value;
+  currentChatTarget=target;
+  const bearHeader=document.getElementById('bearHeader');
+  const quickQ=document.getElementById('quickQuestions');
+  if(target==='AI_BEAR'){
+    if(bearHeader)bearHeader.style.display='flex';
+    if(quickQ)quickQ.style.display='flex';
+    renderBearChat(getBearHistory());return;
   }
-  if (bearHeader) bearHeader.style.display = 'none';
-  if (quickQ) quickQ.style.display = 'none';
-  const box = document.getElementById('teacherChatBox');
-  let msgs = [];
-  if (target === 'GROUP_CHAT') msgs = allChats.filter(c => c.receiverId === 'GROUP_CHAT' || c.receiverEmail === 'GROUP_CHAT');
-  else {
-    if (!myTeacherEmail) { box.innerHTML = '<p style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Bé chưa có cô giáo!</p>'; return; }
-    msgs = allChats.filter(c => (c.senderEmail === user.email && c.receiverEmail === myTeacherEmail) || (c.senderEmail === myTeacherEmail && c.receiverEmail === user.email));
+  if(bearHeader)bearHeader.style.display='none';
+  if(quickQ)quickQ.style.display='none';
+  const box=document.getElementById('teacherChatBox');
+  let msgs=[];
+  if(target==='GROUP_CHAT')msgs=allChats.filter(c=>c.receiverId==='GROUP_CHAT'||c.receiverEmail==='GROUP_CHAT');
+  else{
+    if(!myTeacherEmail){box.innerHTML='<p style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Bé chưa có cô giáo!</p>';return;}
+    msgs=allChats.filter(c=>(c.senderEmail===user.email&&c.receiverEmail===myTeacherEmail)||(c.senderEmail===myTeacherEmail&&c.receiverEmail===user.email));
   }
-  msgs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
-  box.innerHTML = msgs.map(m => {
-    const isMe = m.senderEmail === user.email;
-    return `<div class="message ${isMe ? 'student' : 'teacher'}">
-      <span class="chat-sender">${m.senderName || m.senderEmail}</span>
+  msgs.sort((a,b)=>(a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+  box.innerHTML=msgs.map(m=>{
+    const isMe=m.senderEmail===user.email;
+    return`<div class="message ${isMe?'student':'teacher'}">
+      <span class="chat-sender">${m.senderName||m.senderEmail}</span>
       <span class="chat-text">${m.message}</span>
     </div>`;
-  }).join('') || '<div style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Hãy gửi lời chào đầu tiên! 👋</div>';
-  box.scrollTop = box.scrollHeight;
+  }).join('')||'<div style="text-align:center;color:var(--text-gray);padding:20px;font-weight:800">Hãy gửi lời chào đầu tiên! 👋</div>';
+  box.scrollTop=box.scrollHeight;
 }
 
-async function sendToTeacherInternal() {
-  if (!user) return;
-  const target = document.getElementById('chatTargetSelect').value;
-  const msg = document.getElementById('teacherChatInput').value.trim();
-  if (!msg) return;
-  document.getElementById('teacherChatInput').value = '';
-  if (target === 'AI_BEAR') { await sendBearMessage(msg); return; }
-  const receiverEmail = target === 'GROUP_CHAT' ? 'GROUP_CHAT' : (myTeacherEmail || 'GROUP_CHAT');
-  try {
-    await addDoc(collection(db, 'chats'), {
-      senderEmail: user.email, senderName: myData.fullName || stName,
-      receiverEmail, receiverId: target === 'GROUP_CHAT' ? 'GROUP_CHAT' : receiverEmail,
-      message: msg, timestamp: serverTimestamp()
+async function sendToTeacherInternal(){
+  if(!user)return;
+  const target=document.getElementById('chatTargetSelect').value;
+  const msg=document.getElementById('teacherChatInput').value.trim();
+  if(!msg)return;
+  document.getElementById('teacherChatInput').value='';
+  if(target==='AI_BEAR'){await sendBearMessage(msg);return;}
+  const receiverEmail=target==='GROUP_CHAT'?'GROUP_CHAT':(myTeacherEmail||'GROUP_CHAT');
+  try{
+    await addDoc(collection(db,'chats'),{
+      senderEmail:user.email,senderName:myData.fullName||stName,
+      receiverEmail,receiverId:target==='GROUP_CHAT'?'GROUP_CHAT':receiverEmail,
+      message:msg,timestamp:serverTimestamp()
     });
-  } catch (e) { console.error(e); }
+  }catch(e){console.error(e);}
 }
 
 async function saveGameResult(gameId,scoreVal){const qH=getQuizHistory();const myUid=myData.firestoreId||uid;qH[myUid+'_'+gameId]={score:scoreVal};localStorage.setItem('ks_quiz_history',JSON.stringify(qH));await updateStudentScore(scoreVal);}
@@ -700,8 +691,16 @@ async function sendProgressToTeacherInternal(){
   Swal.fire({title:'Thành công!',text:'Đã gửi báo cáo cho Cô giáo!',icon:'success',confirmButtonColor:'#4A81E8'});
 }
 
-window._fb_allQuizzes=()=>allQuizzes;window._fb_allLessons=()=>allLessons;window._fb_getMyUid=()=>myData.firestoreId||uid;window._fb_getMyData=()=>myData;
-window._fb_saveGame=saveGameResult;window._fb_saveQuiz=saveQuizResult;window._fb_saveSpeak=saveSpeakResult;window._fb_saveVideo=saveVideoResult;window._fb_notify=autoNotifyTeacher;
+/* Expose to global */
+window._fb_allQuizzes=()=>allQuizzes;
+window._fb_allLessons=()=>allLessons;
+window._fb_getMyUid=()=>myData.firestoreId||uid;
+window._fb_getMyData=()=>myData;
+window._fb_saveGame=saveGameResult;
+window._fb_saveQuiz=saveQuizResult;
+window._fb_saveSpeak=saveSpeakResult;
+window._fb_saveVideo=saveVideoResult;
+window._fb_notify=autoNotifyTeacher;
 window.forceLoadChat=()=>loadChatInternal();
 window.sendToTeacher=()=>sendToTeacherInternal();
 window.sendProgressToTeacher=()=>sendProgressToTeacherInternal();
@@ -713,11 +712,14 @@ window.clearBearChat=()=>{
 window.sendQuickQ=(q)=>{document.getElementById('teacherChatInput').value=q;sendToTeacherInternal();};
 window.switchChatTarget=()=>loadChatInternal();
 
-document.addEventListener('DOMContentLoaded',()=>{ 
-    if (user) { loadAll(); renderBearChat(getBearHistory()); }
+document.addEventListener('DOMContentLoaded',()=>{
+  if(user){loadAll();renderBearChat(getBearHistory());}
 });
 </script>
 
+<!-- ══════════════════════════════════════════
+     GLOBAL UI FUNCTIONS
+══════════════════════════════════════════ -->
 <script>
 function toggleTheme(){
   document.body.classList.toggle('dark-theme');
@@ -742,427 +744,609 @@ function logout(){
   Swal.fire({title:'Đăng xuất?',text:'Bé có muốn thoát?',icon:'question',showCancelButton:true,confirmButtonText:'Thoát',confirmButtonColor:'#FF948C',cancelButtonText:'Ở lại'}).then(r=>{if(r.isConfirmed){localStorage.clear();sessionStorage.clear();window.location.href='login.html';}});
 }
 
+/* ── VIDEO PLAYER ── */
 window.currentVideoId=null;let videoWatchTime=0,videoInterval=null;
 function extractVideoID(url){const m=url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);return m&&m[2].length===11?m[2]:null;}
 function openInlineVideo(lessonId,encodedUrl,encodedTitle){
   const videoUrl=decodeURIComponent(encodedUrl),title=decodeURIComponent(encodedTitle);
   window.currentVideoId=lessonId;const vid=extractVideoID(videoUrl);
-  document.getElementById('videoListCard').style.display='none';document.getElementById('videoPlayerCard').style.display='block';
+  document.getElementById('videoListCard').style.display='none';
+  document.getElementById('videoPlayerCard').style.display='block';
   document.getElementById('inlineVideoIframe').src=vid?`https://www.youtube.com/embed/${vid}?autoplay=1`:videoUrl;
   document.getElementById('inlineVideoTitle').innerText=title;
-  const vH=JSON.parse(localStorage.getItem('ks_video_history')||'{}');const myUid=window._fb_getMyUid?window._fb_getMyUid():'unknown';
-  videoWatchTime=0;const btn=document.getElementById('inlineBtnSubmit');const tmr=document.getElementById('inlineVideoTimer');
+  const vH=JSON.parse(localStorage.getItem('ks_video_history')||'{}');
+  const myUid=window._fb_getMyUid?window._fb_getMyUid():'unknown';
+  videoWatchTime=0;
+  const btn=document.getElementById('inlineBtnSubmit');
+  const tmr=document.getElementById('inlineVideoTimer');
   if(!!vH[myUid+'_'+lessonId]){btn.style.background='var(--green-dark)';btn.style.pointerEvents='auto';btn.innerText='✅ Đã hoàn thành';tmr.innerHTML='✅ Đã xem xong';}
-  else{btn.style.background='gray';btn.style.pointerEvents='none';btn.innerText='🔒 Đang xem...';clearInterval(videoInterval);
-    videoInterval=setInterval(()=>{videoWatchTime++;const m=Math.floor(videoWatchTime/60).toString().padStart(2,'0');const s=(videoWatchTime%60).toString().padStart(2,'0');tmr.innerText=`⏳ ${m}:${s} / 10:00`;if(videoWatchTime>=600){clearInterval(videoInterval);btn.style.background='var(--green-dark)';btn.style.pointerEvents='auto';btn.innerText='✅ Nộp Điểm Bài Giảng';tmr.innerText='🎉 Xem đủ rồi!';}},1000);}
-  if(window.forceLoadChat) window.forceLoadChat(); // Tái sử dụng để load bình luận nếu cần
+  else{
+    btn.style.background='gray';btn.style.pointerEvents='none';btn.innerText='🔒 Đang xem...';
+    clearInterval(videoInterval);
+    videoInterval=setInterval(()=>{
+      videoWatchTime++;
+      const m=Math.floor(videoWatchTime/60).toString().padStart(2,'0');
+      const s=(videoWatchTime%60).toString().padStart(2,'0');
+      tmr.innerText=`⏳ ${m}:${s} / 10:00`;
+      if(videoWatchTime>=600){clearInterval(videoInterval);btn.style.background='var(--green-dark)';btn.style.pointerEvents='auto';btn.innerText='✅ Nộp Điểm Bài Giảng';tmr.innerText='🎉 Xem đủ rồi!';}
+    },1000);
+  }
 }
-function closeInlineVideo(){document.getElementById('videoPlayerCard').style.display='none';document.getElementById('videoListCard').style.display='block';document.getElementById('inlineVideoIframe').src='';clearInterval(videoInterval);window.currentVideoId=null;}
+function closeInlineVideo(){
+  document.getElementById('videoPlayerCard').style.display='none';
+  document.getElementById('videoListCard').style.display='block';
+  document.getElementById('inlineVideoIframe').src='';
+  clearInterval(videoInterval);window.currentVideoId=null;
+}
 function sendInlineVideoChat(){
-  const input=document.getElementById('inlineVideoChatInput');const text=input.value.trim();if(!text||!window.currentVideoId)return;
-  const u=JSON.parse(localStorage.getItem('user')||'{}');const obj=JSON.parse(localStorage.getItem('ks_video_comments')||'{}');
+  const input=document.getElementById('inlineVideoChatInput');
+  const text=input.value.trim();if(!text||!window.currentVideoId)return;
+  const u=JSON.parse(localStorage.getItem('user')||'{}');
+  const obj=JSON.parse(localStorage.getItem('ks_video_comments')||'{}');
   if(!obj[window.currentVideoId])obj[window.currentVideoId]=[];
   obj[window.currentVideoId].push({email:u.email,name:u.fullName||u.name,text,time:new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})});
   localStorage.setItem('ks_video_comments',JSON.stringify(obj));input.value='';
-  // Update view locally...
 }
 
+/* ── QUIZ ── */
 function openQuiz(quizId,encTitle){
-  const allQ=window._fb_allQuizzes?window._fb_allQuizzes():[];const quiz=allQ.find(q=>q.firestoreId===quizId);
+  const allQ=window._fb_allQuizzes?window._fb_allQuizzes():[];
+  const quiz=allQ.find(q=>q.firestoreId===quizId);
   if(!quiz)return Swal.fire('Lỗi','Không tìm thấy bài tập!','error');
   let html='<div style="text-align:left">';
   (quiz.questions||[]).forEach((q,idx)=>{
-    if(quiz.type==='mcq'){html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)"><h4 style="margin-bottom:15px;color:var(--blue-dark);font-size:1.2rem">Câu ${idx+1}: ${q.question}</h4>${q.options.map((opt,i)=>`<label style="display:block;background:var(--white);padding:15px;border-radius:15px;margin-bottom:10px;cursor:pointer;border:1px solid var(--border);font-weight:800"><input type="radio" name="q_${idx}" value="${i}"> ${opt}</label>`).join('')}</div>`;}
-    else if(quiz.type==='fill'){let fq=q.question;const blanks=(fq.match(/___/g)||[]).length;for(let i=0;i<blanks;i++)fq=fq.replace('___',`<input type="text" style="border:2px solid var(--orange-dark);padding:5px 15px;border-radius:10px;outline:none;color:var(--orange-dark);font-weight:900;text-align:center;width:150px;margin:0 5px;font-size:1.1rem;background:var(--orange-light)" id="q_${idx}_ans_${i}" placeholder="...">`);html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)"><h4 style="margin-bottom:15px;color:var(--orange-dark);font-size:1.2rem">Câu ${idx+1}:</h4><div style="font-size:1.2rem;line-height:2;font-weight:800">${fq}</div></div>`;}
-  });html+='</div>';
-  Swal.fire({title:`📝 ${decodeURIComponent(encTitle)}`,html,width:'700px',showCancelButton:true,confirmButtonText:'Nộp Bài',cancelButtonText:'Hủy',confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',
-    preConfirm:()=>{let score=0;const ppq=100/quiz.questions.length;let details=[];quiz.questions.forEach((q,idx)=>{if(quiz.type==='mcq'){const sel=document.querySelector(`input[name="q_${idx}"]:checked`);const ans=sel?parseInt(sel.value):-1;const ok=ans===parseInt(q.correctAnswer||0);if(ok)score+=ppq;details.push({q:q.question,userAns:ans!==-1?q.options[ans]:'Bỏ trống',correctAns:q.options[parseInt(q.correctAnswer||0)],isCorrect:ok});}else if(quiz.type==='fill'){let ok=true;let uArr=[];const blanks=q.answers?q.answers.length:0;for(let i=0;i<blanks;i++){const v=document.getElementById(`q_${idx}_ans_${i}`)?.value.trim()||'';uArr.push(v);if(v.toLowerCase()!==(q.answers[i]||'').toLowerCase())ok=false;}if(ok&&blanks>0)score+=ppq;details.push({q:q.question,userAns:uArr.join(', '),correctAns:(q.answers||[]).join(', '),isCorrect:ok});}});return{finalScore:Math.round(score),details};}
-  }).then(async r=>{if(r.isConfirmed){if(window._fb_saveQuiz)await window._fb_saveQuiz(quizId,r.value.finalScore,r.value.details);if(window._fb_notify)await window._fb_notify(`Con vừa nộp bài "${decodeURIComponent(encTitle)}" đạt ${r.value.finalScore}/100 điểm! 🎯`);Swal.fire({title:r.value.finalScore>=80?'Tuyệt Vời! 🎉':'Cố gắng lên! 💪',text:`Bé đạt ${r.value.finalScore}/100 điểm.`,icon:r.value.finalScore>=80?'success':'info',confirmButtonColor:'#4A81E8'});}});
+    if(quiz.type==='mcq'){
+      html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
+        <h4 style="margin-bottom:15px;color:var(--blue-dark);font-size:1.2rem">Câu ${idx+1}: ${q.question}</h4>
+        ${q.options.map((opt,i)=>`<label style="display:block;background:var(--white);padding:15px;border-radius:15px;margin-bottom:10px;cursor:pointer;border:1px solid var(--border);font-weight:800"><input type="radio" name="q_${idx}" value="${i}"> ${opt}</label>`).join('')}
+      </div>`;
+    } else if(quiz.type==='fill'){
+      let fq=q.question;
+      const blanks=(fq.match(/___/g)||[]).length;
+      for(let i=0;i<blanks;i++)fq=fq.replace('___',`<input type="text" style="border:2px solid var(--orange-dark);padding:5px 15px;border-radius:10px;outline:none;color:var(--orange-dark);font-weight:900;text-align:center;width:150px;margin:0 5px;font-size:1.1rem;background:var(--orange-light)" id="q_${idx}_ans_${i}" placeholder="...">`);
+      html+=`<div style="margin-bottom:25px;background:var(--white);padding:20px;border-radius:20px;border:2px solid var(--border)">
+        <h4 style="margin-bottom:15px;color:var(--orange-dark);font-size:1.2rem">Câu ${idx+1}:</h4>
+        <div style="font-size:1.2rem;line-height:2;font-weight:800">${fq}</div>
+      </div>`;
+    }
+  });
+  html+='</div>';
+  Swal.fire({
+    title:`📝 ${decodeURIComponent(encTitle)}`,html,width:'700px',
+    showCancelButton:true,confirmButtonText:'Nộp Bài',cancelButtonText:'Hủy',
+    confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',
+    preConfirm:()=>{
+      let score=0;const ppq=100/quiz.questions.length;let details=[];
+      quiz.questions.forEach((q,idx)=>{
+        if(quiz.type==='mcq'){
+          const sel=document.querySelector(`input[name="q_${idx}"]:checked`);
+          const ans=sel?parseInt(sel.value):-1;
+          const ok=ans===parseInt(q.correctAnswer||0);
+          if(ok)score+=ppq;
+          details.push({q:q.question,userAns:ans!==-1?q.options[ans]:'Bỏ trống',correctAns:q.options[parseInt(q.correctAnswer||0)],isCorrect:ok});
+        } else if(quiz.type==='fill'){
+          let ok=true;let uArr=[];
+          const blanks=q.answers?q.answers.length:0;
+          for(let i=0;i<blanks;i++){const v=document.getElementById(`q_${idx}_ans_${i}`)?.value.trim()||'';uArr.push(v);if(v.toLowerCase()!==(q.answers[i]||'').toLowerCase())ok=false;}
+          if(ok&&blanks>0)score+=ppq;
+          details.push({q:q.question,userAns:uArr.join(', '),correctAns:(q.answers||[]).join(', '),isCorrect:ok});
+        }
+      });
+      return{finalScore:Math.round(score),details};
+    }
+  }).then(async r=>{
+    if(r.isConfirmed){
+      if(window._fb_saveQuiz)await window._fb_saveQuiz(quizId,r.value.finalScore,r.value.details);
+      if(window._fb_notify)await window._fb_notify(`Con vừa nộp bài "${decodeURIComponent(encTitle)}" đạt ${r.value.finalScore}/100 điểm! 🎯`);
+      Swal.fire({title:r.value.finalScore>=80?'Tuyệt Vời! 🎉':'Cố gắng lên! 💪',text:`Bé đạt ${r.value.finalScore}/100 điểm.`,icon:r.value.finalScore>=80?'success':'info',confirmButtonColor:'#4A81E8'});
+    }
+  });
 }
 
-function playAudio(text,speed){if('speechSynthesis'in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=speed;window.speechSynthesis.speak(u);}}
+function playAudio(text,speed){
+  if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=speed;window.speechSynthesis.speak(u);}
+}
+
+function toggleSection(headerEl){headerEl.parentElement.classList.toggle('collapsed');}
 </script>
 
+<!-- ══════════════════════════════════════════
+     LEVENSHTEIN + SCORING
+══════════════════════════════════════════ -->
 <script>
-/* ── Thuật toán Levenshtein: So khớp từng chữ cái một (Rất nhạy) ── */
-function levenshteinDistance(a, b) {
-    if (a.length === 0) return b.length;
-    if (b.length === 0) return a.length;
-    const matrix = [];
-    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-    for (let i = 1; i <= b.length; i++) {
-        for (let j = 1; j <= a.length; j++) {
-            if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                matrix[i][j] = matrix[i - 1][j - 1];
-            } else {
-                matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
-            }
-        }
+function levenshteinDistance(a,b){
+  if(a.length===0)return b.length;if(b.length===0)return a.length;
+  const matrix=[];
+  for(let i=0;i<=b.length;i++)matrix[i]=[i];
+  for(let j=0;j<=a.length;j++)matrix[0][j]=j;
+  for(let i=1;i<=b.length;i++){
+    for(let j=1;j<=a.length;j++){
+      if(b.charAt(i-1)===a.charAt(j-1))matrix[i][j]=matrix[i-1][j-1];
+      else matrix[i][j]=Math.min(matrix[i-1][j-1]+1,Math.min(matrix[i][j-1]+1,matrix[i-1][j]+1));
     }
-    return matrix[b.length][a.length];
+  }
+  return matrix[b.length][a.length];
 }
 
-/* ── Chấm điểm thang 10 thông minh ── */
-function calculateSensitiveScore(transcript, targetWord) {
-    if (!transcript || transcript.trim() === '') return 0;
-    const target = targetWord.toLowerCase().replace(/[.,?!]/g, '').trim();
-    const result = transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
-
-    if (result === target || result.includes(target) || target.includes(result)) return 10;
-
-    const tWords = target.split(/\s+/);
-    const rWords = result.split(/\s+/);
-    let totalScore = 0;
-
-    tWords.forEach(tw => {
-        let bestMatch = 0;
-        rWords.forEach(rw => {
-            const dist = levenshteinDistance(tw, rw);
-            const maxLength = Math.max(tw.length, rw.length);
-            const sim = (maxLength - dist) / maxLength; 
-            if (sim > bestMatch) bestMatch = sim;
-        });
-        totalScore += bestMatch;
+function calculateSensitiveScore(transcript,targetWord){
+  if(!transcript||transcript.trim()==='')return 0;
+  const target=targetWord.toLowerCase().replace(/[.,?!]/g,'').trim();
+  const result=transcript.toLowerCase().replace(/[.,?!]/g,'').trim();
+  if(result===target||result.includes(target)||target.includes(result))return 10;
+  const tWords=target.split(/\s+/);
+  const rWords=result.split(/\s+/);
+  let totalScore=0;
+  tWords.forEach(tw=>{
+    let bestMatch=0;
+    rWords.forEach(rw=>{
+      const dist=levenshteinDistance(tw,rw);
+      const maxLength=Math.max(tw.length,rw.length);
+      const sim=(maxLength-dist)/maxLength;
+      if(sim>bestMatch)bestMatch=sim;
     });
-
-    let finalGrade = Math.round((totalScore / tWords.length) * 10);
-
-    // Điểm khuyến khích
-    if (finalGrade < 4 && result.length > 0) {
-        finalGrade = Math.floor(Math.random() * 3) + 4; 
-    }
-
-    return finalGrade > 10 ? 10 : finalGrade;
+    totalScore+=bestMatch;
+  });
+  let finalGrade=Math.round((totalScore/tWords.length)*10);
+  if(finalGrade<4&&result.length>0)finalGrade=Math.floor(Math.random()*3)+4;
+  return finalGrade>10?10:finalGrade;
 }
 
-function waveDotHtml() {
-    return [0, 1, 2, 3, 4].map(i => `<div style="width:12px;height:12px;background:#FF8C00;border-radius:50%;animation:dotBounce 0.6s ${i*0.1}s ease-in-out infinite"></div>`).join('');
+function waveDotHtml(){
+  return[0,1,2,3,4].map(i=>`<div style="width:12px;height:12px;background:#FF8C00;border-radius:50%;animation:dotBounce 0.6s ${i*0.1}s ease-in-out infinite"></div>`).join('');
 }
+</script>
 
-/* ════════ START RECORDING (LUYỆN NÓI AI) ════════ */
+<!-- ══════════════════════════════════════════
+     RECORDING — ĐÃ FIX RACE CONDITION
+     
+     Thay đổi chính:
+     1. recognition.stop() trước → delay 600ms → rồi mới chấm điểm
+        (trước đây chấm ngay nên finalTranscript vẫn còn rỗng)
+     2. MediaRecorder tách riêng, chỉ để ghi audio phát lại
+     3. Transcript hiện trực tiếp trong popup để bé thấy máy đang nghe
+     4. maxAlternatives: 3 để nhận diện tốt hơn
+══════════════════════════════════════════ -->
+<script>
 function startRecording(targetWord, quizId) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { Swal.fire('Lỗi', 'Bé nhớ mở bằng Google Chrome nhé!', 'error'); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { Swal.fire('Lỗi', 'Bé nhớ mở bằng Google Chrome nhé!', 'error'); return; }
 
-    const recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.interimResults = true; 
-    recognition.continuous = true; 
+  const recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+  recognition.continuous = true;
+  recognition.maxAlternatives = 3;
 
-    let finalTranscript = '';
-    let isStopped = false;
-    let timerInterval;
+  let finalTranscript = '';
+  let interimTranscript = '';
+  let isStopped = false;
+  let timerInterval;
+  let audioChunks = [];
+  let mediaRecorder = null;
+  let audioUrl = null;
 
-    const audioConstraints = {
-        audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
+  navigator.mediaDevices.getUserMedia({
+    audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
+  }).then(stream => {
+
+    /* MediaRecorder chỉ để ghi audio phát lại — KHÔNG liên quan chấm điểm */
+    try {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        audioUrl = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/wav' }));
+      };
+      mediaRecorder.start(100);
+    } catch(e) { console.warn('MediaRecorder không hỗ trợ (không ảnh hưởng chấm điểm):', e); }
+
+    /* Bắt SpeechRecognition NGAY */
+    try { recognition.start(); } catch(e) { console.error('SR start:', e); }
+
+    recognition.onresult = e => {
+      let interim = '', final = '';
+      for (let i = 0; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      if (final.trim()) finalTranscript = final.trim();
+      interimTranscript = interim;
     };
 
-    navigator.mediaDevices.getUserMedia(audioConstraints).then(stream => {
-        const mr = new MediaRecorder(stream);
-        const chunks = [];
-        mr.ondataavailable = e => chunks.push(e.data);
+    recognition.onerror = e => {
+      /* Bỏ qua no-speech — bé có thể đang ngừng thở lấy hơi */
+      if (e.error === 'no-speech') return;
+      console.warn('SR error:', e.error);
+    };
 
-        Swal.fire({
-            title: '🎤 Đang lắng nghe...',
-            html: `
-                <div style="font-size:3.5rem; font-weight:900; color:#2563eb; font-family:'Baloo 2'; line-height:1.2; margin-bottom:20px; text-shadow:2px 2px 0 rgba(0,0,0,0.1)">"${targetWord}"</div>
-                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:15px">${waveDotHtml()}</div>
-                <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text">⏳ Còn lại: 10 giây</p>
-                <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:15px">
-                    <div id="swal-timer-bar" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
-                </div>
-            `,
-            showConfirmButton: true,
-            confirmButtonText: '⏹️ Đã đọc xong',
-            confirmButtonColor: '#ef4444',
-            allowOutsideClick: false,
-            didOpen: () => {
-                mr.start();
-                try { recognition.start(); } catch(e) { console.error("Mic error:", e); }
-                
-                // Đếm ngược 10s
-                let timeLeft = 10;
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    const txt = document.getElementById('swal-timer-text');
-                    const bar = document.getElementById('swal-timer-bar');
-                    if(txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
-                    if(bar) bar.style.width = `${(timeLeft/10)*100}%`;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        if (!isStopped) {
-                            Swal.clickConfirm(); // Hết giờ tự động giả lập phím click
-                        }
-                    }
-                }, 1000);
-            }
-        }).then(res => {
-            if (res.isConfirmed && !isStopped) {
-                isStopped = true;
-                clearInterval(timerInterval); // Xóa bộ đếm để không bị đụng độ
-                Swal.fire({ title: '✨ Đang chấm điểm...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                try { recognition.stop(); } catch(e) {}
-                try { mr.stop(); stream.getTracks().forEach(t => t.stop()); } catch(e) {}
-            }
-        });
+    Swal.fire({
+      title: '🎤 Đang lắng nghe...',
+      html: `
+        <div style="font-size:3.5rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin-bottom:20px;text-shadow:2px 2px 0 rgba(0,0,0,.1)">"${targetWord}"</div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
+        <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text">⏳ Còn lại: 10 giây</p>
+        <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:12px">
+          <div id="swal-timer-bar" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
+        </div>
+        <div id="live-transcript" style="min-height:34px;color:#475569;font-size:.9rem;font-weight:700;padding:8px 12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;text-align:center">
+          🎙️ Đang lắng nghe...
+        </div>
+      `,
+      showConfirmButton: true,
+      confirmButtonText: '⏹️ Đã đọc xong',
+      confirmButtonColor: '#ef4444',
+      allowOutsideClick: false,
+      didOpen: () => {
+        let timeLeft = 10;
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          const txt = document.getElementById('swal-timer-text');
+          const bar = document.getElementById('swal-timer-bar');
+          const live = document.getElementById('live-transcript');
+          if (txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
+          if (bar) bar.style.width = `${(timeLeft / 10) * 100}%`;
+          if (live) {
+            const display = finalTranscript || interimTranscript;
+            live.innerText = display ? `"${display}"` : '🎙️ Đang lắng nghe...';
+          }
+          if (timeLeft <= 0 && !isStopped) { clearInterval(timerInterval); Swal.clickConfirm(); }
+        }, 1000);
+      }
+    }).then(res => {
+      if (res.isConfirmed && !isStopped) {
+        isStopped = true;
+        clearInterval(timerInterval);
 
-        recognition.onresult = e => {
-            let tempText = '';
-            for (let i = e.resultIndex; i < e.results.length; ++i) {
-                tempText += e.results[i][0].transcript;
-            }
-            finalTranscript = tempText.trim();
-        };
+        /* ★ KEY FIX: dừng recognition TRƯỚC, đợi 600ms để onresult kịp fire */
+        try { recognition.stop(); } catch(e) {}
 
-        mr.onstop = async () => {
-            const audioUrl = URL.createObjectURL(new Blob(chunks, { type: 'audio/wav' }));
-            
-            let grade10 = calculateSensitiveScore(finalTranscript, targetWord);
-            let grade100 = grade10 * 10;
-            
-            let displayTranscript = finalTranscript === '' ? '*(Chưa nghe thấy bé nói)*' : finalTranscript;
+        Swal.fire({ title: '✨ Đang chấm điểm...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-            let comment = ''; let iconType = 'info';
-            if (grade10 >= 9) { comment = 'Tuyệt vời! Bé phát âm chuẩn 10 điểm luôn! 🌟'; iconType = 'success'; }
-            else if (grade10 >= 7) { comment = 'Giỏi quá! Bé phát âm rất hay! 👍'; iconType = 'success'; }
-            else if (grade10 >= 4) { comment = 'Bé có cố gắng! Lần sau bé thử mở miệng to hơn một chút nhé! 💪'; }
-            else { comment = 'Mic chưa nghe rõ tiếng bé rồi. Bé bấm thử lại nhé! ❤️'; iconType = 'warning'; }
+        setTimeout(() => {
+          /* Dừng MediaRecorder SAU khi đã chắc có transcript */
+          try { if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); } catch(e) {}
+          try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
 
-            const stars = '⭐'.repeat(Math.round(grade10/2)) + '☆'.repeat(5 - Math.round(grade10/2));
+          /* Đợi thêm 350ms để onstop tạo xong audioUrl */
+          setTimeout(() => gradeAndShow(targetWord, quizId, finalTranscript, audioUrl), 350);
+        }, 600);
+      }
+    });
 
-            Swal.fire({
-                title: grade10 >= 7 ? '🎉 Chúc mừng!' : '🤔 Cố lên bé ơi!',
-                html: `
-                    <div style="font-size:4.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:5px;font-family:'Baloo 2'">${grade10}/10</div>
-                    <div style="font-size:1.5rem; letter-spacing:3px; margin-bottom:15px; color:#F59E0B">${stars}</div>
-                    
-                    <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:15px;padding:15px;text-align:left;margin-bottom:15px">
-                        <div style="font-size:0.85rem;color:var(--text-gray);font-weight:700">Máy tính nghe được:</div>
-                        <div style="font-size:1.2rem;color:var(--orange-dark);font-weight:900">"${displayTranscript}"</div>
-                    </div>
-                    
-                    <p style="font-size:0.9rem; font-weight:700; text-align:left; color:var(--text-gray); margin-bottom:5px">🎧 Băng ghi âm của bé:</p>
-                    <audio controls src="${audioUrl}" style="width:100%; height:40px; border-radius:20px; outline:none; margin-bottom:15px"></audio>
-                    
-                    <button class="btn-learn" style="width:100%; justify-content:center; background:var(--orange-dark)!important; border-color:#C2410C!important; box-shadow:0 5px 0 #C2410C!important; margin-bottom:10px" onclick="playAudio('${targetWord}', 0.5)">
-                        🐢 Nghe Cô Đọc Chậm Lại
-                    </button>
-                    
-                    <div style="background:var(--green-light); color:var(--green-dark); padding:15px; border-radius:15px; font-weight:900; border:2px solid var(--green-dark); font-size:1.05rem">
-                        ${comment}
-                    </div>
-                `,
-                icon: iconType,
-                showCancelButton: true,
-                confirmButtonText: '✅ Nhận Điểm',
-                cancelButtonText: '🎤 Đọc Lại Nhé',
-                confirmButtonColor: '#22c55e',
-                cancelButtonColor: '#fb923c',
-                allowOutsideClick: false
-            }).then(async r => {
-                if (r.isConfirmed) {
-                    if (window._fb_saveSpeak) await window._fb_saveSpeak(quizId, grade100, displayTranscript, comment, audioUrl);
-                    if (window._fb_notify) await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${grade10}/10 điểm! 🎤`);
-                    Swal.fire({ title: 'Đã Lưu Điểm!', icon: 'success', timer: 1400, showConfirmButton: false });
-                } else if (r.dismiss === Swal.DismissReason.cancel) {
-                    setTimeout(() => startRecording(targetWord, quizId), 400);
-                }
-            });
-        };
+  }).catch(() => Swal.fire('Lỗi Micro', 'Bố mẹ giúp bé bật Micro trên máy tính lên nhé! 🎤', 'error'));
+}
 
-        recognition.onerror = () => {
-            if (!isStopped) {
-                isStopped = true; 
-                clearInterval(timerInterval);
-                Swal.close();
-                try { mr.stop(); stream.getTracks().forEach(t => t.stop()); } catch(ex) {}
-            }
-        };
+function gradeAndShow(targetWord, quizId, transcript, audioUrl) {
+  const grade10 = calculateSensitiveScore(transcript, targetWord);
+  const grade100 = grade10 * 10;
+  const displayTranscript = (!transcript || transcript.trim() === '') ? '*(Chưa nghe thấy bé nói)*' : transcript;
 
-    }).catch(() => Swal.fire('Lỗi Micro', 'Bố mẹ giúp bé bật Micro trên máy tính lên nhé! 🎤', 'error'));
+  let comment = '', iconType = 'info';
+  if (grade10 >= 9)      { comment = 'Tuyệt vời! Bé phát âm chuẩn 10 điểm luôn! 🌟'; iconType = 'success'; }
+  else if (grade10 >= 7) { comment = 'Giỏi quá! Bé phát âm rất hay! 👍'; iconType = 'success'; }
+  else if (grade10 >= 4) { comment = 'Bé có cố gắng! Lần sau bé thử mở miệng to hơn một chút nhé! 💪'; }
+  else                   { comment = 'Mic chưa nghe rõ tiếng bé rồi. Bé bấm thử lại nhé! ❤️'; iconType = 'warning'; }
+
+  const stars = '⭐'.repeat(Math.round(grade10 / 2)) + '☆'.repeat(5 - Math.round(grade10 / 2));
+
+  const audioHtml = audioUrl
+    ? `<p style="font-size:.9rem;font-weight:700;text-align:left;color:var(--text-gray);margin-bottom:5px">🎧 Băng ghi âm của bé:</p>
+       <audio controls src="${audioUrl}" style="width:100%;height:40px;border-radius:20px;outline:none;margin-bottom:15px"></audio>`
+    : '';
+
+  Swal.fire({
+    title: grade10 >= 7 ? '🎉 Chúc mừng!' : '🤔 Cố lên bé ơi!',
+    html: `
+      <div style="font-size:4.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:5px;font-family:'Baloo 2'">${grade10}/10</div>
+      <div style="font-size:1.5rem;letter-spacing:3px;margin-bottom:15px;color:#F59E0B">${stars}</div>
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:15px;padding:15px;text-align:left;margin-bottom:15px">
+        <div style="font-size:.85rem;color:var(--text-gray);font-weight:700">Máy tính nghe được:</div>
+        <div style="font-size:1.2rem;color:var(--orange-dark);font-weight:900">"${displayTranscript}"</div>
+      </div>
+      ${audioHtml}
+      <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:10px" onclick="playAudio('${targetWord}',0.5)">
+        🐢 Nghe Cô Đọc Chậm Lại
+      </button>
+      <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark);font-size:1.05rem">
+        ${comment}
+      </div>
+    `,
+    icon: iconType,
+    showCancelButton: true,
+    confirmButtonText: '✅ Nhận Điểm',
+    cancelButtonText: '🎤 Đọc Lại Nhé',
+    confirmButtonColor: '#22c55e',
+    cancelButtonColor: '#fb923c',
+    allowOutsideClick: false
+  }).then(async r => {
+    if (r.isConfirmed) {
+      if (window._fb_saveSpeak) await window._fb_saveSpeak(quizId, grade100, displayTranscript, comment, audioUrl || '');
+      if (window._fb_notify) await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${grade10}/10 điểm! 🎤`);
+      Swal.fire({ title: 'Đã Lưu Điểm!', icon: 'success', timer: 1400, showConfirmButton: false });
+    } else if (r.dismiss === Swal.DismissReason.cancel) {
+      setTimeout(() => startRecording(targetWord, quizId), 400);
+    }
+  });
 }
 window.startRecording = startRecording;
 
-/* ════════ IN-GAME RECORDING (THỎ VỀ ĐÍCH) ════════ */
+/* ── RECORDING TRONG GAME ── */
 function startInGameRecording(targetWord, idx, points) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
 
-    const recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.interimResults = true;
-    recognition.continuous = true;
+  const recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+  recognition.continuous = true;
+  recognition.maxAlternatives = 3;
 
-    let finalTranscript = '';
-    let isStopped = false;
-    let timerInterval2;
+  let finalTranscript = '';
+  let interimTranscript = '';
+  let isStopped = false;
+  let timerInterval2;
 
-    navigator.mediaDevices.getUserMedia({ audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true } }).then(stream => {
-        const mr = new MediaRecorder(stream);
-        const chunks = [];
-        mr.ondataavailable = e => chunks.push(e.data);
+  navigator.mediaDevices.getUserMedia({
+    audio: { noiseSuppression: true, autoGainControl: true, echoCancellation: true }
+  }).then(stream => {
 
-        Swal.fire({
-            title: '🎤 Đọc to lên nào!',
-            html: `
-                <div style="font-size:3rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin-bottom:15px">"${targetWord}"</div>
-                <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
-                <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text-ig">⏳ Còn lại: 10 giây</p>
-                <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:15px">
-                    <div id="swal-timer-bar-ig" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
-                </div>
-            `,
-            showConfirmButton: true, confirmButtonText: '⏹️ Xong', confirmButtonColor: '#ef4444', allowOutsideClick: false,
-            didOpen: () => {
-                mr.start(); try { recognition.start(); } catch(e) {}
-                let timeLeft = 10;
-                timerInterval2 = setInterval(() => {
-                    timeLeft--;
-                    const txt = document.getElementById('swal-timer-text-ig');
-                    const bar = document.getElementById('swal-timer-bar-ig');
-                    if(txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
-                    if(bar) bar.style.width = `${(timeLeft/10)*100}%`;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval2);
-                        if (!isStopped) Swal.clickConfirm();
-                    }
-                }, 1000);
-            }
-        }).then(res => {
-            if (res.isConfirmed && !isStopped) {
-                isStopped = true;
-                clearInterval(timerInterval2);
-                try { recognition.stop(); mr.stop(); stream.getTracks().forEach(t => t.stop()); } catch(e) {}
-            }
-        });
+    try { recognition.start(); } catch(e) { console.error('In-game SR:', e); }
 
-        recognition.onresult = e => {
-            let tempText = '';
-            for (let i = e.resultIndex; i < e.results.length; ++i) { tempText += e.results[i][0].transcript; }
-            finalTranscript = tempText.trim();
-        };
+    recognition.onresult = e => {
+      let interim = '', final = '';
+      for (let i = 0; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      if (final.trim()) finalTranscript = final.trim();
+      interimTranscript = interim;
+    };
 
-        mr.onstop = () => {
-            const grade10 = calculateSensitiveScore(finalTranscript, targetWord);
-            const isCorrect = grade10 >= 5; // Trong game, từ 5/10 là thỏ được đi tiếp
+    recognition.onerror = e => {
+      if (e.error === 'no-speech') return;
+      console.warn('In-game SR error:', e.error);
+    };
 
-            closeQuestion();
-            if (isCorrect) {
-                G.score += parseInt(points) || 0; updateProgress(); showScorePopup('+' + points + '🥕');
-                Swal.fire({ title: `🎉 ${grade10}/10 — Thỏ ăn cà rốt!`, text: finalTranscript ? `Bé đọc: "${finalTranscript}"` : '', icon: 'success', timer: 1500, showConfirmButton: false, toast: true, position: 'top' });
-            } else {
-                G.progress = Math.max(0, G.progress - 1);
-                const obsEl = document.getElementById(`obs_${G.progress}`);
-                if (obsEl) { obsEl.textContent = '🌵'; obsEl.classList.remove('cleared'); }
-                updateRabbitPosition(false); positionCamera(); updateProgress();
-                Swal.fire({ title: `${grade10}/10 — Thỏ bị vấp! 😢`, text: finalTranscript ? `Máy tính nghe thành: "${finalTranscript}"` : 'Bé đọc to hơn nữa nhé!', icon: 'error', timer: 2500, showConfirmButton: false, toast: true, position: 'top' });
-            }
-        };
+    Swal.fire({
+      title: '🎤 Đọc to lên nào!',
+      html: `
+        <div style="font-size:3rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin-bottom:15px">"${targetWord}"</div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
+        <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text-ig">⏳ Còn lại: 10 giây</p>
+        <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:12px">
+          <div id="swal-timer-bar-ig" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div>
+        </div>
+        <div id="live-transcript-ig" style="min-height:34px;color:#475569;font-size:.9rem;font-weight:700;padding:8px 12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;text-align:center">
+          🎙️ Đang lắng nghe...
+        </div>
+      `,
+      showConfirmButton: true,
+      confirmButtonText: '⏹️ Xong',
+      confirmButtonColor: '#ef4444',
+      allowOutsideClick: false,
+      didOpen: () => {
+        let timeLeft = 10;
+        timerInterval2 = setInterval(() => {
+          timeLeft--;
+          const txt = document.getElementById('swal-timer-text-ig');
+          const bar = document.getElementById('swal-timer-bar-ig');
+          const live = document.getElementById('live-transcript-ig');
+          if (txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
+          if (bar) bar.style.width = `${(timeLeft / 10) * 100}%`;
+          if (live) {
+            const display = finalTranscript || interimTranscript;
+            live.innerText = display ? `"${display}"` : '🎙️ Đang lắng nghe...';
+          }
+          if (timeLeft <= 0 && !isStopped) { clearInterval(timerInterval2); Swal.clickConfirm(); }
+        }, 1000);
+      }
+    }).then(res => {
+      if (res.isConfirmed && !isStopped) {
+        isStopped = true;
+        clearInterval(timerInterval2);
 
-        recognition.onerror = () => {
-            if (!isStopped) { isStopped = true; clearInterval(timerInterval2); Swal.close(); try { mr.stop(); stream.getTracks().forEach(t => t.stop()); } catch(ex) {} }
-        };
-    }).catch(() => Swal.fire('Lỗi Micro', 'Bật micro lên nhé bé!', 'error'));
+        /* ★ KEY FIX: dừng recognition TRƯỚC → đợi 600ms */
+        try { recognition.stop(); } catch(e) {}
+        try { stream.getTracks().forEach(t => t.stop()); } catch(e) {}
+
+        setTimeout(() => gradeInGame(targetWord, finalTranscript, points), 600);
+      }
+    });
+
+  }).catch(() => Swal.fire('Lỗi Micro', 'Bật micro lên nhé bé!', 'error'));
+}
+
+function gradeInGame(targetWord, transcript, points) {
+  const grade10 = calculateSensitiveScore(transcript, targetWord);
+  const isCorrect = grade10 >= 5;
+  closeQuestion();
+
+  if (isCorrect) {
+    G.score += parseInt(points) || 0;
+    updateProgress();
+    showScorePopup('+' + points + '🥕');
+    Swal.fire({
+      title: `🎉 ${grade10}/10 — Thỏ ăn cà rốt!`,
+      text: transcript ? `Bé đọc: "${transcript}"` : '',
+      icon: 'success', timer: 1800, showConfirmButton: false, toast: true, position: 'top'
+    });
+  } else {
+    G.progress = Math.max(0, G.progress - 1);
+    const obsEl = document.getElementById(`obs_${G.progress}`);
+    if (obsEl) { obsEl.textContent = '🌵'; obsEl.classList.remove('cleared'); }
+    updateRabbitPosition(false); positionCamera(); updateProgress();
+    const msg = transcript
+      ? `Máy tính nghe: "${transcript}" — cần ≥5/10 nhé bé!`
+      : 'Bé đọc to hơn nữa nhé! Mở miệng to ra!';
+    Swal.fire({
+      title: `${grade10}/10 — Thỏ bị vấp! 😢`,
+      text: msg, icon: 'error', timer: 2500, showConfirmButton: false, toast: true, position: 'top'
+    });
+  }
 }
 window.startInGameRecording = startInGameRecording;
 </script>
-<script>
-const G = {active:false,quiz:null,progress:0,score:0,jumping:false,questionOpen:false,jumpLocked:false,OBSTACLE_SPACING:320,RABBIT_START_X:120};
 
-function toggleSection(headerEl){headerEl.parentElement.classList.toggle('collapsed');}
+<!-- ══════════════════════════════════════════
+     GAME ENGINE
+══════════════════════════════════════════ -->
+<script>
+const G = { active:false, quiz:null, progress:0, score:0, jumping:false, questionOpen:false, jumpLocked:false, OBSTACLE_SPACING:320, RABBIT_START_X:120 };
 
 function playGame(gameId) {
-  const allQ = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
-  const quiz = allQ.find(q => q.firestoreId === gameId);
-  if (!quiz || !quiz.questions || quiz.questions.length === 0) return Swal.fire('Lỗi', 'Trò chơi rỗng!', 'warning');
-  G.quiz=quiz;G.progress=0;G.score=0;G.jumping=false;G.questionOpen=false;G.jumpLocked=false;G.active=true;
-  document.getElementById('gameTitleBar').innerText=quiz.title||'Thỏ Về Đích';
-  document.getElementById('gameScoreBar').innerText='0';
-  document.getElementById('gameOverlay').style.display='flex';
-  document.getElementById('inGameQ').classList.remove('iq-show');
-  document.getElementById('gameInstr').style.opacity='1';
-  buildGameMap();updateProgress();
+  const allQ = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
+  const quiz = allQ.find(q => q.firestoreId === gameId);
+  if (!quiz || !quiz.questions || quiz.questions.length === 0) return Swal.fire('Lỗi','Trò chơi rỗng!','warning');
+  G.quiz=quiz;G.progress=0;G.score=0;G.jumping=false;G.questionOpen=false;G.jumpLocked=false;G.active=true;
+  document.getElementById('gameTitleBar').innerText=quiz.title||'Thỏ Về Đích';
+  document.getElementById('gameScoreBar').innerText='0';
+  document.getElementById('gameOverlay').style.display='flex';
+  document.getElementById('inGameQ').classList.remove('iq-show');
+  document.getElementById('gameInstr').style.opacity='1';
+  buildGameMap(); updateProgress();
 }
-window.playGame=playGame;
+window.playGame = playGame;
 
 function buildGameMap(){
-  if(!G.quiz)return;
-  const N=G.quiz.questions.length;
-  const totalWidth=(N+3)*G.OBSTACLE_SPACING;
-  const inner=document.getElementById('gameTrackInner');
-  inner.style.width=totalWidth+'px';
-  let html=`<div class="rabbit running" id="gameRabbit" style="left:${G.RABBIT_START_X}px">🐇</div>`;
-  for(let i=0;i<N;i++){const x=(i+1)*G.OBSTACLE_SPACING+80;const cleared=i<G.progress;html+=`<div class="obstacle ${cleared?'cleared':''}" id="obs_${i}" style="left:${x}px">${cleared?'🥕':'🌵'}</div>`;}
-  const finX=(N+1)*G.OBSTACLE_SPACING+80;
-  html+=`<div class="finish-flag" style="left:${finX}px">🏁</div>`;
-  inner.innerHTML=html;positionCamera();
+  if(!G.quiz)return;
+  const N=G.quiz.questions.length;
+  const totalWidth=(N+3)*G.OBSTACLE_SPACING;
+  const inner=document.getElementById('gameTrackInner');
+  inner.style.width=totalWidth+'px';
+  let html=`<div class="rabbit running" id="gameRabbit" style="left:${G.RABBIT_START_X}px">🐇</div>`;
+  for(let i=0;i<N;i++){const x=(i+1)*G.OBSTACLE_SPACING+80;const cleared=i<G.progress;html+=`<div class="obstacle ${cleared?'cleared':''}" id="obs_${i}" style="left:${x}px">${cleared?'🥕':'🌵'}</div>`;}
+  const finX=(N+1)*G.OBSTACLE_SPACING+80;
+  html+=`<div class="finish-flag" style="left:${finX}px">🏁</div>`;
+  inner.innerHTML=html; positionCamera();
 }
 
 function getRabbitTargetX(){return G.RABBIT_START_X+G.progress*G.OBSTACLE_SPACING;}
-function positionCamera(){const rabbitX=getRabbitTargetX();const screenW=document.getElementById('gameTrack').offsetWidth;const offset=Math.max(0,rabbitX-screenW*.3);document.getElementById('gameTrackInner').style.transform=`translateX(-${offset}px)`;}
-function updateRabbitPosition(animate){const rabbit=document.getElementById('gameRabbit');if(!rabbit)return;const x=getRabbitTargetX();rabbit.style.left=x+'px';if(!animate){rabbit.className='rabbit running';}}
-function updateProgress(){const N=G.quiz?G.quiz.questions.length:0;const pct=N>0?(G.progress/N)*100:0;document.getElementById('gpFill').style.width=pct+'%';document.getElementById('gpText').innerText=`Câu ${G.progress} / ${N}`;document.getElementById('gameScoreBar').innerText=G.score;}
+function positionCamera(){
+  const rabbitX=getRabbitTargetX();
+  const screenW=document.getElementById('gameTrack').offsetWidth;
+  const offset=Math.max(0,rabbitX-screenW*.3);
+  document.getElementById('gameTrackInner').style.transform=`translateX(-${offset}px)`;
+}
+function updateRabbitPosition(animate){
+  const rabbit=document.getElementById('gameRabbit');if(!rabbit)return;
+  const x=getRabbitTargetX();rabbit.style.left=x+'px';
+  if(!animate)rabbit.className='rabbit running';
+}
+function updateProgress(){
+  const N=G.quiz?G.quiz.questions.length:0;
+  const pct=N>0?(G.progress/N)*100:0;
+  document.getElementById('gpFill').style.width=pct+'%';
+  document.getElementById('gpText').innerText=`Câu ${G.progress} / ${N}`;
+  document.getElementById('gameScoreBar').innerText=G.score;
+}
 function handleJumpInput(){if(!G.active||G.questionOpen||G.jumping||G.jumpLocked)return;if(G.progress>=(G.quiz?.questions?.length||0))return;doJump();}
 window.handleJumpInput=handleJumpInput;
 document.addEventListener('keydown',e=>{if(!G.active)return;if(['ArrowUp','ArrowRight','Enter',' '].includes(e.key)){e.preventDefault();handleJumpInput();}});
+
 function doJump(){
-  G.jumping=true;G.jumpLocked=true;
-  const rabbit=document.getElementById('gameRabbit');
-  if(!rabbit){G.jumping=false;G.jumpLocked=false;return;}
-  rabbit.className='rabbit jumping';
-  document.getElementById('gameInstr').style.opacity='0';
-  setTimeout(()=>{G.progress++;updateRabbitPosition(false);positionCamera();const obsEl=document.getElementById(`obs_${G.progress-1}`);if(obsEl){obsEl.textContent='🥕';obsEl.classList.add('cleared');}},275);
-  setTimeout(()=>{G.jumping=false;const r2=document.getElementById('gameRabbit');if(r2)r2.className='rabbit running';if(G.progress>=G.quiz.questions.length){G.jumpLocked=false;setTimeout(()=>showVictory(),400);return;}G.jumpLocked=false;setTimeout(()=>showQuestion(G.progress-1),200);},560);
+  G.jumping=true;G.jumpLocked=true;
+  const rabbit=document.getElementById('gameRabbit');
+  if(!rabbit){G.jumping=false;G.jumpLocked=false;return;}
+  rabbit.className='rabbit jumping';
+  document.getElementById('gameInstr').style.opacity='0';
+  setTimeout(()=>{
+    G.progress++;updateRabbitPosition(false);positionCamera();
+    const obsEl=document.getElementById(`obs_${G.progress-1}`);
+    if(obsEl){obsEl.textContent='🥕';obsEl.classList.add('cleared');}
+  },275);
+  setTimeout(()=>{
+    G.jumping=false;
+    const r2=document.getElementById('gameRabbit');if(r2)r2.className='rabbit running';
+    if(G.progress>=G.quiz.questions.length){G.jumpLocked=false;setTimeout(()=>showVictory(),400);return;}
+    G.jumpLocked=false;setTimeout(()=>showQuestion(G.progress-1),200);
+  },560);
 }
+
 function showQuestion(idx){
-  if(!G.quiz||idx<0||idx>=G.quiz.questions.length)return;
-  G.questionOpen=true;G.jumpLocked=true;
-  const q=G.quiz.questions[idx];
-  document.getElementById('iqTitle').innerText=q.question||'Câu hỏi';
-  const body=document.getElementById('iqBody');
-  let html='';
-  if(q.type==='mcq'){html=(q.options||[]).map((opt,i)=>`<button class="g-opt-btn" id="gopt_${i}" onclick="checkMCQ(${idx},${i},${q.correctAnswer||0},${q.points||20})">${opt}</button>`).join('');}
-  else if(q.type==='fill'){html=`<input type="text" id="gFillInput" placeholder="Nhập đáp án..." style="width:100%;padding:15px 20px;font-size:1.3rem;text-align:center;border-radius:20px;border:3px solid var(--blue-dark);outline:none;color:var(--text-dark);font-weight:900;margin-bottom:18px"><button class="g-opt-btn" onclick="checkFill(${idx},'${(q.answers||[]).join('|')}',${q.points||20})">✅ Xác Nhận</button>`;}
-  else if(q.type==='speak'){html=`<div style="font-size:3rem;margin-bottom:20px;color:var(--blue-dark);font-weight:900;font-family:'Baloo 2'">${q.word||''}</div><button class="g-opt-btn" style="background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="startInGameRecording('${q.word||''}',${idx},${q.points||20})"><i class="fas fa-microphone"></i> Đọc Từ Này!</button>`;}
-  body.innerHTML=html;
-  document.getElementById('inGameQ').classList.add('iq-show');
-  if(q.type==='fill')setTimeout(()=>document.getElementById('gFillInput')?.focus(),100);
+  if(!G.quiz||idx<0||idx>=G.quiz.questions.length)return;
+  G.questionOpen=true;G.jumpLocked=true;
+  const q=G.quiz.questions[idx];
+  document.getElementById('iqTitle').innerText=q.question||'Câu hỏi';
+  const body=document.getElementById('iqBody');
+  let html='';
+  if(q.type==='mcq'){
+    html=(q.options||[]).map((opt,i)=>`<button class="g-opt-btn" id="gopt_${i}" onclick="checkMCQ(${idx},${i},${q.correctAnswer||0},${q.points||20})">${opt}</button>`).join('');
+  } else if(q.type==='fill'){
+    html=`<input type="text" id="gFillInput" placeholder="Nhập đáp án..." style="width:100%;padding:15px 20px;font-size:1.3rem;text-align:center;border-radius:20px;border:3px solid var(--blue-dark);outline:none;color:var(--text-dark);font-weight:900;margin-bottom:18px">
+    <button class="g-opt-btn" onclick="checkFill(${idx},'${(q.answers||[]).join('|')}',${q.points||20})">✅ Xác Nhận</button>`;
+  } else if(q.type==='speak'){
+    html=`<div style="font-size:3rem;margin-bottom:20px;color:var(--blue-dark);font-weight:900;font-family:'Baloo 2'">${q.word||''}</div>
+    <button class="g-opt-btn" style="background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="startInGameRecording('${q.word||''}',${idx},${q.points||20})"><i class="fas fa-microphone"></i> Đọc Từ Này!</button>`;
+  }
+  body.innerHTML=html;
+  document.getElementById('inGameQ').classList.add('iq-show');
+  if(q.type==='fill')setTimeout(()=>document.getElementById('gFillInput')?.focus(),100);
 }
+
 function closeQuestion(){document.getElementById('inGameQ').classList.remove('iq-show');G.questionOpen=false;G.jumpLocked=false;document.getElementById('gameInstr').style.opacity='1';}
+
 function checkMCQ(idx,selected,correct,points){
-  const btn=document.getElementById(`gopt_${selected}`);const isCorrect=selected==correct;
-  if(btn){btn.classList.add(isCorrect?'correct':'wrong');}
-  setTimeout(()=>{closeQuestion();if(isCorrect){G.score+=parseInt(points)||0;updateProgress();showScorePopup('+'+points+'🥕');}else{G.progress=Math.max(0,G.progress-1);const obsEl=document.getElementById(`obs_${G.progress}`);if(obsEl){obsEl.textContent='🌵';obsEl.classList.remove('cleared');}updateRabbitPosition(false);positionCamera();updateProgress();Swal.fire({title:'Sai rồi 😢',text:'Thỏ bị vấp! Thử lại nhé!',icon:'error',timer:1500,showConfirmButton:false,toast:true,position:'top'});}},400);
+  const btn=document.getElementById(`gopt_${selected}`);
+  const isCorrect=selected==correct;
+  if(btn)btn.classList.add(isCorrect?'correct':'wrong');
+  setTimeout(()=>{
+    closeQuestion();
+    if(isCorrect){G.score+=parseInt(points)||0;updateProgress();showScorePopup('+'+points+'🥕');}
+    else{
+      G.progress=Math.max(0,G.progress-1);
+      const obsEl=document.getElementById(`obs_${G.progress}`);
+      if(obsEl){obsEl.textContent='🌵';obsEl.classList.remove('cleared');}
+      updateRabbitPosition(false);positionCamera();updateProgress();
+      Swal.fire({title:'Sai rồi 😢',text:'Thỏ bị vấp! Thử lại nhé!',icon:'error',timer:1500,showConfirmButton:false,toast:true,position:'top'});
+    }
+  },400);
 }
 window.checkMCQ=checkMCQ;
+
 function checkFill(idx,correctStr,points){
-  const userAns=(document.getElementById('gFillInput')?.value||'').trim().toLowerCase();
-  const correctArr=correctStr.split('|').map(s=>s.trim().toLowerCase());
-  const isCorrect=correctArr.includes(userAns);
-  closeQuestion();
-  if(isCorrect){G.score+=parseInt(points)||0;updateProgress();showScorePopup('+'+points+'🥕');}
-  else{G.progress=Math.max(0,G.progress-1);const obsEl=document.getElementById(`obs_${G.progress}`);if(obsEl){obsEl.textContent='🌵';obsEl.classList.remove('cleared');}updateRabbitPosition(false);positionCamera();updateProgress();Swal.fire({title:'Sai rồi 😢',html:`Đáp án đúng: <strong>${correctArr[0]}</strong>`,icon:'error',timer:2000,showConfirmButton:false,toast:true,position:'top'});}
+  const userAns=(document.getElementById('gFillInput')?.value||'').trim().toLowerCase();
+  const correctArr=correctStr.split('|').map(s=>s.trim().toLowerCase());
+  const isCorrect=correctArr.includes(userAns);
+  closeQuestion();
+  if(isCorrect){G.score+=parseInt(points)||0;updateProgress();showScorePopup('+'+points+'🥕');}
+  else{
+    G.progress=Math.max(0,G.progress-1);
+    const obsEl=document.getElementById(`obs_${G.progress}`);
+    if(obsEl){obsEl.textContent='🌵';obsEl.classList.remove('cleared');}
+    updateRabbitPosition(false);positionCamera();updateProgress();
+    Swal.fire({title:'Sai rồi 😢',html:`Đáp án đúng: <strong>${correctArr[0]}</strong>`,icon:'error',timer:2000,showConfirmButton:false,toast:true,position:'top'});
+  }
 }
 window.checkFill=checkFill;
+
 function showScorePopup(text){
-  const el=document.createElement('div');
-  el.style.cssText=`position:fixed;top:30%;left:50%;transform:translateX(-50%);font-family:'Baloo 2';font-size:2.5rem;font-weight:900;color:#FFD700;text-shadow:3px 3px 0 rgba(0,0,0,.4);z-index:5000;pointer-events:none;animation:scoreFloat .8s ease forwards`;
-  el.textContent=text;
-  if(!document.getElementById('scoreAnim')){const style=document.createElement('style');style.id='scoreAnim';style.textContent='@keyframes scoreFloat{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-80px)}}';document.head.appendChild(style);}
-  document.body.appendChild(el);setTimeout(()=>el.remove(),800);
+  const el=document.createElement('div');
+  el.style.cssText=`position:fixed;top:30%;left:50%;transform:translateX(-50%);font-family:'Baloo 2';font-size:2.5rem;font-weight:900;color:#FFD700;text-shadow:3px 3px 0 rgba(0,0,0,.4);z-index:5000;pointer-events:none;animation:scoreFloat .8s ease forwards`;
+  el.textContent=text;
+  if(!document.getElementById('scoreAnim')){const style=document.createElement('style');style.id='scoreAnim';style.textContent='@keyframes scoreFloat{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-80px)}}';document.head.appendChild(style);}
+  document.body.appendChild(el);setTimeout(()=>el.remove(),800);
 }
+
 async function showVictory(){
-  G.active=false;document.getElementById('gameInstr').innerText='🎉 Thỏ về đích rồi!';
-  const quiz=G.quiz;const finalScore=G.score;
-  if(window._fb_saveGame)await window._fb_saveGame(quiz.firestoreId,finalScore);
-  if(window._fb_notify)await window._fb_notify(`Con vừa phá đảo Game "${quiz.title}" đạt ${finalScore} điểm! 🎮🐰`);
-  const r=await Swal.fire({title:'🎉 VỀ ĐÍCH RỒI!',html:`<div style="font-family:'Baloo 2'"><div style="font-size:5rem;margin-bottom:10px">🐇</div><p style="font-size:1.4rem;font-weight:800;margin-bottom:15px">Bé nhận được:</p><div style="font-size:3.5rem;font-weight:900;color:#FF8C00">${finalScore} 🥕</div></div>`,icon:'success',showCancelButton:true,confirmButtonText:'🔄 Chơi Lại',cancelButtonText:'🚪 Thoát',confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',allowOutsideClick:false});
-  if(r.isConfirmed)playGame(quiz.firestoreId);else closeGame();
+  G.active=false;
+  document.getElementById('gameInstr').innerText='🎉 Thỏ về đích rồi!';
+  const quiz=G.quiz;const finalScore=G.score;
+  if(window._fb_saveGame)await window._fb_saveGame(quiz.firestoreId,finalScore);
+  if(window._fb_notify)await window._fb_notify(`Con vừa phá đảo Game "${quiz.title}" đạt ${finalScore} điểm! 🎮🐰`);
+  const r=await Swal.fire({
+    title:'🎉 VỀ ĐÍCH RỒI!',
+    html:`<div style="font-family:'Baloo 2'"><div style="font-size:5rem;margin-bottom:10px">🐇</div><p style="font-size:1.4rem;font-weight:800;margin-bottom:15px">Bé nhận được:</p><div style="font-size:3.5rem;font-weight:900;color:#FF8C00">${finalScore} 🥕</div></div>`,
+    icon:'success',showCancelButton:true,
+    confirmButtonText:'🔄 Chơi Lại',cancelButtonText:'🚪 Thoát',
+    confirmButtonColor:'#4A81E8',cancelButtonColor:'#FF948C',allowOutsideClick:false
+  });
+  if(r.isConfirmed)playGame(quiz.firestoreId);else closeGame();
 }
-function closeGame(){G.active=false;G.quiz=null;G.jumping=false;G.questionOpen=false;document.getElementById('gameOverlay').style.display='none';document.getElementById('inGameQ').classList.remove('iq-show');}
+
+function closeGame(){
+  G.active=false;G.quiz=null;G.jumping=false;G.questionOpen=false;
+  document.getElementById('gameOverlay').style.display='none';
+  document.getElementById('inGameQ').classList.remove('iq-show');
+}
 window.closeGame=closeGame;
 </script>
 </body>
