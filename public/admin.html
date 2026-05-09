@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <style>
 :root {
   --bg: #0A0C14;
@@ -284,7 +286,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
 <div id="toastBar"></div>
 <div id="syncOv"><i class="fas fa-circle-notch fa-spin"></i> Đang đồng bộ...</div>
 
-<!-- ─── SIDEBAR ─── -->
 <aside class="sb" id="sb">
   <div class="sb-head">
     <div class="sb-logo">
@@ -315,7 +316,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
   </div>
 </aside>
 
-<!-- ─── MAIN ─── -->
 <div class="main">
   <div class="top">
     <div class="top-l">
@@ -323,6 +323,7 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       <div class="page-ttl" id="pgTtl">📊 Dashboard</div>
     </div>
     <div class="top-r">
+      <button class="top-btn" style="background:linear-gradient(135deg,#059669,#047857);color:white;border-color:#047857;font-weight:700" onclick="exportRealExcel()"><i class="fas fa-file-excel"></i> Xuất Excel</button>
       <button class="top-btn" onclick="loadAll()"><i class="fas fa-sync-alt"></i> Làm mới</button>
       <button class="top-btn" onclick="simulateReg()"><i class="fas fa-magic"></i> Mô phỏng</button>
       <div class="live-badge"><div class="live-dot"></div><span id="onlineCount">0</span> Online</div>
@@ -331,7 +332,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
 
   <div class="cnt">
 
-    <!-- ── DASHBOARD ── -->
     <div id="tab-dashboard" class="tab-p active">
       <div class="stats" id="statsGrid"></div>
       <div class="g2">
@@ -375,11 +375,9 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── ANALYTICS ── -->
     <div id="tab-analytics" class="tab-p">
       <div class="stats" id="analyticsStats"></div>
 
-      <!-- HEATMAP -->
       <div class="card">
         <div class="card-h"><div class="card-ttl"><i class="fas fa-fire" style="color:var(--orange)"></i> Heatmap Hoạt Động (52 tuần) <span class="card-tag">THỰC TẾ</span></div></div>
         <div style="font-size:.72rem;color:var(--text3);margin-bottom:10px;font-family:var(--mono)">Mỗi ô = 1 ngày. Màu đậm = nhiều hoạt động hơn.</div>
@@ -416,7 +414,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── CHỜ DUYỆT ── -->
     <div id="tab-approvals" class="tab-p">
       <div class="card">
         <div class="card-h">
@@ -430,7 +427,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── HỌC VIÊN ── -->
     <div id="tab-students" class="tab-p">
       <div class="card">
         <div class="card-h">
@@ -447,7 +443,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── GIÁO VIÊN ── -->
     <div id="tab-teachers" class="tab-p">
       <div class="card">
         <div class="card-h">
@@ -461,7 +456,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── LỚP HỌC ── -->
     <div id="tab-classes" class="tab-p">
       <div class="card">
         <div class="card-h">
@@ -472,7 +466,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── NỘI DUNG ── -->
     <div id="tab-content" class="tab-p">
       <div class="g2">
         <div class="card">
@@ -490,7 +483,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
       </div>
     </div>
 
-    <!-- ── BÁO CÁO ── -->
     <div id="tab-reports" class="tab-p">
       <div class="stats" id="rptStats"></div>
       <div class="g2">
@@ -508,14 +500,12 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
           <div class="card-ttl"><i class="fas fa-file-export" style="color:var(--green)"></i> Xuất Báo Cáo</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-g" onclick="exportReport('csv')"><i class="fas fa-file-csv"></i> Xuất CSV</button>
-          <button class="btn btn-p" onclick="exportReport('summary')"><i class="fas fa-clipboard-list"></i> Tóm tắt</button>
+          <button class="btn btn-g" onclick="exportRealExcel()"><i class="fas fa-file-excel"></i> Xuất Excel Đầy Đủ</button>
           <button class="btn btn-c" onclick="sendBulkReport()"><i class="fas fa-envelope"></i> Gửi Email Hàng Loạt</button>
         </div>
       </div>
     </div>
 
-    <!-- ── CÀI ĐẶT ── -->
     <div id="tab-settings" class="tab-p">
       <div class="g2">
         <div class="card">
@@ -544,7 +534,6 @@ tbody tr:hover td { background:rgba(99,117,255,.04); }
   </div>
 </div>
 
-<!-- ══════════ FIREBASE + LOGIC ══════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -560,6 +549,153 @@ if (!token || user.role !== 'admin') { location.href = 'login.html'; }
 const adminName = user.fullName || 'Admin';
 document.getElementById('sbName').innerText = adminName;
 document.getElementById('sbAv').innerText = adminName.charAt(0).toUpperCase();
+
+// ─── XUẤT EXCEL THỰC TẾ (LẤY DỮ LIỆU TỪ FIREBASE) ───
+window.exportRealExcel = async function () {
+  try {
+    // Popup Loading
+    Swal.fire({
+      title: 'Đang trích xuất dữ liệu...',
+      html: 'Vui lòng đợi giây lát để hệ thống lấy dữ liệu mới nhất từ máy chủ.',
+      allowOutsideClick: false,
+      background: '#111525', color: '#E2E8F0',
+      didOpen: () => { Swal.showLoading(); }
+    });
+
+    // Gọi dữ liệu trực tiếp từ Firebase Database
+    const [uSnap, lSnap, qSnap, cSnap] = await Promise.all([
+      getDocs(collection(db, 'users')),
+      getDocs(collection(db, 'lessons')),
+      getDocs(collection(db, 'quizzes')),
+      getDocs(collection(db, 'classes'))
+    ]);
+
+    const d_allUsers = uSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+    const d_allLessons = lSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+    const d_allQuizzes = qSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+    const d_allClasses = cSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+
+    // Phân loại
+    const students = d_allUsers.filter(u => u.role === 'student');
+    const teachers = d_allUsers.filter(u => u.role === 'teacher');
+    const pending  = d_allUsers.filter(u => u.role === 'pending' || u.role === 'teacher_pending');
+    const games    = d_allQuizzes.filter(q => q.type === 'game');
+    const quizMCQ  = d_allQuizzes.filter(q => q.type === 'mcq');
+    const quizFill = d_allQuizzes.filter(q => q.type === 'fill');
+    const speaks   = d_allQuizzes.filter(q => q.type === 'speak');
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('vi-VN');
+    const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+    const WB = XLSX.utils.book_new();
+
+    function makeSheet(rows, headers, colWidths) {
+      const data = [headers, ...rows];
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      if (colWidths) ws['!cols'] = colWidths.map(w => ({ wch: w }));
+      return ws;
+    }
+
+    // ── SHEET 1: TỔNG QUAN
+    const avgScore = students.length ? (students.reduce((s, u) => s + (Number(u.score) || 0), 0) / students.length).toFixed(1) : 0;
+    const topStudents = students.filter(s => (Number(s.score) || 0) >= 100).length;
+    const unassigned  = students.filter(s => !s.class).length;
+    const classCounts = {};
+    students.forEach(s => { if (s.class) classCounts[s.class] = (classCounts[s.class] || 0) + 1; });
+
+    const overviewRows = [
+      ["📅 Ngày Xuất", `${dateStr} ${timeStr}`],
+      ["", ""],
+      ["── CHỈ SỐ CHÍNH ──", ""],
+      ["📚 Tổng Học Viên", students.length],
+      ["👩‍🏫 Tổng Giáo Viên", teachers.length],
+      ["⏳ Đang Chờ Duyệt", pending.length],
+      ["🏫 Số Lớp Học", d_allClasses.length],
+      ["🏆 Điểm TB Toàn Trường", Number(avgScore)],
+      ["⭐ HS Trên 100 Điểm", topStudents],
+      ["⚠️ HS Chưa Xếp Lớp", unassigned],
+      ["", ""],
+      ["── NỘI DUNG ──", ""],
+      ["📹 Video Bài Giảng", d_allLessons.length],
+      ["📝 Bài Tập MCQ", quizMCQ.length],
+      ["✍️ Bài Tập Điền Khuyết", quizFill.length],
+      ["🎮 Game", games.length],
+      ["🎤 Luyện Nói", speaks.length],
+      ["📖 Tổng Nội Dung", d_allLessons.length + d_allQuizzes.length],
+      ["", ""],
+      ["── PHÂN BỔ THEO LỚP ──", ""],
+      ["Lớp", "Số Học Sinh"],
+      ...Object.entries(classCounts).sort((a,b) => b[1]-a[1]).map(([cls, cnt]) => [cls, cnt])
+    ];
+    const ws1 = XLSX.utils.aoa_to_sheet(overviewRows);
+    ws1['!cols'] = [{ wch: 30 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(WB, ws1, "📊 Tổng Quan");
+
+    // ── SHEET 2: HỌC VIÊN
+    const stSorted = [...students].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+    const stHeaders = ["STT", "Họ và Tên", "Lớp", "Email", "Điểm 🥕", "Xếp Hạng Toàn Trường", "Ghi Chú Cô Giáo", "Trạng Thái", "Ngày Tham Gia", "Cần Hỗ Trợ?"];
+    const stRows = stSorted.map((s, i) => {
+      const joinDate = s.createdAt ? (s.createdAt.seconds ? new Date(s.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : new Date(s.createdAt).toLocaleDateString('vi-VN')) : "—";
+      const score = Number(s.score) || 0;
+      const needsHelp = score < 30 ? "⚠️ Cần Hỗ Trợ" : "✅ Ổn";
+      const status = score === 0 ? "❌ Chưa Học" : score < 50 ? "⚠️ Ít Hoạt Động" : "✅ Đang Học";
+      return [i + 1, s.fullName || "?", s.class || "Chưa Xếp Lớp", s.email || "—", score, `#${i + 1}`, s.comment || "—", status, joinDate, needsHelp];
+    });
+    const ws2 = makeSheet(stRows, stHeaders, [5, 22, 14, 28, 10, 20, 30, 16, 16, 14]);
+    XLSX.utils.book_append_sheet(WB, ws2, "👨‍🎓 Học Viên");
+
+    // ── SHEET 3: GIÁO VIÊN
+    const tcHeaders = ["STT", "Họ và Tên", "Email", "Lớp Phụ Trách", "Số Học Sinh", "Video Đã Tạo", "Bài Tập Đã Tạo", "Game Đã Tạo", "Luyện Nói Đã Tạo", "Ngày Tham Gia"];
+    const tcRows = teachers.map((t, i) => {
+      const cls = (t.classes || []).filter(Boolean);
+      const studentCount = students.filter(s => cls.includes(s.class)).length;
+      const videoCount = d_allLessons.filter(l => l.createdBy === t.email).length;
+      const quizCount  = d_allQuizzes.filter(q => q.createdBy === t.email && (q.type === 'mcq' || q.type === 'fill')).length;
+      const gameCount  = d_allQuizzes.filter(q => q.createdBy === t.email && q.type === 'game').length;
+      const speakCount = d_allQuizzes.filter(q => q.createdBy === t.email && q.type === 'speak').length;
+      const joinDate = t.createdAt ? (t.createdAt.seconds ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : new Date(t.createdAt).toLocaleDateString('vi-VN')) : "—";
+      return [i + 1, t.fullName || "?", t.email || "—", cls.join(", ") || "Chưa Phân Công", studentCount, videoCount, quizCount, gameCount, speakCount, joinDate];
+    });
+    const ws3 = makeSheet(tcRows, tcHeaders, [5, 22, 28, 20, 12, 14, 14, 12, 16, 16]);
+    XLSX.utils.book_append_sheet(WB, ws3, "👩‍🏫 Giáo Viên");
+
+    // ── SHEET 4: NỘI DUNG
+    const typeLabel = { video: "📹 Video", mcq: "📝 MCQ", fill: "✍️ Điền Khuyết", game: "🎮 Game", speak: "🎤 Luyện Nói" };
+    const allContent = [...d_allLessons.map(l => ({ ...l, _type: 'video' })), ...d_allQuizzes.map(q => ({ ...q, _type: q.type }))];
+    const ctHeaders = ["STT", "Tiêu Đề", "Loại", "Unit/Chương", "Tạo Bởi", "Số Câu Hỏi"];
+    const ctRows = allContent.map((item, i) => [i + 1, item.title || "?", typeLabel[item._type] || item._type, item.unit || "—", item.createdBy || "—", item.questions ? item.questions.length : "—"]);
+    const ws5 = makeSheet(ctRows, ctHeaders, [5, 30, 16, 16, 24, 12]);
+    XLSX.utils.book_append_sheet(WB, ws5, "📖 Nội Dung");
+
+    // ── SHEET 5: XẾP HẠNG
+    const rankHeaders = ["Hạng", "Họ và Tên", "Lớp", "Điểm 🥕", "Xếp Loại", "Email"];
+    const top20 = [...students].sort((a,b) => (Number(b.score)||0)-(Number(a.score)||0)).slice(0,20);
+    const rkRows = top20.map((s, i) => {
+      const score = Number(s.score) || 0;
+      const grade = score >= 300 ? "🌟 Xuất Sắc" : score >= 150 ? "⭐ Giỏi" : score >= 80  ? "👍 Khá" : score >= 30  ? "📚 Trung Bình" : "🔔 Cần Cố Gắng";
+      return [i+1, s.fullName||"?", s.class||"—", score, grade, s.email||"—"];
+    });
+    const ws7 = makeSheet(rkRows, rankHeaders, [8, 22, 14, 12, 16, 28]);
+    XLSX.utils.book_append_sheet(WB, ws7, "🏆 Xếp Hạng");
+
+    // LƯU FILE VÀ ĐÓNG POPUP
+    const fileName = `KidsEnglish_BaoCao_${now.toISOString().slice(0,10)}.xlsx`;
+    XLSX.writeFile(WB, fileName);
+
+    Swal.fire({
+      title: '✅ Xuất Excel Thành Công!',
+      html: `Đã cập nhật dữ liệu mới nhất từ máy chủ.<br>File <strong>${fileName}</strong> đã được tải xuống.`,
+      icon: 'success',
+      background: '#111525', color: '#E2E8F0',
+      confirmButtonColor: '#2563EB'
+    });
+
+  } catch (error) {
+    console.error("Lỗi xuất Excel:", error);
+    Swal.fire({title: '❌ Lỗi', text: 'Không thể trích xuất dữ liệu: ' + error.message, icon: 'error', background: '#111525', color: '#E2E8F0'});
+  }
+};
 
 // ─── ANALYTICS ENGINE ───
 const AK = 'ks_analytics_v2';
@@ -1019,7 +1155,7 @@ window.approveUser = async function (fid) {
     title: `✅ Duyệt: ${u.fullName || ''}`, background: '#111525', color: '#E2E8F0',
     html: `<p style="color:#64748B;font-weight:600;margin-bottom:12px">Phân ${isPending ? 'giáo viên' : 'học viên'} vào lớp:</p>
       <select id="sw-class" style="width:100%;padding:10px;border:1px solid rgba(99,117,255,.3);border-radius:9px;font-weight:700;background:#0F1220;color:#E2E8F0">
-        <option value="">-- Chọn sau --</option>${isPending ? '' : ''}${cOpts}
+        <option value="">-- Chọn sau --</option>${cOpts}
       </select>`,
     focusConfirm: false, showCancelButton: true, confirmButtonText: 'Duyệt', confirmButtonColor: '#10B981',
     preConfirm: () => document.getElementById('sw-class').value
@@ -1192,17 +1328,6 @@ window.clearAnalytics = async function () {
 };
 
 window.clearActivity = function () { const d = getAnalytics(); d.events = []; saveAnalytics(d); refreshUI(); showToast('🗑️', 'Đã xóa hoạt động!', 'red'); };
-
-window.exportReport = function (type) {
-  if (type === 'csv') {
-    const students = allUsers.filter(u => u.role === 'student');
-    const csv = ['Tên,Email,Lớp,Điểm', ...students.map(s => `${s.fullName || ''},${s.email || ''},${s.class || ''},${s.score || 0}`)].join('\n');
-    const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv); a.download = 'bao-cao-hoc-vien.csv'; a.click();
-    showToast('📊', 'Đã xuất CSV!', 'green');
-  } else {
-    showToast('📋', 'Đang tạo báo cáo tóm tắt...', 'blue');
-  }
-};
 
 window.sendBulkReport = function () { showToast('📧', 'Tính năng gửi email hàng loạt - cần API!', 'blue'); };
 
