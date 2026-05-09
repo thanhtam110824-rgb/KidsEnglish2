@@ -1,737 +1,812 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KidsEnglish Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidsEnglish — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root{
+  --bg:#F0F4FF;--sidebar-bg:#1E2140;--card:#fff;
+  --primary:#5C6BC0;--primary-dark:#3949AB;--primary-light:#E8EAF6;
+  --accent:#FF8A65;--accent-dark:#E64A19;
+  --green:#43A047;--green-light:#E8F5E9;
+  --red:#E53935;--red-light:#FFEBEE;
+  --yellow:#FB8C00;--yellow-light:#FFF3E0;
+  --purple:#8E24AA;--purple-light:#F3E5F5;
+  --text:#1A237E;--text-muted:#7986CB;--border:#E8EAF6;
+  --shadow:0 8px 32px rgba(92,107,192,.13);
+  --sidebar-text:#B0BEC5;--sidebar-active:#fff;
+}
+body.dark{--bg:#0F1117;--card:#1A1D2E;--border:#2A2D3E;--text:#E8EAF6;--text-muted:#7986CB;--sidebar-bg:#0D0F1A;--shadow:0 8px 32px rgba(0,0,0,.4)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);display:flex;transition:background .3s,color .3s}
 
-    <style>
-        :root {
-            --bg-primary: #F4F7FE; --bg-secondary: #FFFFFF; --bg-tertiary: #F0F4FF;
-            --text-primary: #2B3674; --text-secondary: #A3AED0; --border-color: #E9EDF7;
-            --primary: #4318FF; --secondary: #FF8A4C; --green: #05CD99;
-            --red: #EE5D50; --purple: #7551FF; --info: #0dcaf0;
-        }
-        body.dark-mode {
-            --bg-primary: #0F1419; --bg-secondary: #1A1F2E; --bg-tertiary: #2A2F3F;
-            --text-primary: #E8E9F3; --text-secondary: #A3AED0; --border-color: #2A2F3F;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
-        body { background: var(--bg-primary); color: var(--text-primary); transition: all 0.3s; height: 100vh; overflow: hidden; display: flex; }
-        .theme-toggle { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--primary); border: none; color: white; cursor: pointer; z-index: 1000; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(67,24,255,0.3); transition: all 0.3s; }
-        .theme-toggle:hover { transform: scale(1.1); }
-        .sidebar { width: 280px; background: var(--bg-secondary); border-right: 2px solid var(--border-color); padding: 30px 20px; overflow-y: auto; display: flex; flex-direction: column; }
-        .logo { font-family: 'Baloo 2', cursive; font-size: 1.8rem; font-weight: 800; text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
-        .nav-item { padding: 12px 15px; margin: 5px 0; border-radius: 12px; cursor: pointer; color: var(--text-secondary); font-weight: 700; transition: all 0.3s; display: flex; align-items: center; gap: 10px; position: relative; }
-        .nav-item:hover { background: var(--bg-tertiary); color: var(--primary); transform: translateX(5px); }
-        .nav-item.active { background: var(--primary); color: white; }
-        .nav-spacer { flex: 1; }
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 20px 40px; background: var(--bg-secondary); border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .page-title { font-family: 'Baloo 2', cursive; font-size: 1.8rem; color: var(--text-primary); }
-        .content { flex: 1; overflow-y: auto; padding: 30px 40px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 30px; }
-        .stat-card { background: var(--bg-secondary); border-radius: 15px; padding: 25px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 15px; transition: all 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .stat-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .stat-info h4 { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
-        .stat-info h2 { font-family: 'Baloo 2', cursive; font-size: 1.8rem; color: var(--text-primary); }
-        .card { background: var(--bg-secondary); border-radius: 15px; padding: 30px; border: 1px solid var(--border-color); margin-bottom: 25px; }
-        .card-title { font-family: 'Baloo 2', cursive; font-size: 1.3rem; margin-bottom: 20px; color: var(--text-primary); display: flex; justify-content: space-between; align-items: center; }
-        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Nunito', sans-serif; }
-        .btn-small { padding: 6px 12px; font-size: 0.85rem; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #3311DB; }
-        .btn-success { background: var(--green); color: white; }
-        .btn-danger { background: var(--red); color: white; }
-        .btn-warning { background: #FF9A3C; color: white; }
-        .btn-info { background: var(--info); color: white; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px; border-bottom: 2px solid var(--border-color); font-weight: 800; color: var(--text-secondary); text-transform: uppercase; font-size: 0.85rem; }
-        td { padding: 15px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
-        tr:hover td { background: var(--bg-tertiary); }
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
-        .badge-success { background: rgba(5,205,153,0.1); color: var(--green); }
-        .badge-warning { background: rgba(255,154,60,0.1); color: var(--secondary); }
-        .badge-danger { background: rgba(238,93,80,0.1); color: var(--red); }
-        .chart-container { position: relative; height: 300px; margin-bottom: 20px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .loading { text-align: center; padding: 40px; color: var(--text-secondary); }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-secondary); }
-        @keyframes pulse { 0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)} }
-        .badge-notification { background: var(--red); color: white; border-radius: 50%; padding: 2px 8px; font-size: 0.75rem; margin-left: auto; display: none; animation: pulse 1s infinite; }
-        .badge-notification.active { display: inline-block; }
-        input[type="text"], input[type="email"], input[type="number"], input[type="password"], select {
-            width: 100%; padding: 10px 15px; border: 1px solid var(--border-color);
-            border-radius: 8px; background: var(--bg-tertiary); color: var(--text-primary);
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
+/* ═══ SIDEBAR ═══ */
+.sidebar{
+  width:260px;background:var(--sidebar-bg);
+  display:flex;flex-direction:column;padding:0;
+  box-shadow:6px 0 24px rgba(0,0,0,.18);
+  z-index:100;flex-shrink:0;transition:width .3s;overflow:hidden
+}
+.sidebar.collapsed{width:72px}
+.sb-header{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#fff;
+  display:flex;align-items:center;gap:10px;white-space:nowrap;overflow:hidden}
+.sb-logo span{background:linear-gradient(135deg,#FFD54F,#FF8A65);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar.collapsed .sb-logo-text{display:none}
+.sb-nav{flex:1;padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.sb-nav::-webkit-scrollbar{width:4px}
+.sb-nav::-webkit-scrollbar-thumb{background:#3949AB;border-radius:4px}
+.nav-item{
+  display:flex;align-items:center;gap:13px;padding:11px 14px;
+  border-radius:12px;cursor:pointer;color:var(--sidebar-text);
+  font-weight:800;font-size:.93rem;transition:all .25s;
+  white-space:nowrap;overflow:hidden;position:relative;border:none;background:none;width:100%;text-align:left
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,var(--primary),#7C4DFF);color:#fff;box-shadow:0 4px 12px rgba(92,107,192,.4)}
+.nav-item .n-icon{font-size:1.1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-item .n-badge{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:var(--red);color:#fff;border-radius:20px;
+  padding:2px 8px;font-size:.72rem;font-weight:900;
+  display:none;animation:pulse 1.5s infinite
+}
+.n-badge.show{display:inline-block}
+@keyframes pulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.15)}}
+.nav-divider{height:1px;background:rgba(255,255,255,.07);margin:8px 0}
+.nav-label{font-size:.7rem;color:rgba(255,255,255,.3);font-weight:900;
+  text-transform:uppercase;letter-spacing:.08em;padding:8px 14px 4px;white-space:nowrap}
+.sidebar.collapsed .nav-label,.sidebar.collapsed .n-text,.sidebar.collapsed .n-badge-text{display:none}
+.sb-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,.07)}
+.sb-user{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;overflow:hidden}
+.sb-avatar{width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--primary),#7C4DFF);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1rem;flex-shrink:0}
+.sb-user-info{min-width:0}
+.sb-user-name{font-weight:900;color:#fff;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:.75rem;color:var(--sidebar-text);font-weight:700}
+.sidebar.collapsed .sb-user-info{display:none}
+
+/* ═══ MAIN ═══ */
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{
+  padding:16px 32px;background:var(--card);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);flex-shrink:0
+}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.collapse-btn{background:var(--primary-light);border:none;width:36px;height:36px;
+  border-radius:10px;cursor:pointer;color:var(--primary);font-size:1rem;
+  display:flex;align-items:center;justify-content:center;transition:.3s}
+.collapse-btn:hover{background:var(--primary);color:#fff}
+.page-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{background:var(--primary-light);border:none;width:38px;height:38px;
+  border-radius:10px;cursor:pointer;color:var(--primary);font-size:1rem;
+  display:flex;align-items:center;justify-content:center;transition:.3s}
+.topbar-btn:hover{background:var(--primary);color:#fff}
+.online-dot{display:flex;align-items:center;gap:6px;
+  background:var(--green-light);color:var(--green);
+  padding:6px 14px;border-radius:20px;font-weight:800;font-size:.85rem}
+.online-dot::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ═══ CONTENT ═══ */
+.content{flex:1;overflow-y:auto;padding:28px 32px}
+.content::-webkit-scrollbar{width:6px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* TAB PANES */
+.tab-pane{display:none;animation:fadeSlide .3s ease}
+.tab-pane.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ STAT CARDS ═══ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:28px}
+.stat-card{
+  background:var(--card);border-radius:20px;padding:24px;
+  border:1px solid var(--border);display:flex;align-items:center;gap:16px;
+  box-shadow:var(--shadow);transition:all .3s;cursor:default
+}
+.stat-card:hover{transform:translateY(-4px);border-color:var(--primary)}
+.stat-icon{width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;font-weight:900;letter-spacing:.05em;margin-bottom:4px}
+.stat-value{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--text);line-height:1}
+.stat-change{font-size:.78rem;font-weight:800;margin-top:4px}
+.stat-change.up{color:var(--green)}
+.stat-change.down{color:var(--red)}
+
+/* ═══ CARD ═══ */
+.card{background:var(--card);border-radius:20px;padding:28px;
+  border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:24px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:gap}
+.card-title{font-family:'Fredoka One',cursive;font-size:1.25rem;color:var(--text);display:flex;align-items:center;gap:10px}
+.card-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ═══ BUTTONS ═══ */
+.btn{padding:9px 18px;border:none;border-radius:10px;font-weight:800;font-size:.88rem;
+  cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:7px;
+  font-family:'Nunito',sans-serif;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#7C4DFF);color:#fff;box-shadow:0 4px 12px rgba(92,107,192,.3)}
+.btn-success{background:linear-gradient(135deg,var(--green),#1B5E20);color:#fff;box-shadow:0 4px 12px rgba(67,160,71,.3)}
+.btn-danger{background:linear-gradient(135deg,var(--red),#B71C1C);color:#fff;box-shadow:0 4px 12px rgba(229,57,53,.3)}
+.btn-warning{background:linear-gradient(135deg,var(--yellow),var(--accent));color:#fff;box-shadow:0 4px 12px rgba(251,140,0,.3)}
+.btn-info{background:linear-gradient(135deg,#0288D1,#01579B);color:#fff;box-shadow:0 4px 12px rgba(2,136,209,.3)}
+.btn-ghost{background:var(--primary-light);color:var(--primary);box-shadow:none}
+.btn-ghost:hover{background:var(--primary);color:#fff}
+.btn-sm{padding:6px 12px;font-size:.82rem;border-radius:8px}
+
+/* ═══ TABLE ═══ */
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--primary-light)}
+th{padding:13px 16px;text-align:left;font-size:.78rem;font-weight:900;
+  color:var(--primary);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td{padding:13px 16px;font-size:.9rem;border-top:1px solid var(--border);
+  color:var(--text);transition:background .2s}
+tbody tr:hover td{background:var(--bg)}
+.td-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ═══ BADGE ═══ */
+.badge{padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:900;display:inline-flex;align-items:center;gap:5px}
+.badge-success{background:var(--green-light);color:var(--green)}
+.badge-warning{background:var(--yellow-light);color:var(--yellow)}
+.badge-danger{background:var(--red-light);color:var(--red)}
+.badge-info{background:#E3F2FD;color:#0288D1}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+
+/* ═══ SEARCH ═══ */
+.search-wrap{position:relative;max-width:280px}
+.search-wrap input{
+  width:100%;padding:9px 14px 9px 38px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;
+  font-weight:700;font-size:.9rem;outline:none;transition:.3s
+}
+.search-wrap input:focus{border-color:var(--primary);background:var(--card)}
+.search-wrap .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+
+/* ═══ CHARTS ═══ */
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:24px;margin-bottom:24px}
+.chart-box{position:relative;height:280px}
+
+/* ═══ AVATAR ═══ */
+.user-avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#7C4DFF);
+  color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem}
+
+/* ═══ EMPTY / LOADING ═══ */
+.empty{text-align:center;padding:40px;color:var(--text-muted)}
+.empty i{font-size:2.5rem;margin-bottom:12px;opacity:.5;display:block}
+.loading-row td{text-align:center;padding:30px;color:var(--text-muted)}
+
+/* ═══ SETTINGS ═══ */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.setting-group{display:flex;flex-direction:column;gap:8px}
+.setting-group label{font-weight:800;color:var(--text);font-size:.9rem}
+.setting-group input,.setting-group select{
+  padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;
+  background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-weight:700;outline:none;transition:.3s
+}
+.setting-group input:focus,.setting-group select:focus{border-color:var(--primary);background:var(--card)}
+
+/* ═══ PROGRESS BAR ═══ */
+.mini-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:4px}
+.mini-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--primary),#7C4DFF);transition:width .5s}
+</style>
 </head>
 <body>
 
-<button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-
-<aside class="sidebar">
-    <div class="logo" onclick="switchTab('dashboard', this)">Kids<span style="color:var(--secondary)">English</span></div>
-    <div class="nav-item active" onclick="switchTab('dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</div>
-    <div class="nav-item" onclick="switchTab('approvals', this)">
-        <i class="fas fa-user-clock"></i> Chờ Duyệt
-        <span id="pendingBadge" class="badge-notification">0</span>
+<!-- ══════ SIDEBAR ══════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">
+      <span>🌟</span>
+      <span class="sb-logo-text">KidsEnglish</span>
     </div>
-    <div class="nav-item" onclick="switchTab('students', this)"><i class="fas fa-user-graduate"></i> Học Viên</div>
-    <div class="nav-item" onclick="switchTab('teachers', this)"><i class="fas fa-chalkboard-user"></i> Giáo Viên</div>
-    <div class="nav-item" onclick="switchTab('classes', this)"><i class="fas fa-door-open"></i> Lớp Học</div>
-    <div class="nav-item" onclick="switchTab('reports', this)"><i class="fas fa-chart-bar"></i> Báo Cáo</div>
-    <div class="nav-item" onclick="switchTab('settings', this)"><i class="fas fa-cog"></i> Cài Đặt</div>
-    <div class="nav-spacer"></div>
-    <div class="nav-item" onclick="logout()" style="background:rgba(238,93,80,0.1);color:var(--red)"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</div>
+  </div>
+  <nav class="sb-nav">
+    <span class="nav-label">Tổng Quan</span>
+    <button class="nav-item active" data-tab="dashboard"><i class="fas fa-chart-pie n-icon"></i><span class="n-text">Dashboard</span></button>
+    <button class="nav-item" data-tab="approvals">
+      <i class="fas fa-user-clock n-icon"></i><span class="n-text">Chờ Duyệt</span>
+      <span class="n-badge" id="pendingBadge">0</span>
+    </button>
+    <span class="nav-divider"></span>
+    <span class="nav-label">Quản Lý</span>
+    <button class="nav-item" data-tab="students"><i class="fas fa-user-graduate n-icon"></i><span class="n-text">Học Viên</span></button>
+    <button class="nav-item" data-tab="teachers"><i class="fas fa-chalkboard-user n-icon"></i><span class="n-text">Giáo Viên</span></button>
+    <button class="nav-item" data-tab="classes"><i class="fas fa-door-open n-icon"></i><span class="n-text">Lớp Học</span></button>
+    <span class="nav-divider"></span>
+    <span class="nav-label">Hệ Thống</span>
+    <button class="nav-item" data-tab="reports"><i class="fas fa-chart-bar n-icon"></i><span class="n-text">Báo Cáo</span></button>
+    <button class="nav-item" data-tab="settings"><i class="fas fa-cog n-icon"></i><span class="n-text">Cài Đặt</span></button>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAvatar">A</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sbName">Admin</div>
+        <div class="sb-user-role">Quản trị viên</div>
+      </div>
+    </div>
+    <button class="nav-item" style="color:var(--red);margin-top:8px" onclick="doLogout()"><i class="fas fa-sign-out-alt n-icon"></i><span class="n-text">Đăng Xuất</span></button>
+  </div>
 </aside>
 
-<div class="main-wrapper">
-    <div class="header">
-        <h1 class="page-title" id="pageTitle">📊 Dashboard</h1>
-        <div>
-            <span style="margin-right:20px" id="adminName">Admin</span>
-            <span style="color:var(--green);font-weight:700"><i class="fas fa-circle" style="font-size:0.5rem"></i> Online</span>
-        </div>
+<!-- ══════ MAIN ══════ -->
+<div class="main-wrap">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="collapse-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="page-title" id="pageTitle">📊 Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" onclick="toggleDark()" id="themeBtn" title="Chế độ tối"><i class="fas fa-moon"></i></button>
+      <button class="topbar-btn" onclick="loadAll()" title="Làm mới dữ liệu"><i class="fas fa-sync-alt"></i></button>
+      <div class="online-dot">Online</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-icon" style="background:#E8EAF6">⏳</div><div><div class="stat-label">Đang tải...</div><div class="stat-value">—</div></div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="card"><div class="card-header"><div class="card-title">📈 Lượt Truy Cập 7 Ngày</div></div><div class="chart-box"><canvas id="chartVisit"></canvas></div></div>
+        <div class="card"><div class="card-header"><div class="card-title">🎯 Phân Bổ Vai Trò</div></div><div class="chart-box"><canvas id="chartRole"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">⏳ Yêu Cầu Chờ Duyệt Gần Đây</div><a class="btn btn-ghost btn-sm" onclick="switchTab('approvals')">Xem tất cả →</a></div>
+        <div class="table-wrap"><table><thead><tr><th>Họ tên</th><th>Email</th><th>Loại</th><th>Thời gian</th><th>Hành động</th></tr></thead><tbody id="dashPendingTable"><tr class="loading-row"><td colspan="5">Đang tải...</td></tr></tbody></table></div>
+      </div>
     </div>
 
-    <div class="content">
-        <!-- DASHBOARD -->
-        <div id="tab-dashboard" class="tab-content active">
-            <div class="stats-grid" id="statsContainer"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...</div></div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:25px">
-                <div class="card"><div class="card-title">📈 Lượt Truy Cập (7 Ngày Gần Đây)</div><div class="chart-container"><canvas id="growthChart"></canvas></div></div>
-                <div class="card"><div class="card-title">🎯 Tỉ Lệ Vai Trò Trong Hệ Thống</div><div class="chart-container"><canvas id="completionChart"></canvas></div></div>
-            </div>
+    <!-- ── CHỜ DUYỆT ── -->
+    <div id="tab-approvals" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⏳ Hồ Sơ Chờ Duyệt</div>
+          <div class="card-actions">
+            <button class="btn btn-warning" onclick="simulateReg()"><i class="fas fa-magic"></i> Mô Phỏng Đăng Ký</button>
+            <button class="btn btn-success" onclick="approveAll()"><i class="fas fa-check-double"></i> Duyệt Tất Cả</button>
+          </div>
         </div>
-
-        <!-- CHỜ DUYỆT -->
-        <div id="tab-approvals" class="tab-content">
-            <div class="card">
-                <div class="card-title">
-                    ⏳ Học Viên Vừa Đăng Ký
-                    <button class="btn btn-warning" onclick="simulateRegistration()"><i class="fas fa-magic"></i> Mô Phỏng Đơn Mới</button>
-                </div>
-                <div style="margin-bottom:15px;color:var(--text-secondary);font-weight:600;font-size:0.95rem">
-                    💡 Khi học sinh ấn "Đăng ký ngay" trên trang chủ, hồ sơ sẽ nằm ở đây chờ Admin duyệt.
-                </div>
-                <table>
-                    <thead><tr><th>Họ Tên</th><th>Email</th><th>Thời Gian Đăng Ký</th><th>Hành Động</th></tr></thead>
-                    <tbody id="approvalTable"><tr><td colspan="4" class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- HỌC VIÊN -->
-        <div id="tab-students" class="tab-content">
-            <div class="card">
-                <div class="card-title">
-                    👨‍🎓 Danh Sách Học Viên
-                    <button class="btn btn-primary" onclick="addUser('student')"><i class="fas fa-plus"></i> Thêm Học Viên</button>
-                </div>
-                <div style="margin-bottom:15px"><input type="text" id="studentSearch" placeholder="🔍 Tìm kiếm..." onkeyup="filterTable('studentTable', this.value)" style="max-width:300px"></div>
-                <div style="overflow-x:auto">
-                    <table>
-                        <thead><tr><th>Họ Tên</th><th>Email</th><th>Lớp</th><th>Điểm TB</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead>
-                        <tbody id="studentTable"><tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- GIÁO VIÊN -->
-        <div id="tab-teachers" class="tab-content">
-            <div class="card">
-                <div class="card-title">
-                    👩‍🏫 Danh Sách Giáo Viên
-                    <button class="btn btn-primary" onclick="addUser('teacher')"><i class="fas fa-plus"></i> Thêm Giáo Viên</button>
-                </div>
-                <div style="overflow-x:auto">
-                    <table>
-                        <thead><tr><th>Họ Tên</th><th>Email</th><th>Lớp Phụ Trách</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead>
-                        <tbody id="teacherTable"><tr><td colspan="5" class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- LỚP HỌC -->
-        <div id="tab-classes" class="tab-content">
-            <div class="card">
-                <div class="card-title">
-                    📚 Danh Sách Lớp Học
-                    <button class="btn btn-primary" onclick="addClass()"><i class="fas fa-plus"></i> Tạo Lớp</button>
-                </div>
-                <table>
-                    <thead><tr><th>Tên Lớp</th><th>Giáo Viên Phụ Trách</th><th>Sĩ Số</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead>
-                    <tbody id="classTable"><tr><td colspan="5" class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- BÁO CÁO -->
-        <div id="tab-reports" class="tab-content">
-            <div class="card">
-                <div class="card-title">📊 Báo Cáo & Thống Kê</div>
-                <div class="empty-state">
-                    <i class="fas fa-chart-line" style="font-size:3rem;margin-bottom:20px;opacity:0.5"></i>
-                    <p>Chưa có dữ liệu báo cáo chi tiết.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- CÀI ĐẶT -->
-        <div id="tab-settings" class="tab-content">
-            <div class="card">
-                <div class="card-title">⚙️ Cài Đặt Hệ Thống</div>
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
-                    <div>
-                        <label style="font-weight:700;display:block;margin-bottom:8px">📛 Tên Trung Tâm</label>
-                        <input type="text" id="settingName" value="KidsEnglish">
-                    </div>
-                    <div>
-                        <label style="font-weight:700;display:block;margin-bottom:8px">📧 Email Liên Hệ</label>
-                        <input type="email" id="settingEmail" value="contact@kidsenglish.vn">
-                    </div>
-                    <div>
-                        <label style="font-weight:700;display:block;margin-bottom:8px">📱 Số Điện Thoại</label>
-                        <input type="text" id="settingPhone" value="">
-                    </div>
-                    <div>
-                        <label style="font-weight:700;display:block;margin-bottom:8px">🌐 Website</label>
-                        <input type="text" id="settingWebsite" value="">
-                    </div>
-                </div>
-                <button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()">💾 Lưu Cài Đặt</button>
-            </div>
-        </div>
+        <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:16px;font-weight:700">💡 Khi học sinh / giáo viên đăng ký từ trang chủ, hồ sơ sẽ xuất hiện tại đây để Admin xem xét.</p>
+        <div class="table-wrap"><table><thead><tr><th>Họ tên</th><th>Email</th><th>Loại TK</th><th>Thời gian đăng ký</th><th>Hành động</th></tr></thead><tbody id="approvalTable"><tr class="loading-row"><td colspan="5"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr></tbody></table></div>
+      </div>
     </div>
-</div>
 
-<!-- ===== FIREBASE SDK ===== -->
+    <!-- ── HỌC VIÊN ── -->
+    <div id="tab-students" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👨‍🎓 Danh Sách Học Viên</div>
+          <div class="card-actions">
+            <div class="search-wrap"><span class="si"><i class="fas fa-search"></i></span><input id="studentSearch" type="text" placeholder="Tìm kiếm..." oninput="filterTable('studentTable',this.value)"></div>
+            <button class="btn btn-primary" onclick="addUser('student')"><i class="fas fa-plus"></i> Thêm</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Học Viên</th><th>Email</th><th>Lớp</th><th>Điểm 🥕</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead><tbody id="studentTable"><tr class="loading-row"><td colspan="6"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ── GIÁO VIÊN ── -->
+    <div id="tab-teachers" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👩‍🏫 Danh Sách Giáo Viên</div>
+          <div class="card-actions">
+            <div class="search-wrap"><span class="si"><i class="fas fa-search"></i></span><input id="teacherSearch" type="text" placeholder="Tìm kiếm..." oninput="filterTable('teacherTable',this.value)"></div>
+            <button class="btn btn-primary" onclick="addUser('teacher')"><i class="fas fa-plus"></i> Thêm</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Giáo Viên</th><th>Email</th><th>Lớp Phụ Trách</th><th>Học Viên</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead><tbody id="teacherTable"><tr class="loading-row"><td colspan="6"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ── LỚP HỌC ── -->
+    <div id="tab-classes" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📚 Quản Lý Lớp Học</div>
+          <button class="btn btn-primary" onclick="addClass()"><i class="fas fa-plus"></i> Tạo Lớp</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Tên Lớp</th><th>Giáo Viên</th><th>Sĩ Số</th><th>Lấp đầy</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead><tbody id="classTable"><tr class="loading-row"><td colspan="6"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ── BÁO CÁO ── -->
+    <div id="tab-reports" class="tab-pane">
+      <div class="stats-grid" id="reportStats"></div>
+      <div class="charts-grid">
+        <div class="card"><div class="card-header"><div class="card-title">🏆 Top Học Viên</div></div><div id="topStudents"></div></div>
+        <div class="card"><div class="card-header"><div class="card-title">📊 Điểm Trung Bình Theo Lớp</div></div><div class="chart-box"><canvas id="chartClassAvg"></canvas></div></div>
+      </div>
+    </div>
+
+    <!-- ── CÀI ĐẶT ── -->
+    <div id="tab-settings" class="tab-pane">
+      <div class="card">
+        <div class="card-header"><div class="card-title">⚙️ Cài Đặt Hệ Thống</div></div>
+        <div class="settings-grid">
+          <div class="setting-group"><label>📛 Tên Trung Tâm</label><input id="stName" value="KidsEnglish"></div>
+          <div class="setting-group"><label>📧 Email Liên Hệ</label><input id="stEmail" type="email" value="contact@kidsenglish.vn"></div>
+          <div class="setting-group"><label>📱 Điện Thoại</label><input id="stPhone" placeholder="0123 456 789"></div>
+          <div class="setting-group"><label>🌐 Website</label><input id="stWebsite" placeholder="https://kidsenglish.vn"></div>
+          <div class="setting-group"><label>📝 Điểm nhận được khi xem video</label><input id="stVideoScore" type="number" value="20"></div>
+          <div class="setting-group"><label>🎯 Ngưỡng điểm bài tập đạt</label><input id="stPassScore" type="number" value="80"></div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:24px" onclick="saveSettings()"><i class="fas fa-save"></i> Lưu Cài Đặt</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🔐 Đổi Mật Khẩu Admin</div></div>
+        <div class="settings-grid">
+          <div class="setting-group"><label>Mật khẩu mới</label><input id="newPass" type="password" placeholder="••••••••"></div>
+          <div class="setting-group"><label>Xác nhận mật khẩu</label><input id="confPass" type="password" placeholder="••••••••"></div>
+        </div>
+        <button class="btn btn-warning" style="margin-top:24px" onclick="changePass()"><i class="fas fa-key"></i> Đổi Mật Khẩu</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-wrap -->
+
+<!-- ══════ FIREBASE ══════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {
-    getFirestore, collection, doc,
-    getDocs, addDoc, updateDoc, deleteDoc,
-    query, where, orderBy, serverTimestamp
+  getFirestore, collection, doc,
+  getDocs, addDoc, updateDoc, deleteDoc,
+  query, orderBy, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ===== CẤU HÌNH FIREBASE — điền đúng config của bạn =====
-const firebaseConfig = {
-    apiKey: "AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",
-    authDomain: "kidsenglish2.firebaseapp.com",
-    projectId: "kidsenglish2",
-    storageBucket: "kidsenglish2.appspot.com",
-    messagingSenderId: "",   // <-- điền nếu có
-    appId: ""                // <-- điền nếu có
-};
+const firebaseConfig={apiKey:"AIzaSyAOluRNafW_Rk7IHPViAaQInGSJU1sAi9w",authDomain:"kidsenglish2.firebaseapp.com",projectId:"kidsenglish2",storageBucket:"kidsenglish2.firebasestorage.app",messagingSenderId:"25492249032",appId:"1:25492249032:web:67502896b604909ee7c8fd"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+// Auth check
+const user=JSON.parse(localStorage.getItem('user')||'{}');
+const token=localStorage.getItem('token');
+if(!token||user.role!=='admin'){location.href='login.html';}
 
-// ===== XÁC THỰC ADMIN =====
-const token = localStorage.getItem('token') || sessionStorage.getItem('ks_token');
-const user  = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('ks_user') || '{}');
+// Admin name
+const adminName=user.fullName||'Admin';
+document.getElementById('sbName').innerText=adminName;
+document.getElementById('sbAvatar').innerText=adminName.charAt(0).toUpperCase();
 
-if (!token || !user || user.role !== 'admin') {
-    window.location.href = 'login.html';
+// Cache
+let allUsers=[], allClasses=[];
+let visitChart=null, roleChart=null, classChart=null;
+
+// Log visit
+function logVisit(){const v=JSON.parse(localStorage.getItem('ks_visits')||'[]');v.push(new Date().toISOString());localStorage.setItem('ks_visits',JSON.stringify(v));}
+logVisit();
+
+async function loadAll(){
+  try{
+    const [uS,cS]=await Promise.all([getDocs(collection(db,'users')),getDocs(collection(db,'classes'))]);
+    allUsers=uS.docs.map(d=>({firestoreId:d.id,...d.data()}));
+    allClasses=cS.docs.map(d=>({firestoreId:d.id,...d.data()}));
+    refreshUI();
+  }catch(e){
+    Swal.fire('❌ Lỗi Firebase','Không kết nối được Firestore: '+e.message,'error');
+  }
+}
+window.loadAll=loadAll;
+
+// Real-time listeners
+function startListeners(){
+  onSnapshot(collection(db,'users'),snap=>{allUsers=snap.docs.map(d=>({firestoreId:d.id,...d.data()}));refreshUI();});
+  onSnapshot(collection(db,'classes'),snap=>{allClasses=snap.docs.map(d=>({firestoreId:d.id,...d.data()}));refreshUI();});
 }
 
-// ===== HIỂN THỊ TÊN ADMIN =====
-document.addEventListener('DOMContentLoaded', () => {
-    if (user.fullName) document.getElementById('adminName').innerText = user.fullName;
-    logVisit();
-    loadAll();
-});
+function refreshUI(){
+  const students=allUsers.filter(u=>u.role==='student');
+  const teachers=allUsers.filter(u=>u.role==='teacher');
+  const pending=allUsers.filter(u=>u.role==='pending'||u.role==='teacher_pending');
 
-// ===== BIẾN TOÀN CỤC (cache) =====
-let allUsers   = [];
-let allClasses = [];
-let growthChartInstance    = null;
-let completionChartInstance = null;
+  // Stats
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-icon" style="background:#E8EAF6;color:var(--primary)"><i class="fas fa-user-graduate"></i></div>
+      <div><div class="stat-label">Học Viên</div><div class="stat-value">${students.length}</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> Đang học</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--green-light);color:var(--green)"><i class="fas fa-chalkboard-user"></i></div>
+      <div><div class="stat-label">Giáo Viên</div><div class="stat-value">${teachers.length}</div><div class="stat-change up"><i class="fas fa-check"></i> Hoạt động</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--yellow-light);color:var(--yellow)"><i class="fas fa-user-clock"></i></div>
+      <div><div class="stat-label">Chờ Duyệt</div><div class="stat-value">${pending.length}</div>
+      ${pending.length>0?'<div class="stat-change down"><i class="fas fa-exclamation"></i> Cần xử lý</div>':''}</div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--purple-light);color:var(--purple)"><i class="fas fa-door-open"></i></div>
+      <div><div class="stat-label">Lớp Học</div><div class="stat-value">${allClasses.length}</div><div class="stat-change up"><i class="fas fa-circle"></i> Hoạt động</div></div></div>`;
 
-// ===== GHI LƯỢT TRUY CẬP =====
-function logVisit() {
-    let visits = JSON.parse(localStorage.getItem('ks_visits') || '[]');
-    visits.push(new Date().toISOString());
-    localStorage.setItem('ks_visits', JSON.stringify(visits));
+  // Badge
+  const badge=document.getElementById('pendingBadge');
+  if(pending.length>0){badge.innerText=pending.length;badge.classList.add('show');}else{badge.classList.remove('show');}
+
+  // Dashboard pending (3 items)
+  renderPendingTable('dashPendingTable',pending.slice(0,3));
+  renderPendingTable('approvalTable',pending);
+  renderStudentTable(students);
+  renderTeacherTable(teachers,students);
+  renderClassTable(students);
+  renderReports(students,teachers);
+  renderCharts(students,teachers);
 }
 
-// ===== TẢI TOÀN BỘ DỮ LIỆU TỪ FIRESTORE =====
-async function loadAll() {
-    try {
-        // Tải users
-        const uSnap = await getDocs(collection(db, 'users'));
-        allUsers = uSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-
-        // Tải classes
-        const cSnap = await getDocs(collection(db, 'classes'));
-        allClasses = cSnap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-
-        refreshUI();
-    } catch (err) {
-        console.error('Lỗi tải dữ liệu:', err);
-        Swal.fire('❌ Lỗi Firebase', 'Không thể kết nối Firestore. Kiểm tra config & rules!', 'error');
-    }
+function renderPendingTable(tbId,list){
+  const tbody=document.getElementById(tbId);
+  if(!list.length){tbody.innerHTML='<tr><td colspan="5" class="empty"><i class="fas fa-check-circle" style="color:var(--green)"></i><br>Không có yêu cầu chờ duyệt!</td></tr>';return;}
+  tbody.innerHTML=list.map(p=>`
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar">${(p.fullName||'?').charAt(0)}</div><strong>${p.fullName||'?'}</strong></div></td>
+      <td style="color:var(--text-muted)">${p.email}</td>
+      <td><span class="badge ${p.role==='teacher_pending'?'badge-purple':'badge-info'}">${p.role==='teacher_pending'?'👩‍🏫 Giáo viên':'👨‍🎓 Học viên'}</span></td>
+      <td style="color:var(--text-muted);font-size:.85rem">${p.createdAt?new Date(p.createdAt.seconds?p.createdAt.seconds*1000:p.createdAt).toLocaleString('vi-VN'):'—'}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-success btn-sm" onclick="approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button>
+        <button class="btn btn-danger btn-sm" onclick="rejectUser('${p.firestoreId}','${p.fullName||''}')"><i class="fas fa-times"></i> Xóa</button>
+      </div></td>
+    </tr>`).join('');
 }
 
-// ===== REFRESH TOÀN BỘ GIAO DIỆN =====
-function refreshUI() {
-    const students      = allUsers.filter(u => u.role === 'student');
-    const teachers      = allUsers.filter(u => u.role === 'teacher');
-    const pendingUsers  = allUsers.filter(u => u.role === 'pending');
-
-    // --- Stats ---
-    document.getElementById('statsContainer').innerHTML = `
-        <div class="stat-card">
-            <div class="stat-icon" style="background:var(--bg-tertiary);color:var(--primary)"><i class="fas fa-user-graduate"></i></div>
-            <div class="stat-info"><h4>Học Viên</h4><h2>${students.length}</h2></div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(5,205,153,0.1);color:var(--green)"><i class="fas fa-chalkboard-user"></i></div>
-            <div class="stat-info"><h4>Giáo Viên</h4><h2>${teachers.length}</h2></div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(255,154,60,0.1);color:var(--secondary)"><i class="fas fa-user-clock"></i></div>
-            <div class="stat-info"><h4>Chờ Duyệt</h4><h2>${pendingUsers.length}</h2></div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(117,81,255,0.1);color:var(--purple)"><i class="fas fa-door-open"></i></div>
-            <div class="stat-info"><h4>Lớp Học</h4><h2>${allClasses.length}</h2></div>
-        </div>`;
-
-    // --- Badge chờ duyệt ---
-    const badge = document.getElementById('pendingBadge');
-    if (pendingUsers.length > 0) { badge.innerText = pendingUsers.length; badge.classList.add('active'); }
-    else { badge.classList.remove('active'); }
-
-    // --- Bảng chờ duyệt ---
-    document.getElementById('approvalTable').innerHTML = pendingUsers.length > 0
-        ? pendingUsers.map(p => `
-            <tr>
-                <td><strong>${p.fullName || p.name || '?'}</strong></td>
-                <td>${p.email}</td>
-                <td>${p.createdAt ? new Date(p.createdAt.seconds ? p.createdAt.seconds*1000 : p.createdAt).toLocaleString('vi-VN') : '—'}</td>
-                <td>
-                    <button class="btn btn-success btn-small" style="margin-right:5px" onclick="window._approveUser('${p.firestoreId}')"><i class="fas fa-check"></i> Duyệt</button>
-                    <button class="btn btn-danger btn-small" onclick="window._rejectUser('${p.firestoreId}', '${p.fullName || ''}')"><i class="fas fa-times"></i> Xóa</button>
-                </td>
-            </tr>`).join('')
-        : '<tr><td colspan="4" class="loading">✅ Không có yêu cầu nào đang chờ duyệt!</td></tr>';
-
-    // --- Bảng học sinh ---
-    document.getElementById('studentTable').innerHTML = students.length > 0
-        ? students.map(s => `
-            <tr>
-                <td><strong>${s.fullName || s.name || 'Chưa cập nhật'}</strong></td>
-                <td>${s.email}</td>
-                <td>${s.class ? `<span class="badge badge-success">${s.class}</span>` : `<span class="badge badge-warning">Chưa Xếp Lớp</span>`}</td>
-                <td><strong style="color:var(--green)">${s.score || 0}</strong></td>
-                <td><span class="badge badge-success">Đang Học</span></td>
-                <td style="min-width:280px">
-                    <button class="btn btn-warning btn-small" style="margin-right:4px" onclick="window._assignClass('${s.firestoreId}','student')"><i class="fas fa-layer-group"></i> Xếp Lớp</button>
-                    <button class="btn btn-primary btn-small" style="margin-right:4px" onclick="window._loginAs('${s.firestoreId}','student')"><i class="fas fa-sign-in-alt"></i> Vào</button>
-                    <button class="btn btn-info btn-small" style="margin-right:4px" onclick="window._sendEmail('${s.email}')"><i class="fas fa-envelope"></i></button>
-                    <button class="btn btn-danger btn-small" onclick="window._deleteUser('${s.firestoreId}','${s.fullName || s.name || ''}')"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`).join('')
-        : '<tr><td colspan="6" class="loading">Chưa có học viên nào</td></tr>';
-
-    // --- Bảng giáo viên ---
-    document.getElementById('teacherTable').innerHTML = teachers.length > 0
-        ? teachers.map(t => {
-            const cls = (t.classes && t.classes.filter(Boolean).length > 0) ? t.classes.join(', ') : null;
-            return `
-            <tr>
-                <td><strong>${t.fullName || t.name || 'Chưa cập nhật'}</strong></td>
-                <td>${t.email}</td>
-                <td>${cls ? `<span class="badge badge-success">${cls}</span>` : `<span class="badge badge-warning">Chưa Phân Lớp</span>`}</td>
-                <td><span class="badge badge-success">Hoạt Động</span></td>
-                <td style="min-width:280px">
-                    <button class="btn btn-warning btn-small" style="margin-right:4px" onclick="window._assignClass('${t.firestoreId}','teacher')"><i class="fas fa-layer-group"></i> Phân Lớp</button>
-                    <button class="btn btn-primary btn-small" style="margin-right:4px" onclick="window._loginAs('${t.firestoreId}','teacher')"><i class="fas fa-sign-in-alt"></i> Vào</button>
-                    <button class="btn btn-info btn-small" style="margin-right:4px" onclick="window._sendEmail('${t.email}')"><i class="fas fa-envelope"></i></button>
-                    <button class="btn btn-danger btn-small" onclick="window._deleteUser('${t.firestoreId}','${t.fullName || t.name || ''}')"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`}).join('')
-        : '<tr><td colspan="5" class="loading">Chưa có giáo viên</td></tr>';
-
-    // --- Bảng lớp học ---
-    document.getElementById('classTable').innerHTML = allClasses.length > 0
-        ? allClasses.map(cls => {
-            const hsCount = students.filter(s => s.class === cls.name).length;
-            return `
-            <tr>
-                <td><strong>${cls.name}</strong></td>
-                <td>${cls.teacherName || '<span style="color:#A3AED0">(Chưa phân công)</span>'}</td>
-                <td><strong style="color:var(--primary)">${hsCount}/${cls.capacity || 30}</strong></td>
-                <td><span class="badge badge-success">Hoạt Động</span></td>
-                <td style="min-width:280px">
-                    <button class="btn btn-small" style="margin-right:4px;background:var(--purple);color:white" onclick="window._viewClassDetails('${cls.name}','${cls.teacherName || ''}')"><i class="fas fa-eye"></i> Xem HS</button>
-                    <button class="btn btn-warning btn-small" style="margin-right:4px" onclick="window._manageClassStudents('${cls.name}')"><i class="fas fa-user-plus"></i></button>
-                    <button class="btn btn-danger btn-small" onclick="window._deleteClass('${cls.firestoreId}','${cls.name}')"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`}).join('')
-        : '<tr><td colspan="5" class="loading">Chưa có dữ liệu lớp học</td></tr>';
-
-    renderCharts();
+function renderStudentTable(students){
+  const tbody=document.getElementById('studentTable');
+  if(!students.length){tbody.innerHTML='<tr><td colspan="6" class="empty"><i class="fas fa-user-graduate"></i><br>Chưa có học viên</td></tr>';return;}
+  tbody.innerHTML=students.map(s=>`
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar">${(s.fullName||'?').charAt(0)}</div><strong>${s.fullName||'Chưa cập nhật'}</strong></div></td>
+      <td style="color:var(--text-muted);font-size:.87rem">${s.email}</td>
+      <td>${s.class?`<span class="badge badge-success"><i class="fas fa-door-open"></i> ${s.class}</span>`:`<span class="badge badge-warning">Chưa xếp lớp</span>`}</td>
+      <td><strong style="color:var(--green);font-size:1.1rem">${s.score||0}</strong> 🥕</td>
+      <td><span class="badge badge-success">● Đang học</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="assignClass('${s.firestoreId}','student')" title="Xếp lớp"><i class="fas fa-layer-group"></i></button>
+        <button class="btn btn-primary btn-sm" onclick="loginAs('${s.firestoreId}','student')" title="Vào TK"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-info btn-sm" onclick="sendMail('${s.email}')" title="Gửi mail"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteUser('${s.firestoreId}','${s.fullName||''}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
 }
 
-// ===== CHARTS =====
-function renderCharts() {
-    const visits = JSON.parse(localStorage.getItem('ks_visits') || '[]');
-    const labels = [], visitData = [];
-    const today = new Date();
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date(today); d.setDate(d.getDate() - i);
-        const ds = d.toLocaleDateString('vi-VN');
-        labels.push(`${d.getDate()}/${d.getMonth()+1}`);
-        visitData.push(visits.filter(v => new Date(v).toLocaleDateString('vi-VN') === ds).length);
-    }
-    if (growthChartInstance) growthChartInstance.destroy();
-    const gCtx = document.getElementById('growthChart');
-    if (gCtx) growthChartInstance = new Chart(gCtx, {
-        type:'line', data:{labels, datasets:[{label:'Lượt Truy Cập',data:visitData,borderColor:'#4318FF',backgroundColor:'rgba(67,24,255,0.1)',tension:0.4,fill:true,borderWidth:2}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}
-    });
-
-    if (completionChartInstance) completionChartInstance.destroy();
-    const cCtx = document.getElementById('completionChart');
-    const students = allUsers.filter(u=>u.role==='student').length;
-    const teachers = allUsers.filter(u=>u.role==='teacher').length;
-    if (cCtx) completionChartInstance = new Chart(cCtx, {
-        type:'doughnut',
-        data:{labels:['Học Viên','Giáo Viên','Admin'],datasets:[{data:[students,teachers,1],backgroundColor:['#05CD99','#FF8A4C','#7551FF']}]},
-        options:{responsive:true,maintainAspectRatio:false}
-    });
+function renderTeacherTable(teachers,students){
+  const tbody=document.getElementById('teacherTable');
+  if(!teachers.length){tbody.innerHTML='<tr><td colspan="6" class="empty"><i class="fas fa-chalkboard-user"></i><br>Chưa có giáo viên</td></tr>';return;}
+  tbody.innerHTML=teachers.map(t=>{
+    const cls=(t.classes||[]).filter(Boolean);
+    const hsCount=students.filter(s=>cls.includes(s.class)).length;
+    return`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="user-avatar" style="background:linear-gradient(135deg,var(--green),#1B5E20)">${(t.fullName||'?').charAt(0)}</div><strong>${t.fullName||'Chưa cập nhật'}</strong></div></td>
+      <td style="color:var(--text-muted);font-size:.87rem">${t.email}</td>
+      <td>${cls.length?cls.map(c=>`<span class="badge badge-success" style="margin-right:4px">${c}</span>`).join(''):`<span class="badge badge-warning">Chưa phân lớp</span>`}</td>
+      <td><strong style="color:var(--primary)">${hsCount}</strong> học sinh</td>
+      <td><span class="badge badge-success">● Hoạt động</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="assignClass('${t.firestoreId}','teacher')" title="Phân lớp"><i class="fas fa-layer-group"></i></button>
+        <button class="btn btn-primary btn-sm" onclick="loginAs('${t.firestoreId}','teacher')" title="Vào TK"><i class="fas fa-sign-in-alt"></i></button>
+        <button class="btn btn-info btn-sm" onclick="sendMail('${t.email}')" title="Gửi mail"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteUser('${t.firestoreId}','${t.fullName||''}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;}).join('');
 }
 
-// ===== MÔ PHỎNG ĐĂNG KÝ MỚI (lưu vào Firestore) =====
-window._simulateRegistration = async function() {
-    const names = ['Bảo Bình','Minh Chiến','Thuỷ Tiên','Thanh Hương','Đức Mạnh'];
-    const randomName = names[Math.floor(Math.random()*names.length)];
-    const randomNum  = Math.floor(Math.random()*10000);
-    try {
-        await addDoc(collection(db,'users'), {
-            fullName: `${randomName} ${randomNum}`,
-            email: `hocvien${randomNum}@kids.vn`,
-            password: '123456',
-            role: 'pending',
-            createdAt: serverTimestamp()
-        });
-        await loadAll();
-        Swal.fire({title:'Ting Ting! 🔔',text:`Vừa có 1 bé (${randomName}) đăng ký từ Trang Chủ!`,icon:'info',toast:true,position:'top-end',showConfirmButton:false,timer:3000});
-    } catch(e) { console.error(e); Swal.fire('Lỗi','Không thể thêm đơn: '+e.message,'error'); }
+function renderClassTable(students){
+  const tbody=document.getElementById('classTable');
+  if(!allClasses.length){tbody.innerHTML='<tr><td colspan="6" class="empty"><i class="fas fa-door-open"></i><br>Chưa có lớp học nào</td></tr>';return;}
+  tbody.innerHTML=allClasses.map(cls=>{
+    const cap=cls.capacity||30;
+    const cnt=students.filter(s=>s.class===cls.name).length;
+    const pct=Math.min(Math.round(cnt/cap*100),100);
+    return`<tr>
+      <td><strong style="font-size:1.05rem">${cls.name}</strong></td>
+      <td>${cls.teacherName?`<div style="display:flex;align-items:center;gap:8px"><div class="user-avatar" style="background:linear-gradient(135deg,var(--green),#1B5E20);width:28px;height:28px;font-size:.8rem">${cls.teacherName.charAt(0)}</div>${cls.teacherName}</div>`:`<span style="color:var(--text-muted)">Chưa phân công</span>`}</td>
+      <td><strong style="color:var(--primary)">${cnt}</strong>/${cap}</td>
+      <td style="min-width:120px"><div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${pct>80?'linear-gradient(90deg,var(--yellow),var(--red))':'linear-gradient(90deg,var(--green),var(--primary))'}"></div></div><span style="font-size:.78rem;color:var(--text-muted)">${pct}%</span></td>
+      <td><span class="badge badge-success">● Hoạt động</span></td>
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="viewClass('${cls.name}','${cls.teacherName||''}')"><i class="fas fa-eye"></i> Xem</button>
+        <button class="btn btn-warning btn-sm" onclick="manageClassStudents('${cls.name}')"><i class="fas fa-user-plus"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteClass('${cls.firestoreId}','${cls.name}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+function renderReports(students,teachers){
+  const avgScore=students.length?Math.round(students.reduce((s,u)=>s+(u.score||0),0)/students.length):0;
+  document.getElementById('reportStats').innerHTML=`
+    <div class="stat-card"><div class="stat-icon" style="background:#E8EAF6;color:var(--primary)"><i class="fas fa-star"></i></div><div><div class="stat-label">Điểm TB</div><div class="stat-value">${avgScore}</div><div class="stat-change">🥕 Cà rốt</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--green-light);color:var(--green)"><i class="fas fa-graduation-cap"></i></div><div><div class="stat-label">Có Lớp</div><div class="stat-value">${students.filter(s=>s.class).length}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--yellow-light);color:var(--yellow)"><i class="fas fa-exclamation"></i></div><div><div class="stat-label">Chưa Xếp Lớp</div><div class="stat-value">${students.filter(s=>!s.class).length}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--purple-light);color:var(--purple)"><i class="fas fa-trophy"></i></div><div><div class="stat-label">HS Trên 100đ</div><div class="stat-value">${students.filter(s=>(s.score||0)>=100).length}</div></div></div>`;
+
+  const top5=students.sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,5);
+  document.getElementById('topStudents').innerHTML=top5.map((s,i)=>{
+    const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+    return`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:1.5rem">${medals[i]}</span>
+      <div class="user-avatar">${(s.fullName||'?').charAt(0)}</div>
+      <div style="flex:1"><strong>${s.fullName||'?'}</strong><div style="font-size:.82rem;color:var(--text-muted)">${s.class||'Chưa xếp lớp'}</div></div>
+      <strong style="color:var(--green);font-size:1.1rem">${s.score||0} 🥕</strong>
+    </div>`;}).join('') || '<div class="empty"><i class="fas fa-trophy"></i><br>Chưa có dữ liệu</div>';
+}
+
+function renderCharts(students,teachers){
+  const visits=JSON.parse(localStorage.getItem('ks_visits')||'[]');
+  const labels=[],data=[];
+  const today=new Date();
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);d.setDate(d.getDate()-i);
+    const ds=d.toLocaleDateString('vi-VN');
+    labels.push(`${d.getDate()}/${d.getMonth()+1}`);
+    data.push(visits.filter(v=>new Date(v).toLocaleDateString('vi-VN')===ds).length);
+  }
+  if(visitChart)visitChart.destroy();
+  const vCtx=document.getElementById('chartVisit');
+  if(vCtx)visitChart=new Chart(vCtx,{type:'line',data:{labels,datasets:[{label:'Lượt truy cập',data,borderColor:'#5C6BC0',backgroundColor:'rgba(92,107,192,.1)',tension:.4,fill:true,borderWidth:2.5,pointBackgroundColor:'#5C6BC0',pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+
+  if(roleChart)roleChart.destroy();
+  const rCtx=document.getElementById('chartRole');
+  if(rCtx)roleChart=new Chart(rCtx,{type:'doughnut',data:{labels:['Học Viên','Giáo Viên','Admin'],datasets:[{data:[students.length,teachers.length,1],backgroundColor:['#5C6BC0','#43A047','#FF8A65'],borderWidth:0,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+  // Class avg chart
+  const ccCtx=document.getElementById('chartClassAvg');
+  if(ccCtx){
+    const classLabels=allClasses.map(c=>c.name);
+    const classAvg=allClasses.map(c=>{
+      const cs=students.filter(s=>s.class===c.name);
+      return cs.length?Math.round(cs.reduce((a,s)=>a+(s.score||0),0)/cs.length):0;
+    });
+    if(classChart)classChart.destroy();
+    classChart=new Chart(ccCtx,{type:'bar',data:{labels:classLabels.length?classLabels:['(Chưa có lớp)'],datasets:[{label:'Điểm TB',data:classAvg.length?classAvg:[0],backgroundColor:'rgba(92,107,192,.7)',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  }
+}
+
+// ── ACTIONS ──
+window.approveUser=async function(fid){
+  const u=allUsers.find(x=>x.firestoreId===fid);if(!u)return;
+  const isPending=u.role==='teacher_pending';
+  const classOptions=allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+  const {value:cls}=await Swal.fire({
+    title:`✅ Duyệt: ${u.fullName||''}`,
+    html:`<p style="margin-bottom:12px;color:#666;font-weight:700">Phân ${isPending?'giáo viên':'bé'} vào lớp nào?</p>
+      <select id="sw-class" style="width:100%;padding:10px;border:2px solid #E8EAF6;border-radius:10px;font-family:Nunito;font-weight:700">
+        <option value="">-- ${isPending?'Chưa phân công':'Xếp lớp sau'} --</option>
+        ${classOptions}
+      </select>`,
+    focusConfirm:false,showCancelButton:true,confirmButtonText:'✅ Duyệt',cancelButtonText:'Hủy',confirmButtonColor:'#43A047',
+    preConfirm:()=>document.getElementById('sw-class').value
+  });
+  if(cls===undefined)return;
+  try{
+    const updateData={role:isPending?'teacher':'student',status:'active'};
+    if(isPending){updateData.classes=cls?[cls]:[];}else{updateData.class=cls||'';updateData.score=0;updateData.comment='';}
+    await updateDoc(doc(db,'users',fid),updateData);
+    if(cls&&!isPending){const ci=allClasses.find(c=>c.name===cls);if(ci)await updateDoc(doc(db,'classes',ci.firestoreId),{});}
+    Swal.fire({icon:'success',title:'Đã duyệt!',toast:true,position:'top-end',showConfirmButton:false,timer:2500});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
 };
 
-// ===== DUYỆT USER =====
-window._approveUser = async function(firestoreId) {
-    const classOptions = allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-    const targetUser = allUsers.find(u=>u.firestoreId===firestoreId);
-    if (!targetUser) return;
+window.approveAll=async function(){
+  const pending=allUsers.filter(u=>u.role==='pending'||u.role==='teacher_pending');
+  if(!pending.length)return Swal.fire({icon:'info',title:'Không có hồ sơ nào!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});
+  const r=await Swal.fire({title:`Duyệt tất cả ${pending.length} hồ sơ?`,text:'Họ sẽ được phân thành Học Viên/Giáo Viên chưa xếp lớp.',icon:'question',showCancelButton:true,confirmButtonColor:'#43A047',confirmButtonText:'Duyệt tất cả'});
+  if(!r.isConfirmed)return;
+  try{
+    await Promise.all(pending.map(u=>updateDoc(doc(db,'users',u.firestoreId),{role:u.role==='teacher_pending'?'teacher':'student',status:'active',score:u.score||0,class:u.class||'',classes:u.classes||[],comment:''})));
+    Swal.fire({icon:'success',title:'Đã duyệt tất cả!',toast:true,position:'top-end',timer:2500,showConfirmButton:false});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
+};
 
-    const {value: assignedClass} = await Swal.fire({
-        title:`✅ Duyệt: ${targetUser.fullName||''}`,
-        html:`<p style="margin-bottom:15px;color:#666">Phân bé vào lớp nào?</p>
-              <select id="swal-approve-class" style="width:90%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:Nunito">
-                  <option value="">-- Chưa xếp lớp (sẽ xếp sau) --</option>${classOptions}
-              </select>`,
-        focusConfirm:false, showCancelButton:true, confirmButtonText:'Duyệt & Xếp Lớp', cancelButtonText:'Hủy',
-        preConfirm: ()=>document.getElementById('swal-approve-class').value
-    });
+window.rejectUser=async function(fid,name){
+  const r=await Swal.fire({title:'Từ chối đơn?',text:`Xóa vĩnh viễn hồ sơ [${name}]?`,icon:'warning',showCancelButton:true,confirmButtonColor:'#E53935',confirmButtonText:'Xóa',cancelButtonText:'Hủy'});
+  if(r.isConfirmed){try{await deleteDoc(doc(db,'users',fid));Swal.fire({icon:'success',title:'Đã xóa!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});}catch(e){Swal.fire('Lỗi',e.message,'error');}}
+};
 
-    if (assignedClass !== undefined) {
-        try {
-            await updateDoc(doc(db,'users',firestoreId),{
-                role: 'student', class: assignedClass||'', score:0, comment:'', status:'active'
-            });
-            await loadAll();
-            Swal.fire('✅ Thành công',`Đã duyệt bé ${targetUser.fullName||''} vào hệ thống!`,'success');
-        } catch(e) { Swal.fire('Lỗi','Không duyệt được: '+e.message,'error'); }
+window.addUser=async function(role){
+  const rn=role==='student'?'Học Viên':'Giáo Viên';
+  const classOptions=allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+  const {value:fv}=await Swal.fire({
+    title:`➕ Thêm ${rn}`,
+    html:`
+      <div style="display:grid;gap:12px;text-align:left">
+        <div><label style="font-weight:800;font-size:.9rem">Họ và Tên</label><input id="sw-n" class="swal2-input" placeholder="Nguyễn Văn A" style="margin:6px 0 0"></div>
+        <div><label style="font-weight:800;font-size:.9rem">Email</label><input id="sw-e" type="email" class="swal2-input" placeholder="email@example.com" style="margin:6px 0 0"></div>
+        <div><label style="font-weight:800;font-size:.9rem">Mật Khẩu</label><input id="sw-p" type="password" class="swal2-input" value="123456" style="margin:6px 0 0"></div>
+        <div><label style="font-weight:800;font-size:.9rem">Lớp</label><select id="sw-c" class="swal2-input" style="margin:6px 0 0;font-weight:700"><option value="">-- Chọn sau --</option>${role==='teacher'?'<option value="Tất cả">Tất cả lớp</option>':''}${classOptions}</select></div>
+      </div>`,
+    focusConfirm:false,showCancelButton:true,confirmButtonText:`Tạo ${rn}`,confirmButtonColor:'#5C6BC0',
+    preConfirm:()=>({name:document.getElementById('sw-n').value.trim(),email:document.getElementById('sw-e').value.trim(),pass:document.getElementById('sw-p').value,cls:document.getElementById('sw-c').value})
+  });
+  if(!fv||!fv.name||!fv.email)return fv&&Swal.fire('⚠️','Vui lòng điền đủ thông tin!','warning');
+  const data={fullName:fv.name,email:fv.email,password:fv.pass,role,status:'active',score:0,comment:'',createdAt:serverTimestamp()};
+  if(role==='student')data.class=fv.cls||''; else data.classes=fv.cls?[fv.cls]:[];
+  try{
+    await addDoc(collection(db,'users'),data);
+    if(role==='teacher'&&fv.cls&&fv.cls!=='Tất cả'){const ci=allClasses.find(c=>c.name===fv.cls);if(ci)await updateDoc(doc(db,'classes',ci.firestoreId),{teacherName:fv.name});}
+    Swal.fire({icon:'success',title:`Đã thêm ${rn}!`,toast:true,position:'top-end',timer:2500,showConfirmButton:false});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
+};
+
+window.addClass=async function(){
+  const teachers=allUsers.filter(u=>u.role==='teacher');
+  const tOpts=teachers.map(t=>`<option value="${t.fullName||t.name}">${t.fullName||t.name}</option>`).join('');
+  const {value:fv}=await Swal.fire({
+    title:'📚 Tạo Lớp Học',
+    html:`<div style="display:grid;gap:12px;text-align:left">
+      <div><label style="font-weight:800;font-size:.9rem">Tên Lớp</label><input id="sw-cn" class="swal2-input" placeholder="VD: Lớp Anh Văn 2A" style="margin:6px 0 0"></div>
+      <div><label style="font-weight:800;font-size:.9rem">Giáo Viên Phụ Trách</label><select id="sw-ct" class="swal2-input" style="margin:6px 0 0;font-weight:700"><option value="">-- Chọn sau --</option>${tOpts}</select></div>
+      <div><label style="font-weight:800;font-size:.9rem">Sĩ Số Tối Đa</label><input id="sw-cc" type="number" class="swal2-input" value="30" min="1" style="margin:6px 0 0"></div>
+    </div>`,
+    focusConfirm:false,showCancelButton:true,confirmButtonText:'Tạo Lớp',confirmButtonColor:'#5C6BC0',
+    preConfirm:()=>({name:document.getElementById('sw-cn').value.trim(),teacher:document.getElementById('sw-ct').value,cap:parseInt(document.getElementById('sw-cc').value)||30})
+  });
+  if(!fv||!fv.name)return fv&&Swal.fire('⚠️','Vui lòng nhập tên lớp!','warning');
+  try{
+    await addDoc(collection(db,'classes'),{name:fv.name,teacherName:fv.teacher||'',capacity:fv.cap,createdAt:serverTimestamp()});
+    if(fv.teacher){const t=allUsers.find(u=>u.role==='teacher'&&(u.fullName===fv.teacher||u.name===fv.teacher));if(t){const uCls=[...(t.classes||[]).filter(Boolean),fv.name];await updateDoc(doc(db,'users',t.firestoreId),{classes:uCls});}}
+    Swal.fire({icon:'success',title:'Đã tạo lớp!',toast:true,position:'top-end',timer:2500,showConfirmButton:false});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
+};
+
+window.assignClass=async function(fid,role){
+  const u=allUsers.find(x=>x.firestoreId===fid);if(!u)return;
+  const cOpts=allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+  const cur=role==='student'?u.class:(u.classes||[]).join(',');
+  const {value:cls}=await Swal.fire({
+    title:`${role==='student'?'Xếp lớp':'Phân lớp'}: ${u.fullName||''}`,
+    html:`<select id="sw-as" class="swal2-input" style="font-weight:700"><option value="">-- Không xếp lớp --</option>${role==='teacher'?'<option value="Tất cả">Tất cả lớp</option>':''}${cOpts}</select>`,
+    showCancelButton:true,confirmButtonText:'Lưu',confirmButtonColor:'#5C6BC0',
+    preConfirm:()=>document.getElementById('sw-as').value,
+    didOpen:()=>{const el=document.getElementById('sw-as');if(el&&cur)el.value=cur;}
+  });
+  if(cls===undefined)return;
+  try{
+    if(role==='student')await updateDoc(doc(db,'users',fid),{class:cls});
+    else{
+      await updateDoc(doc(db,'users',fid),{classes:cls?[cls]:[]});
+      if(cls&&cls!=='Tất cả'){const ci=allClasses.find(c=>c.name===cls);if(ci)await updateDoc(doc(db,'classes',ci.firestoreId),{teacherName:u.fullName||u.name||''});}
     }
+    Swal.fire({icon:'success',title:'Đã cập nhật!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
 };
 
-// ===== TỪ CHỐI =====
-window._rejectUser = async function(firestoreId, name) {
-    const result = await Swal.fire({title:'Từ chối đơn đăng ký?',text:`Xóa vĩnh viễn đơn của [${name}]?`,icon:'warning',showCancelButton:true,confirmButtonColor:'#EE5D50',confirmButtonText:'Xóa',cancelButtonText:'Hủy'});
-    if (result.isConfirmed) {
-        try {
-            await deleteDoc(doc(db,'users',firestoreId));
-            await loadAll();
-            Swal.fire('Đã xóa','Đơn đăng ký đã bị xóa.','success');
-        } catch(e) { Swal.fire('Lỗi',e.message,'error'); }
-    }
+window.deleteUser=async function(fid,name){
+  const r=await Swal.fire({title:'🗑️ Xóa người dùng?',text:`Sẽ xóa vĩnh viễn [${name}]!`,icon:'warning',showCancelButton:true,confirmButtonColor:'#E53935',confirmButtonText:'Xóa ngay!',cancelButtonText:'Hủy'});
+  if(r.isConfirmed){try{await deleteDoc(doc(db,'users',fid));Swal.fire({icon:'success',title:'Đã xóa!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});}catch(e){Swal.fire('Lỗi',e.message,'error');}}
 };
 
-// ===== THÊM USER (Học Viên / Giáo Viên) =====
-window._addUser = async function(role) {
-    const roleName = role==='student'?'Học Viên':'Giáo Viên';
-    const classOptions = allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-
-    const {value:fv} = await Swal.fire({
-        title:`➕ Thêm ${roleName}`,
-        html:`
-            <input id="sw-name"  placeholder="Họ và Tên" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px">
-            <input id="sw-email" placeholder="Email" type="email" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px">
-            <input id="sw-pass"  placeholder="Mật khẩu" type="password" value="123456" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px">
-            <select id="sw-class" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px;font-family:Nunito">
-                <option value="">-- Chọn lớp (bỏ qua để xếp sau) --</option>
-                ${role==='teacher'?'<option value="Tất cả">Tất cả các lớp</option>':''}
-                ${classOptions}
-            </select>`,
-        focusConfirm:false, showCancelButton:true, confirmButtonText:'Tạo Mới', cancelButtonText:'Hủy',
-        preConfirm:()=>({
-            fullName: document.getElementById('sw-name').value.trim(),
-            email:    document.getElementById('sw-email').value.trim(),
-            password: document.getElementById('sw-pass').value,
-            assignedClass: document.getElementById('sw-class').value
-        })
-    });
-
-    if (!fv) return;
-    if (!fv.fullName || !fv.email) { Swal.fire('⚠️ Lỗi','Vui lòng điền Họ tên và Email!','warning'); return; }
-
-    const newDoc = {
-        fullName: fv.fullName, email: fv.email, password: fv.password,
-        role: role, status:'active', createdAt: serverTimestamp()
-    };
-    if (role==='student') { newDoc.class=fv.assignedClass||''; newDoc.score=0; newDoc.comment=''; }
-    else                  { newDoc.classes=[fv.assignedClass||'']; }
-
-    try {
-        await addDoc(collection(db,'users'), newDoc);
-        // Cập nhật lớp nếu giáo viên được gán lớp cụ thể
-        if (role==='teacher' && fv.assignedClass && fv.assignedClass!=='Tất cả') {
-            const cls = allClasses.find(c=>c.name===fv.assignedClass);
-            if (cls) await updateDoc(doc(db,'classes',cls.firestoreId),{teacherName:fv.fullName});
-        }
-        await loadAll();
-        Swal.fire('✅ Thành công!',`Đã thêm ${roleName}`,'success');
-    } catch(e) { Swal.fire('Lỗi Firebase',e.message,'error'); }
+window.viewClass=function(name,teacher){
+  const students=allUsers.filter(u=>u.role==='student'&&u.class===name);
+  Swal.fire({
+    title:`📚 ${name}`,
+    html:`<div style="text-align:left">
+      <div style="background:#E8EAF6;padding:12px 18px;border-radius:12px;margin-bottom:16px">
+        <strong>👩‍🏫 Giáo viên:</strong> ${teacher||'(Chưa phân công)'}<br>
+        <strong>👥 Sĩ số:</strong> ${students.length} học sinh
+      </div>
+      ${students.length?`<div style="display:flex;flex-direction:column;gap:8px">${students.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#F5F7FF;border-radius:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#5C6BC0,#7C4DFF);color:white;display:flex;align-items:center;justify-content:center;font-weight:900">${(s.fullName||'?').charAt(0)}</div><strong>${s.fullName||'?'}</strong></div><span style="color:#43A047;font-weight:900">${s.score||0} 🥕</span></div>`).join('')}</div>`:
+      '<p style="color:#9E9E9E;text-align:center;padding:20px">Lớp chưa có học sinh nào</p>'}
+    </div>`,
+    confirmButtonText:'Đóng',confirmButtonColor:'#5C6BC0',width:500
+  });
 };
 
-// ===== TẠO LỚP =====
-window._addClass = async function() {
-    const teachers = allUsers.filter(u=>u.role==='teacher');
-    const tOptions = teachers.map(t=>`<option value="${t.fullName||t.name}">${t.fullName||t.name}</option>`).join('');
-
-    const {value:fv} = await Swal.fire({
-        title:'📚 Tạo Lớp Học',
-        html:`
-            <input id="sw-cname" placeholder="Tên Lớp (VD: Lớp 2A)" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px">
-            <select id="sw-cteacher" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px;font-family:Nunito">
-                <option value="">-- Phân công GV (bỏ qua để chọn sau) --</option>${tOptions}
-            </select>
-            <input id="sw-ccap" type="number" placeholder="Sĩ số (VD: 30)" value="30" style="width:90%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:6px">`,
-        focusConfirm:false, showCancelButton:true, confirmButtonText:'Tạo Lớp', cancelButtonText:'Hủy',
-        preConfirm:()=>({
-            name: document.getElementById('sw-cname').value.trim(),
-            teacherName: document.getElementById('sw-cteacher').value,
-            capacity: parseInt(document.getElementById('sw-ccap').value)||30
-        })
-    });
-
-    if (!fv || !fv.name) { if(fv) Swal.fire('⚠️ Lỗi','Vui lòng nhập tên lớp!','warning'); return; }
-
-    try {
-        const clsRef = await addDoc(collection(db,'classes'),{
-            name:fv.name, teacherName:fv.teacherName||'', capacity:fv.capacity, createdAt:serverTimestamp()
-        });
-        // Cập nhật lớp phụ trách cho giáo viên
-        if (fv.teacherName) {
-            const teacher = allUsers.find(u=>u.role==='teacher'&&(u.fullName===fv.teacherName||u.name===fv.teacherName));
-            if (teacher) {
-                const updatedClasses = [...(teacher.classes||[]).filter(Boolean), fv.name];
-                await updateDoc(doc(db,'users',teacher.firestoreId),{classes:updatedClasses});
-            }
-        }
-        await loadAll();
-        Swal.fire('✅ Thành công!','Đã tạo lớp mới','success');
-    } catch(e) { Swal.fire('Lỗi Firebase',e.message,'error'); }
+window.manageClassStudents=async function(className){
+  const students=allUsers.filter(u=>u.role==='student');
+  if(!students.length)return Swal.fire('⚠️','Chưa có học sinh trong hệ thống!','info');
+  const opts=students.map(s=>`<option value="${s.firestoreId}">${s.fullName||'?'} (${s.class||'Chưa xếp'})</option>`).join('');
+  const {value:sid}=await Swal.fire({
+    title:`➕ Thêm HS vào ${className}`,
+    html:`<select id="sw-mcs" class="swal2-input" style="font-weight:700"><option value="">-- Chọn học sinh --</option>${opts}</select>`,
+    showCancelButton:true,confirmButtonText:'Xác Nhận',confirmButtonColor:'#5C6BC0',
+    preConfirm:()=>document.getElementById('sw-mcs').value
+  });
+  if(sid){try{await updateDoc(doc(db,'users',sid),{class:className});Swal.fire({icon:'success',title:'Đã chuyển lớp!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});}catch(e){Swal.fire('Lỗi',e.message,'error');}}
 };
 
-// ===== XẾP LỚP / PHÂN LỚP =====
-window._assignClass = async function(firestoreId, role) {
-    const targetUser = allUsers.find(u=>u.firestoreId===firestoreId);
-    if (!targetUser) return;
-    const classOptions = allClasses.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-
-    const {value:assignedClass} = await Swal.fire({
-        title: role==='student'?`Xếp Lớp: ${targetUser.fullName||''}`:`Phân Lớp: ${targetUser.fullName||''}`,
-        html:`<select id="sw-assign" style="width:90%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:Nunito">
-                <option value="">-- Thu hồi / Chưa phân công --</option>
-                ${role==='teacher'?'<option value="Tất cả">Tất cả các lớp</option>':''}
-                ${classOptions}
-              </select>`,
-        showCancelButton:true, confirmButtonText:'Lưu Lại', cancelButtonText:'Hủy',
-        preConfirm:()=>document.getElementById('sw-assign').value
-    });
-
-    if (assignedClass === undefined) return;
-    try {
-        if (role==='student') {
-            await updateDoc(doc(db,'users',firestoreId),{class:assignedClass});
-        } else {
-            await updateDoc(doc(db,'users',firestoreId),{classes:[assignedClass]});
-            if (assignedClass && assignedClass!=='Tất cả') {
-                const cls = allClasses.find(c=>c.name===assignedClass);
-                if (cls) await updateDoc(doc(db,'classes',cls.firestoreId),{teacherName:targetUser.fullName||targetUser.name||''});
-            }
-        }
-        await loadAll();
-        Swal.fire('✅ Thành công','Đã cập nhật phân lớp!','success');
-    } catch(e) { Swal.fire('Lỗi',e.message,'error'); }
+window.deleteClass=async function(fid,name){
+  const r=await Swal.fire({title:'🗑️ Xóa lớp này?',text:`Học sinh trong [${name}] sẽ bị chuyển về "Chưa xếp lớp"!`,icon:'warning',showCancelButton:true,confirmButtonColor:'#E53935',confirmButtonText:'Xóa',cancelButtonText:'Hủy'});
+  if(r.isConfirmed){
+    try{
+      await deleteDoc(doc(db,'classes',fid));
+      const affected=allUsers.filter(u=>u.role==='student'&&u.class===name);
+      await Promise.all(affected.map(u=>updateDoc(doc(db,'users',u.firestoreId),{class:''})));
+      Swal.fire({icon:'success',title:'Đã xóa lớp!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});
+    }catch(e){Swal.fire('Lỗi',e.message,'error');}
+  }
 };
 
-// ===== XÓA USER =====
-window._deleteUser = async function(firestoreId, name) {
-    const result = await Swal.fire({title:'🗑️ Chắc chắn xóa?',text:`Sẽ xóa vĩnh viễn [${name}]!`,icon:'warning',showCancelButton:true,confirmButtonColor:'#EE5D50',confirmButtonText:'Xóa ngay!',cancelButtonText:'Hủy'});
-    if (result.isConfirmed) {
-        try {
-            await deleteDoc(doc(db,'users',firestoreId));
-            await loadAll();
-            Swal.fire('✅ Đã xóa!',`[${name}] đã được xóa.`,'success');
-        } catch(e) { Swal.fire('Lỗi',e.message,'error'); }
-    }
+window.loginAs=async function(fid,role){
+  const r=await Swal.fire({title:'🔐 Vào xem tài khoản?',text:'Bạn sẽ được chuyển sang giao diện của người này.',icon:'info',showCancelButton:true,confirmButtonColor:'#5C6BC0',confirmButtonText:'Vào',cancelButtonText:'Hủy'});
+  if(r.isConfirmed){
+    const u=allUsers.find(x=>x.firestoreId===fid);
+    if(u){localStorage.setItem('user',JSON.stringify(u));localStorage.setItem('token','ks_view_'+Date.now());location.href=role==='student'?'hocvien.html':'giaovien.html';}
+  }
 };
 
-// ===== XÓA LỚP =====
-window._deleteClass = async function(firestoreId, name) {
-    const result = await Swal.fire({title:'🗑️ Xóa lớp này?',text:`Học sinh trong [${name}] sẽ bị chuyển về "Chưa xếp lớp"!`,icon:'warning',showCancelButton:true,confirmButtonColor:'#EE5D50',confirmButtonText:'Xóa!',cancelButtonText:'Hủy'});
-    if (result.isConfirmed) {
-        try {
-            await deleteDoc(doc(db,'classes',firestoreId));
-            // Reset class cho học sinh thuộc lớp bị xóa
-            const affected = allUsers.filter(u=>u.role==='student'&&u.class===name);
-            await Promise.all(affected.map(u=>updateDoc(doc(db,'users',u.firestoreId),{class:''})));
-            await loadAll();
-            Swal.fire('✅ Đã xóa!',`Lớp [${name}] đã bị xóa.`,'success');
-        } catch(e) { Swal.fire('Lỗi',e.message,'error'); }
-    }
+window.sendMail=function(email){window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`,'_blank');};
+
+window.simulateReg=async function(){
+  const names=['Bảo Bình','Minh Chiến','Thuỷ Tiên','Thanh Hương','Đức Mạnh','An Nhiên','Quỳnh Anh'];
+  const n=names[Math.floor(Math.random()*names.length)];
+  const num=Math.floor(Math.random()*9999);
+  const isTeacher=Math.random()>.7;
+  try{
+    await addDoc(collection(db,'users'),{fullName:`${n} ${num}`,email:`user${num}@kids.vn`,role:isTeacher?'teacher_pending':'pending',status:'pending',score:0,class:'',classes:[],comment:'',createdAt:serverTimestamp()});
+    Swal.fire({title:'🔔 Đơn Mới!',text:`${isTeacher?'Giáo viên':'Học viên'} ${n} vừa đăng ký!`,icon:'info',toast:true,position:'top-right',showConfirmButton:false,timer:3500});
+  }catch(e){Swal.fire('Lỗi',e.message,'error');}
 };
 
-// ===== XEM CHI TIẾT LỚP =====
-window._viewClassDetails = function(className, teacherName) {
-    const classStudents = allUsers.filter(u=>u.role==='student'&&u.class===className);
-    const listHTML = classStudents.length > 0
-        ? `<ul style="text-align:left;background:var(--bg-tertiary);padding:15px 30px;border-radius:10px;margin-top:15px;list-style:none">
-           ${classStudents.map(s=>`<li style="margin-bottom:8px"><i class="fas fa-user-circle" style="margin-right:8px;color:var(--primary)"></i><strong>${s.fullName||s.name}</strong></li>`).join('')}
-           </ul>`
-        : `<p style="color:var(--red);margin-top:15px;font-weight:bold">⚠️ Lớp này chưa có học sinh.</p>`;
-    Swal.fire({title:`📚 ${className}`,html:`<p style="font-size:1rem;margin-bottom:10px"><strong>👩‍🏫 GV Chủ Nhiệm:</strong> ${teacherName||'(Chưa phân công)'}</p><p><strong>👥 Sĩ Số:</strong> ${classStudents.length} học sinh</p>${listHTML}`,icon:'info',confirmButtonText:'Đóng',width:500});
+window.saveSettings=function(){
+  const s={name:document.getElementById('stName').value,email:document.getElementById('stEmail').value,phone:document.getElementById('stPhone').value,website:document.getElementById('stWebsite').value,videoScore:document.getElementById('stVideoScore').value,passScore:document.getElementById('stPassScore').value};
+  localStorage.setItem('ks_settings',JSON.stringify(s));
+  Swal.fire({icon:'success',title:'Đã lưu cài đặt!',toast:true,position:'top-end',timer:2000,showConfirmButton:false});
 };
 
-// ===== QUẢN LÝ HỌC SINH TRONG LỚP =====
-window._manageClassStudents = async function(className) {
-    const students = allUsers.filter(u=>u.role==='student');
-    if (!students.length) return Swal.fire('⚠️','Chưa có học sinh nào trong hệ thống!','info');
-    const options = students.map(s=>`<option value="${s.firestoreId}">${s.fullName||s.name} (Hiện: ${s.class||'Chưa xếp'})</option>`).join('');
-    const {value:studentId} = await Swal.fire({
-        title:`Thêm HS vào ${className}`,
-        html:`<select id="sw-mcs" style="width:90%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:Nunito"><option value="">-- Chọn Học Sinh --</option>${options}</select>`,
-        focusConfirm:false, showCancelButton:true, confirmButtonText:'Xác nhận', cancelButtonText:'Hủy',
-        preConfirm:()=>document.getElementById('sw-mcs').value
-    });
-    if (studentId) {
-        try {
-            await updateDoc(doc(db,'users',studentId),{class:className});
-            await loadAll();
-            Swal.fire('✅ Thành công',`Đã chuyển học sinh vào ${className}`,'success');
-        } catch(e) { Swal.fire('Lỗi',e.message,'error'); }
-    }
+window.changePass=function(){
+  const np=document.getElementById('newPass').value;
+  const cp=document.getElementById('confPass').value;
+  if(!np||!cp)return Swal.fire('⚠️','Vui lòng nhập mật khẩu mới!','warning');
+  if(np!==cp)return Swal.fire('⚠️','Mật khẩu không khớp!','warning');
+  if(np.length<6)return Swal.fire('⚠️','Mật khẩu tối thiểu 6 ký tự!','warning');
+  Swal.fire({icon:'success',title:'Đã đổi mật khẩu!',text:'(Demo - cần Firebase Auth để lưu thực tế)',toast:true,position:'top-end',timer:2500,showConfirmButton:false});
 };
 
-// ===== VÀO TÀI KHOẢN KHÁC (LoginAs) =====
-window._loginAs = async function(firestoreId, role) {
-    const result = await Swal.fire({title:'🔐 Vào xem tài khoản?',text:'Hệ thống sẽ chuyển bạn sang giao diện của người này.',icon:'info',showCancelButton:true,confirmButtonColor:'#4318FF',confirmButtonText:'Đồng ý',cancelButtonText:'Hủy'});
-    if (result.isConfirmed) {
-        const targetUser = allUsers.find(u=>u.firestoreId===firestoreId);
-        if (targetUser) {
-            const mockToken = 'mock_token_'+Date.now();
-            localStorage.setItem('token', mockToken); localStorage.setItem('user', JSON.stringify(targetUser));
-            sessionStorage.setItem('ks_user', JSON.stringify(targetUser)); sessionStorage.setItem('ks_token', mockToken);
-            window.location.href = role==='student' ? 'hocvien.html' : 'giaovien.html';
-        } else { Swal.fire('Lỗi','Không tìm thấy người dùng!','error'); }
-    }
+window.doLogout=function(){
+  Swal.fire({title:'👋 Đăng xuất?',icon:'question',showCancelButton:true,confirmButtonColor:'#E53935',confirmButtonText:'Thoát',cancelButtonText:'Hủy'}).then(r=>{
+    if(r.isConfirmed){localStorage.clear();sessionStorage.clear();location.href='login.html';}
+  });
 };
 
-// ===== CÀI ĐẶT =====
-window._saveSettings = function() {
-    const settings = {
-        centerName: document.getElementById('settingName').value,
-        email: document.getElementById('settingEmail').value,
-        phone: document.getElementById('settingPhone').value,
-        website: document.getElementById('settingWebsite').value
-    };
-    localStorage.setItem('ks_settings', JSON.stringify(settings));
-    Swal.fire('✅ Thành công','Đã lưu cài đặt hệ thống','success');
+window.filterTable=function(tbId,q){
+  document.querySelectorAll(`#${tbId} tr`).forEach(row=>{row.style.display=row.innerText.toLowerCase().includes(q.toLowerCase())?'':'none';});
 };
 
-// ===== ĐĂNG XUẤT =====
-window._logout = function() {
-    Swal.fire({title:'👋 Đăng xuất?',text:'Bạn có chắc chắn muốn thoát?',icon:'warning',showCancelButton:true,confirmButtonColor:'#EE5D50',cancelButtonColor:'#A3AED0',confirmButtonText:'✅ Thoát',cancelButtonText:'Hủy'}).then(r=>{
-        if(r.isConfirmed) {
-            localStorage.removeItem('token'); localStorage.removeItem('user');
-            sessionStorage.removeItem('ks_user'); sessionStorage.removeItem('ks_token');
-            window.location.href='login.html';
-        }
-    });
-};
+document.addEventListener('DOMContentLoaded',()=>{loadAll();startListeners();});
 
-// ===== GẮN CÁC HÀM TOÀN CỤC =====
-// (Cho phép onclick="" trong HTML gọi được từ module)
-window.simulateRegistration = window._simulateRegistration;
-window.addUser              = window._addUser;
-window.addClass             = window._addClass;
-window.saveSettings         = window._saveSettings;
-window.logout               = window._logout;
-window.filterTable = function(tableId, query) {
-    document.querySelectorAll(`#${tableId} tr`).forEach(row=>{
-        row.style.display = row.innerText.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
-    });
-};
-window.sendEmail = window._sendEmail = email => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`,'_blank');
-
+// Load saved settings
+const saved=JSON.parse(localStorage.getItem('ks_settings')||'{}');
+if(saved.videoScore)document.getElementById('stVideoScore').value=saved.videoScore;
+if(saved.passScore)document.getElementById('stPassScore').value=saved.passScore;
 </script>
 
-<!-- ===== SCRIPT KHÔNG DÙNG MODULE (Dark mode, switchTab) ===== -->
 <script>
-// Dark mode
-const themeToggle = document.getElementById('themeToggle');
-if (localStorage.getItem('adminTheme') === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+// ── TABS ──
+const TAB_TITLES={dashboard:'📊 Dashboard',approvals:'⏳ Chờ Duyệt',students:'👨‍🎓 Quản Lý Học Viên',teachers:'👩‍🏫 Quản Lý Giáo Viên',classes:'📚 Quản Lý Lớp Học',reports:'📊 Báo Cáo',settings:'⚙️ Cài Đặt'};
+function switchTab(tab){
+  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('pageTitle').innerText=TAB_TITLES[tab]||tab;
 }
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('adminTheme', isDark ? 'dark' : 'light');
-    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+document.querySelectorAll('.nav-item[data-tab]').forEach(btn=>{
+  btn.addEventListener('click',()=>switchTab(btn.dataset.tab));
 });
 
-// Switch tab — nhận element trực tiếp thay vì dùng event global
-function switchTab(tabName, el) {
-    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-    // Tìm nav-item gần nhất
-    const navEl = el ? el.closest('.nav-item') : null;
-    if (navEl) navEl.classList.add('active');
-    const titles = {
-        dashboard:'📊 Dashboard', approvals:'⏳ Chờ Duyệt',
-        students:'👨‍🎓 Quản Lý Học Viên', teachers:'👩‍🏫 Quản Lý Giáo Viên',
-        classes:'📚 Quản Lý Lớp Học', reports:'📊 Báo Cáo', settings:'⚙️ Cài Đặt'
-    };
-    document.getElementById('pageTitle').innerText = titles[tabName] || tabName;
+// ── SIDEBAR COLLAPSE ──
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('collapsed');}
+
+// ── DARK MODE ──
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  localStorage.setItem('adminTheme',isDark?'dark':'light');
+  document.getElementById('themeBtn').innerHTML=isDark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
 }
+if(localStorage.getItem('adminTheme')==='dark'){document.body.classList.add('dark');document.getElementById('themeBtn').innerHTML='<i class="fas fa-sun"></i>';}
 </script>
 </body>
 </html>
