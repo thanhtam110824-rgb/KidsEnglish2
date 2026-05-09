@@ -28,12 +28,15 @@
         .sidebar { width:280px; background:var(--white); padding:30px 20px; display:flex; flex-direction:column; box-shadow:var(--shadow-md); border-radius:0 45px 45px 0; overflow-y:auto; z-index:100; }
         .brand-logo { font-family:'Baloo 2',cursive; font-size:3rem; font-weight:900; text-align:center; margin-bottom:30px; background:linear-gradient(135deg,#4A81E8 0%,#70A1FF 100%); -webkit-background-clip:text; color:transparent; }
         .brand-logo span { background:linear-gradient(135deg,#FF948C 0%,#FFB7B2 100%); -webkit-background-clip:text; color:transparent; }
+        
+        /* Cải tiến Nút Sidebar */
         .btn-learn, .logout-btn { background:#2563eb!important; color:var(--gold)!important; border:2px solid #1e40af!important; transition:0.3s; box-shadow:0 6px 0 #1e3a8a!important; font-weight:900; border-radius:20px; }
         .btn-learn:hover, .logout-btn:hover { background:#1d4ed8!important; transform:translateY(2px)!important; box-shadow:0 4px 0 #1e3a8a!important; }
         .btn-learn:active, .logout-btn:active { transform:translateY(6px)!important; box-shadow:0 0px 0 transparent!important; }
         .nav-item { padding:15px 20px; margin-bottom:12px; border-radius:20px; cursor:pointer; font-size:1.05rem; font-weight:800; color:var(--text-gray); transition:0.3s; display:flex; align-items:center; gap:15px; border:none; background:transparent!important; width:100%; text-align:left; box-shadow:none!important; }
         .nav-item:hover { color:#2563eb!important; background:#DBF4F7!important; transform:translateX(8px)!important; }
         .nav-item.active { background:#2563eb!important; color:var(--gold)!important; box-shadow:var(--shadow-md)!important; transform:scale(1.02)!important; }
+        
         .main-wrapper { flex:1; display:flex; flex-direction:column; overflow:hidden; }
         .header { padding:25px 40px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
         .page-title { font-family:'Baloo 2',cursive; font-size:2.8rem; color:var(--text-dark); }
@@ -41,25 +44,45 @@
         .tab-pane { display:none; }
         .tab-pane.active { display:block; animation:bounceIn 0.5s ease; }
         @keyframes bounceIn { from{opacity:0;transform:scale(0.95) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        
         .card { background:var(--white); border-radius:35px; padding:35px; margin-bottom:30px; box-shadow:var(--shadow-md); border:2px solid var(--border); }
         .card-title { font-family:'Baloo 2',cursive; font-size:1.8rem; color:var(--text-dark); margin-bottom:25px; display:flex; align-items:center; gap:15px; }
+        
+        /* Cải tiến UI hiển thị theo Unit (Chương) */
+        .unit-section { margin-bottom: 25px; border-radius: 25px; border: 3px solid var(--border); background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); transition: 0.3s; }
+        .unit-section:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+        .unit-header { padding: 18px 25px; font-family: 'Baloo 2', cursive; font-size: 1.6rem; font-weight: 900; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; transition: background 0.3s; }
+        .unit-header i { transition: transform 0.3s; }
+        .unit-section.collapsed .unit-header i { transform: rotate(-90deg); }
+        .unit-body { padding: 25px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; transition: 0.3s; }
+        .unit-section.collapsed .unit-body { display: none; }
+
+        /* Grid Item (Thẻ bài học/Game/Quiz) */
+        .real-item { background:var(--white); border-radius:25px; padding:25px; border:2px solid var(--border); display:flex; flex-direction:column; justify-content:space-between; height:100%; transition:0.3s; position: relative; overflow: hidden; }
+        .real-item:hover { transform: scale(1.03); box-shadow: var(--shadow-md); border-width: 3px; }
+        .real-item .item-content { flex: 1; margin-bottom: 20px; }
+        .status-badge { position: absolute; top: 15px; right: 15px; background: var(--green-light); color: var(--green-dark); padding: 5px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; border: 2px solid var(--green-dark); }
+
         .grade-box { background:#2563eb; border-radius:35px; padding:30px; text-align:center; margin-bottom:30px; border:4px dashed var(--gold); }
         .grade-score { font-family:'Baloo 2',cursive; font-size:5rem; font-weight:900; color:var(--gold); margin:5px 0; text-shadow:3px 3px 0px rgba(0,0,0,0.3); line-height:1; }
         .grade-comment { font-size:1.2rem; font-weight:800; color:#2563eb; background:var(--gold); padding:12px 25px; border-radius:25px; display:inline-block; margin-top:10px; }
         .leaderboard-item { display:flex; align-items:center; justify-content:space-between; padding:18px 25px; background:var(--bg); border-radius:25px; margin-bottom:12px; font-weight:800; border:2px solid transparent; }
         .leaderboard-item.me { background:#DBF4F7; border-color:#2563eb; color:#2563eb; }
+        
         .btn-learn { padding:14px 25px; border-radius:20px; font-size:1.1rem; cursor:pointer; display:inline-flex; align-items:center; gap:10px; }
         .btn-game-opt { display:block; width:100%; margin-bottom:18px; font-size:1.3rem; padding:18px 25px; background:#2563eb!important; color:var(--gold)!important; border:3px solid #1e40af!important; border-radius:20px; box-shadow:0 6px 0 #1e40af!important; font-weight:900; cursor:pointer; text-align:center; }
-        .real-item { background:var(--white); border-radius:30px; padding:25px; margin-bottom:20px; border:2px solid var(--border); display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-sm); }
+        
         .chat-container { background:var(--bg); padding:20px; border-radius:20px; height:350px; overflow-y:auto; margin-bottom:15px; display:flex; flex-direction:column; gap:12px; border:2px solid var(--border); }
         .message { padding:12px 18px; border-radius:20px; max-width:80%; word-break:break-word; box-shadow:var(--shadow-sm); }
         .message.student { background:#2563eb; color:white; align-self:flex-end; border-bottom-right-radius:4px; }
         .message.teacher { background:var(--white); color:var(--text-dark); align-self:flex-start; border-bottom-left-radius:4px; border:1px solid var(--border); }
         .chat-sender { font-size:0.8rem; font-weight:900; opacity:0.8; margin-bottom:4px; display:block; text-transform:uppercase; color:inherit; }
         .chat-text { font-size:1.05rem; font-weight:700; line-height:1.4; color:inherit; }
+        
         .progress-bar { width:100%; height:35px; background:var(--white); border-radius:20px; overflow:hidden; margin:15px 0; border:3px solid var(--green-dark); }
         .progress-fill { height:100%; background:linear-gradient(90deg,var(--green-dark) 0%,#047857 100%); transition:width 0.5s; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:1.2rem; }
         .theme-btn { background:var(--yellow-light)!important; border:3px solid var(--yellow-dark)!important; color:var(--text-dark)!important; width:50px; height:50px; border-radius:50%; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 var(--yellow-dark)!important; }
+        
         #gameOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; flex-direction:column; }
         .game-sky { flex:1; position:relative; overflow:hidden; background:linear-gradient(to bottom,#A0C4FF,#E2F0FF); }
         .game-ground { height:120px; background:#B5EAD7; border-top:15px solid #82C2AC; position:relative; z-index:5; }
@@ -77,6 +100,7 @@
         table { width:100%; border-collapse:collapse; }
         th,td { padding:15px; text-align:left; border-bottom:1px solid var(--border); font-size:1.05rem; }
         th { background:var(--white); font-weight:900; border-bottom:2px solid var(--border); color:#2563eb; }
+        
         @media (max-width:768px) {
             body{flex-direction:column} .sidebar{position:fixed;bottom:0;left:0;width:100%;height:75px;flex-direction:row;padding:0;border-radius:0;justify-content:space-around;align-items:center;z-index:1000}
             .brand-logo{display:none} .nav-item{width:auto;margin:0;padding:5px;flex-direction:column;gap:2px;font-size:0.75rem;justify-content:center}
@@ -125,7 +149,6 @@
     </div>
 
     <div class="content">
-        <!-- HOME -->
         <div id="tab-home" class="tab-pane active">
             <div style="display:grid;grid-template-columns:1fr 350px;gap:25px" id="homeGrid">
                 <div>
@@ -147,12 +170,14 @@
             </div>
         </div>
 
-        <!-- LESSONS -->
         <div id="tab-lessons" class="tab-pane">
-            <div class="card" id="videoListCard">
-                <div class="card-title" style="color:var(--blue-dark)">📺 Bài Học Video</div>
+            <div class="card" id="videoListCard" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="card-title" style="color:var(--blue-dark); background: var(--white); padding: 25px 35px; border-radius: 35px; box-shadow: var(--shadow-md); border: 2px solid var(--border)">
+                    📺 Bài Học Video Theo Chương
+                </div>
                 <div id="realLessonsList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài giảng...</div></div>
             </div>
+            
             <div class="card" id="videoPlayerCard" style="display:none;padding:25px;max-width:1000px;margin:0 auto">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
                     <h2 id="inlineVideoTitle" style="color:var(--blue-dark);font-size:1.5rem;margin:0;font-weight:900">Tiêu đề video</h2>
@@ -175,31 +200,33 @@
             </div>
         </div>
 
-        <!-- GAME -->
         <div id="tab-game" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color:var(--game-dark)">🎮 Trò Chơi Thử Thách</div>
+            <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="card-title" style="color:var(--game-dark); background: var(--white); padding: 25px 35px; border-radius: 35px; box-shadow: var(--shadow-md); border: 2px solid var(--border)">
+                    🎮 Trò Chơi Thử Thách
+                </div>
                 <div id="realGameList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải game...</div></div>
             </div>
         </div>
 
-        <!-- QUIZ -->
         <div id="tab-quiz" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color:var(--green-dark)">📝 Bài Tập Cô Giao</div>
+            <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="card-title" style="color:var(--green-dark); background: var(--white); padding: 25px 35px; border-radius: 35px; box-shadow: var(--shadow-md); border: 2px solid var(--border)">
+                    📝 Bài Tập Cô Giao
+                </div>
                 <div id="realAssignmentsList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài tập...</div></div>
             </div>
         </div>
 
-        <!-- SPEAKING -->
         <div id="tab-speaking" class="tab-pane">
-            <div class="card">
-                <div class="card-title" style="color:var(--orange-dark)">🎤 Luyện Phát Âm Cùng AI</div>
+            <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="card-title" style="color:var(--orange-dark); background: var(--white); padding: 25px 35px; border-radius: 35px; box-shadow: var(--shadow-md); border: 2px solid var(--border)">
+                    🎤 Luyện Phát Âm Cùng AI
+                </div>
                 <div id="realSpeakingList"><div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Đang tải bài luyện nói...</div></div>
             </div>
         </div>
 
-        <!-- PROGRESS -->
         <div id="tab-progress" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--blue-dark)">📊 Báo Cáo Tiến Độ</div>
@@ -217,7 +244,6 @@
             </div>
         </div>
 
-        <!-- CHAT -->
         <div id="tab-chat-teacher" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--blue-dark)">💬 Kênh Trò Chuyện</div>
@@ -238,7 +264,6 @@
     </div>
 </div>
 
-<!-- GAME OVERLAY -->
 <div id="gameOverlay">
     <div style="padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:absolute;top:0;left:0;width:100%;z-index:100">
         <span style="color:white;font-family:'Baloo 2';font-size:2rem;font-weight:900;text-shadow:2px 2px 0 var(--blue-dark)">🐰 THỎ VỀ ĐÍCH</span>
@@ -255,7 +280,12 @@
     <div class="game-ground"></div>
 </div>
 
-<!-- ===== FIREBASE MODULE ===== -->
+<script>
+    function toggleSection(headerEl) {
+        headerEl.parentElement.classList.toggle('collapsed');
+    }
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {
@@ -311,7 +341,6 @@ let myTeacherEmail = null;
 let unreadChatCount = 0;
 let currentChatTarget = '';
 
-// Debounce để tránh render liên tục
 let _refreshTimer = null;
 function scheduleRefresh() {
     if (_refreshTimer) clearTimeout(_refreshTimer);
@@ -408,6 +437,57 @@ function checkNewMessages(prevCount) {
     unreadChatCount = myMsgs.length;
 }
 
+// LOGIC PHÂN CHIA THEO UNIT
+function getUnitName(item) {
+    if (item.unit) return item.unit;
+    // Tự động phân tích Title nếu không có trường unit
+    const match = item.title?.match(/Unit\s\d+/i);
+    if (match) return `${match[0]} (Chương Trình Cốt Lõi)`;
+    return '📚 Học Liệu Mở Rộng';
+}
+
+function renderGroupedItems(items, containerId, renderItemFn, emptyMsg, themeColor) {
+    const container = document.getElementById(containerId);
+    if (!items || items.length === 0) {
+        container.innerHTML = `<div class="loading-msg">${emptyMsg}</div>`;
+        return;
+    }
+
+    const grouped = items.reduce((acc, val) => {
+        const u = getUnitName(val);
+        if (!acc[u]) acc[u] = [];
+        acc[u].push(val);
+        return acc;
+    }, {});
+
+    // Sắp xếp khóa để Unit 9, 10, 11 lên trước (nếu có)
+    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+        const numA = parseInt(a.match(/\d+/) || [0])[0];
+        const numB = parseInt(b.match(/\d+/) || [0])[0];
+        return numA - numB;
+    });
+
+    let html = '';
+    sortedKeys.forEach((unitName, index) => {
+        // Chỉ mở sẵn Unit đầu tiên
+        const isCollapsed = index === 0 ? '' : 'collapsed';
+        const unitItems = grouped[unitName];
+        
+        html += `
+        <div class="unit-section ${isCollapsed}" style="border-color: var(--${themeColor}-dark)">
+            <div class="unit-header" style="background: var(--${themeColor}-light); color: var(--${themeColor}-dark)" onclick="toggleSection(this)">
+                <span>${unitName} <span style="font-size:1rem; opacity:0.8; font-weight:700">(${unitItems.length} bài)</span></span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="unit-body">
+                ${unitItems.map(renderItemFn).join('')}
+            </div>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
 // ===== REFRESH UI =====
 function refreshUI() {
     const score   = myData.score || 0;
@@ -434,64 +514,67 @@ function refreshUI() {
     const vH = getVideoHistory();
     const myUid = myData.firestoreId || uid;
 
-    // --- Bài giảng ---
-    document.getElementById('realLessonsList').innerHTML = allLessons.length
-        ? allLessons.map(l => {
-            const done = !!vH[myUid + '_' + l.firestoreId];
-            return `<div class="real-item">
-                <div><strong style="font-size:1.2rem;color:var(--blue-dark)">${l.title}</strong>
-                ${done ? '<span style="color:var(--green-dark);margin-left:10px;background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;font-weight:900">✅ Đã xem</span>' : ''}</div>
-                <button class="btn-learn" onclick="openInlineVideo('${l.firestoreId}','${encodeURIComponent(l.videoUrl || '')}','${encodeURIComponent(l.title || '')}')"><i class="fas fa-play"></i> Xem</button></div>`;
-        }).join('')
-        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài giảng.</p>';
+    // --- Bài giảng (Grouped) ---
+    renderGroupedItems(allLessons, 'realLessonsList', l => {
+        const done = !!vH[myUid + '_' + l.firestoreId];
+        return `<div class="real-item" style="border-color: var(--blue-dark)">
+            ${done ? '<div class="status-badge">✅ Đã xem</div>' : ''}
+            <div class="item-content">
+                <strong style="font-size:1.3rem;color:var(--blue-dark);display:block;margin-bottom:10px">${l.title}</strong>
+                <p style="font-size:0.95rem;color:var(--text-gray);font-weight:800">📹 Video Tương Tác</p>
+            </div>
+            <button class="btn-learn" style="width:100%; justify-content:center" onclick="openInlineVideo('${l.firestoreId}','${encodeURIComponent(l.videoUrl || '')}','${encodeURIComponent(l.title || '')}')"><i class="fas fa-play"></i> Xem Bài Giảng</button>
+        </div>`;
+    }, '📭 Chưa có bài giảng.', 'blue');
 
-    // --- Game ---
+    // --- Game (Grouped) ---
     const games = allQuizzes.filter(q => q.type === 'game');
-    document.getElementById('realGameList').innerHTML = games.length
-        ? games.map(g => {
-            const done = qH[myUid + '_' + g.firestoreId];
-            return `<div class="real-item" style="border-color:var(--game-dark);border-width:3px;flex-direction:column;align-items:flex-start;gap:15px">
-                <div style="font-size:1.4rem;font-weight:900;color:var(--game-dark)">🎮 ${g.title}
-                ${done ? '<span style="color:var(--green-dark);background:var(--green-light);padding:5px 12px;border-radius:15px;font-size:0.9rem;margin-left:10px">✅ Đã Phá Đảo</span>' : ''}</div>
-                <button class="btn-learn" style="background:var(--game-dark)!important;border-color:#7E22CE!important;box-shadow:0 5px 0 #7E22CE!important;width:100%;justify-content:center" onclick="playGame('${g.firestoreId}')"><i class="fas fa-gamepad"></i> CHƠI NGAY</button></div>`;
-        }).join('')
-        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có trò chơi.</p>';
+    renderGroupedItems(games, 'realGameList', g => {
+        const done = qH[myUid + '_' + g.firestoreId];
+        return `<div class="real-item" style="border-color:var(--game-dark)">
+            ${done ? '<div class="status-badge">✅ Đã Phá Đảo</div>' : ''}
+            <div class="item-content" style="text-align:center; margin-top:20px">
+                <div style="font-size:3.5rem; margin-bottom:10px">🐰</div>
+                <strong style="font-size:1.4rem;font-weight:900;color:var(--game-dark)">${g.title}</strong>
+            </div>
+            <button class="btn-learn" style="background:var(--game-dark)!important;border-color:#7E22CE!important;box-shadow:0 5px 0 #7E22CE!important;width:100%;justify-content:center" onclick="playGame('${g.firestoreId}')"><i class="fas fa-gamepad"></i> CHƠI NGAY</button>
+        </div>`;
+    }, '📭 Chưa có trò chơi.', 'game');
 
-    // --- Bài tập ---
+    // --- Bài tập (Grouped) ---
     const normalQuizzes = allQuizzes.filter(q => q.type === 'mcq' || q.type === 'fill');
-    document.getElementById('realAssignmentsList').innerHTML = normalQuizzes.length
-        ? normalQuizzes.map(q => {
-            const res = qH[myUid + '_' + q.firestoreId];
-            return `<div class="real-item" style="border-color:var(--green-dark)">
-                <div><strong style="font-size:1.2rem;color:var(--green-dark)">${q.title}</strong>
-                ${res ? `<span style="color:white;background:var(--green-dark);padding:5px 12px;border-radius:15px;margin-left:10px;font-weight:900;font-size:0.9rem">Đã làm: ${res.score}đ</span>` : ''}
-                <p style="font-size:0.95rem;color:var(--text-gray);margin-top:8px;font-weight:800">${q.type === 'mcq' ? '📝 Trắc nghiệm' : '✍️ Điền khuyết'} - ${(q.questions || []).length} câu</p></div>
-                <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="openQuiz('${q.firestoreId}','${encodeURIComponent(q.title || '')}')">Làm Bài</button></div>`;
-        }).join('')
-        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài tập.</p>';
+    renderGroupedItems(normalQuizzes, 'realAssignmentsList', q => {
+        const res = qH[myUid + '_' + q.firestoreId];
+        return `<div class="real-item" style="border-color:var(--green-dark)">
+            ${res ? `<div class="status-badge" style="background:var(--green-dark);color:white;border:none">Điểm: ${res.score}đ</div>` : ''}
+            <div class="item-content">
+                <strong style="font-size:1.3rem;color:var(--green-dark);display:block;margin-bottom:10px">${q.title}</strong>
+                <p style="font-size:0.95rem;color:var(--text-gray);font-weight:800">${q.type === 'mcq' ? '📝 Trắc nghiệm' : '✍️ Điền khuyết'} - ${(q.questions || []).length} câu</p>
+            </div>
+            <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important;width:100%;justify-content:center" onclick="openQuiz('${q.firestoreId}','${encodeURIComponent(q.title || '')}')">Làm Bài</button>
+        </div>`;
+    }, '📭 Chưa có bài tập.', 'green');
 
-    // --- Luyện nói ---
+    // --- Luyện nói (Grouped) ---
     const speaks = allQuizzes.filter(q => q.type === 'speak');
-    document.getElementById('realSpeakingList').innerHTML = speaks.length
-        ? speaks.map(s => {
-            const res = sH[myUid + '_' + s.firestoreId];
-            const resultHtml = res ? `<div style="margin-top:20px;padding:20px;background:var(--white);border-radius:20px;border:2px dashed var(--border)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
-                    <span style="font-weight:900;color:var(--text-gray)">📌 Lần gần nhất:</span>
-                    <span style="background:var(--orange-dark);color:white;padding:5px 20px;border-radius:20px;font-weight:900;font-size:1.2rem">${res.score}/100đ</span>
-                </div>
-                <div style="font-weight:800;font-size:1.1rem;color:var(--blue-dark)">Bé đọc: "${res.transcript}"</div>
-                <div style="color:var(--green-dark);font-weight:900;font-size:1rem;background:var(--green-light);padding:10px;border-radius:15px;text-align:center;margin-top:10px">${res.comment}</div></div>` : '';
-            return `<div class="real-item" style="display:block;border-color:var(--orange-dark)">
-                <strong style="font-size:1.3rem;color:var(--orange-dark)">${s.title}</strong>
-                <h3 style="color:var(--blue-dark);font-size:2.5rem;background:var(--white);padding:20px;border-radius:25px;text-align:center;margin:20px 0;border:3px solid var(--border)">${s.word || ''}</h3>
-                <div style="display:flex;gap:15px;flex-wrap:wrap">
-                    <button class="btn-learn" style="flex:1;justify-content:center" onclick="playAudio('${s.word}',1)"><i class="fas fa-volume-up"></i> Chuẩn</button>
-                    <button class="btn-learn" style="flex:1;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-circle-pause"></i> Chậm</button>
-                    <button class="btn-learn" style="flex:1;justify-content:center;background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="startRecording('${s.word}','${s.firestoreId}')"><i class="fas fa-microphone"></i> Thu Âm</button>
-                </div>${resultHtml}</div>`;
-        }).join('')
-        : '<p style="text-align:center;font-weight:800;color:var(--text-gray)">📭 Chưa có bài luyện nói.</p>';
+    renderGroupedItems(speaks, 'realSpeakingList', s => {
+        const res = sH[myUid + '_' + s.firestoreId];
+        const resultHtml = res ? `<div style="margin-top:15px;padding:15px;background:var(--orange-light);border-radius:15px;border:2px dashed var(--orange-dark)">
+            <div style="font-weight:900;color:var(--orange-dark);text-align:center;font-size:1.1rem">Điểm AI: ${res.score}/100đ</div>
+        </div>` : '';
+        return `<div class="real-item" style="border-color:var(--orange-dark)">
+            <div class="item-content">
+                <strong style="font-size:1.3rem;color:var(--orange-dark);display:block;text-align:center">${s.title}</strong>
+                <div style="color:var(--blue-dark);font-size:2.8rem;background:var(--white);padding:20px;border-radius:25px;text-align:center;margin:15px 0;border:3px solid var(--border);font-family:'Baloo 2'">${s.word || ''}</div>
+                ${resultHtml}
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn-learn" style="flex:1;justify-content:center;padding:10px" onclick="playAudio('${s.word}',1)"><i class="fas fa-volume-up"></i></button>
+                <button class="btn-learn" style="flex:1;justify-content:center;padding:10px;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-circle-pause"></i></button>
+                <button class="btn-learn" style="flex:2;justify-content:center;padding:10px;background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="startRecording('${s.word}','${s.firestoreId}')"><i class="fas fa-microphone"></i> Thu</button>
+            </div>
+        </div>`;
+    }, '📭 Chưa có bài luyện nói.', 'orange');
 
     // --- Tiến độ ---
     const allItems = [...allLessons, ...normalQuizzes, ...speaks, ...games];
@@ -502,7 +585,7 @@ function refreshUI() {
         else if (item.type === 'game' || item.type === 'mcq' || item.type === 'fill') done = qH[myUid + '_' + item.firestoreId] !== undefined;
         else done = !!vH[myUid + '_' + item.firestoreId];
         if (done) doneCount++;
-        return `<tr><td><strong>${item.title}</strong></td>
+        return `<tr><td><strong>${item.title}</strong><br><small style="color:gray">${getUnitName(item)}</small></td>
             <td><span style="font-weight:bold;color:var(--text-gray)">${item.type === 'speak' ? 'Luyện Nói' : item.type === 'game' ? 'Trò Chơi' : item.type === 'mcq' || item.type === 'fill' ? 'Bài Tập' : 'Video'}</span></td>
             <td style="color:${done ? 'var(--green-dark)' : 'var(--orange-dark)'};font-weight:bold">${done ? '✅ Xong' : '⏳ Chưa'}</td></tr>`;
     }).join('') || '<tr><td colspan="3" style="text-align:center">Chưa có nhiệm vụ</td></tr>';
@@ -518,14 +601,13 @@ function refreshUI() {
     document.getElementById('totalCountTab').innerText       = total;
 }
 
-// ===== CẬP NHẬT ĐIỂM =====
+// CÁC HÀM CẬP NHẬT ĐIỂM, CHAT, GAME GIỮ NGUYÊN HOẠT ĐỘNG
 async function updateStudentScore(addedScore) {
     if (!myData.firestoreId) return;
     const newScore = (parseInt(myData.score) || 0) + parseInt(addedScore);
     try { await updateDoc(doc(db, 'users', myData.firestoreId), { score: newScore }); } catch(e) { console.error('Lỗi cập nhật điểm:', e); }
 }
 
-// ===== GỬI TIN NHẮN AUTO =====
 async function autoNotifyTeacher(msg) {
     const receiver = myTeacherEmail || 'GROUP_CHAT';
     try {
@@ -537,7 +619,6 @@ async function autoNotifyTeacher(msg) {
     } catch(e) { console.error(e); }
 }
 
-// ===== CHAT =====
 function loadChatInternal() {
     const target = document.getElementById('chatTargetSelect').value;
     currentChatTarget = target;
@@ -579,7 +660,6 @@ function loadChatInternal() {
     box.scrollTop = box.scrollHeight;
 }
 
-// ===== GỬI TIN NHẮN =====
 async function sendToTeacherInternal() {
     const target = document.getElementById('chatTargetSelect').value;
     const msg = document.getElementById('teacherChatInput').value.trim();
@@ -600,7 +680,6 @@ async function sendToTeacherInternal() {
         box.appendChild(typingEl);
         box.scrollTop = box.scrollHeight;
 
-        // Gọi AI (fallback nếu không có Vertex AI)
         try {
             const resp = await fetch("https://api.anthropic.com/v1/messages", {
                 method: "POST",
@@ -637,7 +716,6 @@ async function sendToTeacherInternal() {
     } catch(e) { console.error(e); }
 }
 
-// ===== LƯU KẾT QUẢ =====
 async function saveGameResult(gameId, scoreVal) {
     const qH = getQuizHistory();
     const myUid = myData.firestoreId || uid;
@@ -682,7 +760,6 @@ async function sendProgressToTeacherInternal() {
     Swal.fire({ title: 'Thành công!', text: 'Đã gửi báo cáo cho Cô giáo!', icon: 'success', confirmButtonColor: '#4A81E8' });
 }
 
-// ===== GÁN TẤT CẢ VÀO WINDOW (để non-module script gọi được) =====
 window._fb_allQuizzes   = () => allQuizzes;
 window._fb_allLessons   = () => allLessons;
 window._fb_getMyUid     = () => myData.firestoreId || uid;
@@ -697,7 +774,6 @@ window._fb_sendMsg      = sendToTeacherInternal;
 window._fb_sendProgress = sendProgressToTeacherInternal;
 window._fb_ready        = false;
 
-// Các hàm gọi từ HTML buttons
 window.forceLoadChat         = () => loadChatInternal();
 window.sendToTeacher         = () => sendToTeacherInternal();
 window.sendProgressToTeacher = () => sendProgressToTeacherInternal();
@@ -708,9 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<!-- ===== NON-MODULE SCRIPT ===== -->
 <script>
-// Theme
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
@@ -725,7 +799,6 @@ if (localStorage.getItem('kids_theme') === 'dark') {
     if (document.getElementById('themeIcon2')) document.getElementById('themeIcon2').innerHTML = '<i class="fas fa-sun"></i>';
 }
 
-// Tab switch
 function switchTab(id, el) {
     if (id !== 'lessons') closeInlineVideo();
     document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
@@ -734,9 +807,7 @@ function switchTab(id, el) {
     if (el) el.classList.add('active');
 }
 
-function clearChatNotif() {
-    document.getElementById('chatNotifDot').classList.remove('active');
-}
+function clearChatNotif() { document.getElementById('chatNotifDot').classList.remove('active'); }
 
 function logout() {
     Swal.fire({ title: 'Đăng xuất?', text: 'Bé có muốn thoát?', icon: 'question', showCancelButton: true, confirmButtonText: 'Thoát', confirmButtonColor: '#FF948C', cancelButtonText: 'Ở lại', cancelButtonColor: '#4A81E8' }).then(r => {
@@ -748,7 +819,6 @@ function logout() {
     });
 }
 
-// ===== VIDEO PLAYER =====
 window.currentVideoId = null;
 let videoWatchTime = 0, videoInterval = null;
 
@@ -831,7 +901,6 @@ function sendInlineVideoChat() {
     loadInlineVideoChat();
 }
 
-// ===== QUIZ =====
 function openQuiz(quizId, encTitle) {
     const allQ = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
     const quiz = allQ.find(q => q.firestoreId === quizId);
@@ -891,7 +960,6 @@ function openQuiz(quizId, encTitle) {
     });
 }
 
-// ===== PLAY AUDIO =====
 function playAudio(text, speed) {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -901,7 +969,6 @@ function playAudio(text, speed) {
     } else Swal.fire('Lỗi', 'Trình duyệt không hỗ trợ!', 'error');
 }
 
-// ===== SPEECH RECORDING =====
 function startRecording(targetWord, quizId) {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
@@ -954,9 +1021,8 @@ function startRecording(targetWord, quizId) {
     }).catch(() => Swal.fire('Lỗi', 'Cần cấp quyền Micro!', 'error'));
 }
 
-// ===== GAME =====
+// ===== GAME LOGIC KHÔNG ĐỔI =====
 let currentGame = null, currentGameProgress = 0, currentGameScore = 0, isJumping = false;
-
 function playGame(gameId) {
     const games = window._fb_allQuizzes ? window._fb_allQuizzes() : [];
     currentGame = games.find(q => q.firestoreId === gameId);
@@ -967,13 +1033,11 @@ function playGame(gameId) {
     document.getElementById('inGameQuestionPanel').style.display = 'none';
     renderGameMap(-1);
 }
-
 function closeGame() {
     document.getElementById('gameOverlay').style.display = 'none';
     document.getElementById('inGameQuestionPanel').style.display = 'none';
     currentGame = null;
 }
-
 function renderGameMap(jumpingToTarget) {
     if (!currentGame) return;
     let rabbitX = 50;
@@ -995,7 +1059,6 @@ function renderGameMap(jumpingToTarget) {
     else if (jumpingToTarget === -1) ins.innerHTML = 'Bấm <strong>ENTER</strong> hoặc <strong>⬆️</strong> để nhảy!';
     else ins.innerText = 'Thỏ đang bay... 🐇💨';
 }
-
 window.addEventListener('keydown', e => {
     const overlay = document.getElementById('gameOverlay');
     const qPanel  = document.getElementById('inGameQuestionPanel');
@@ -1005,13 +1068,11 @@ window.addEventListener('keydown', e => {
         }
     }
 });
-
 function triggerRabbitJump() {
     if (!currentGame || currentGameProgress >= currentGame.questions.length) return;
     isJumping = true; renderGameMap(currentGameProgress);
     setTimeout(() => { isJumping = false; showInGameQuestion(currentGameProgress); }, 600);
 }
-
 function showInGameQuestion(index) {
     if (!currentGame) return;
     const q = currentGame.questions[index];
@@ -1032,13 +1093,11 @@ function showInGameQuestion(index) {
     document.getElementById('inGameQuestionPanel').style.display = 'block';
     if (q.type === 'fill') setTimeout(() => document.getElementById('inGameFillAns')?.focus(), 100);
 }
-
 function checkInGameAnswer(index, selected, correct, points) {
     document.getElementById('inGameQuestionPanel').style.display = 'none';
     if (selected == correct) advanceGame(points);
     else Swal.fire({ title: 'Sai rồi 😢', text: 'Thỏ bị vấp, chọn lại nhé!', icon: 'error', confirmButtonColor: '#4A81E8' }).then(() => showInGameQuestion(index));
 }
-
 function checkInGameFill(index, correctStr, points) {
     const userAns = document.getElementById('inGameFillAns').value.trim().toLowerCase();
     const correctArr = correctStr.split('|').map(s => s.toLowerCase().trim());
@@ -1046,7 +1105,6 @@ function checkInGameFill(index, correctStr, points) {
     if (correctArr.includes(userAns)) advanceGame(points);
     else Swal.fire({ title: 'Sai rồi 😢', text: 'Kiểm tra lại chính tả nhé!', icon: 'error', confirmButtonColor: '#4A81E8' }).then(() => showInGameQuestion(index));
 }
-
 function startInGameRecording(targetWord, index, points) {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     const statusDiv = document.getElementById('inGameSpeakStatus');
@@ -1080,7 +1138,6 @@ function startInGameRecording(targetWord, index, points) {
         };
     }).catch(() => { statusDiv.innerText = 'Cần cấp quyền Micro!'; });
 }
-
 async function advanceGame(points) {
     currentGameScore += parseInt(points) || 0;
     currentGameProgress++;
