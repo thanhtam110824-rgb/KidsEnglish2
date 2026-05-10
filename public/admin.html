@@ -810,7 +810,7 @@ window.deleteClass = async function (fid, name) {
 
 window.loginAs = async function (fid, role) {
   const r = await Swal.fire({ title: '🔐 Đăng nhập tài khoản?', text: `Bạn sẽ được chuyển thẳng sang giao diện của ${role === 'student' ? 'học sinh' : 'giáo viên'} này.`, icon: 'info', background: '#111525', color: '#E2E8F0', showCancelButton: true, confirmButtonColor: '#6375FF', confirmButtonText: 'Vào ngay' });
-  if (r.isConfirmed) { const u = allUsers.find(x => x.firestoreId === fid); if (u) { localStorage.setItem('user', JSON.stringify(u)); localStorage.setItem('token', 'ks_view_' + Date.now()); location.href = role === 'student' ? 'index.html' : 'giaovien.html'; } }
+  if (r.isConfirmed) { const u = allUsers.find(x => x.firestoreId === fid); if (u) { localStorage.setItem('user', JSON.stringify(u)); localStorage.setItem('token', 'ks_view_' + Date.now()); location.href = role === 'student' ? 'hocvien.html' : 'giaovien.html'; } }
 };
 
 window.sendMail = function (email) { window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}`, '_blank'); };
