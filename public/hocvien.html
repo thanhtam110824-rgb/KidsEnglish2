@@ -933,7 +933,7 @@ function startRecording(targetWord, quizId) {
                 let score10 = Math.round((totalScore / tWords.length) * 10);
                 if (score10 < 4 && spoken !== '') score10 = 4;
                 if (score10 > 10) score10 = 10;
-                const score10 = score10 * 10;
+                const score100 = score10 * 10;
                 const comment = score10 >= 9 ? 'Xuất sắc! 🌟🌟🌟' :
                                 score10 >= 7 ? 'Tốt lắm! 👍' :
                                 score10 >= 5 ? 'Khá đấy, luyện thêm nhé! 💪' :
@@ -971,7 +971,7 @@ function startRecording(targetWord, quizId) {
                 }).then(async r => {
                     if (r.isConfirmed) {
                         if (window._fb_saveSpeak) {
-                            await window._fb_saveSpeak(quizId, score10, spoken, comment, audioUrl);
+                            await window._fb_saveSpeak(quizId, score100, spoken, comment, audioUrl);
                         }
                         Swal.fire({ title: 'Đã Nộp!', text: `Con được ${score10}/10 điểm nhé!`, icon: 'success', timer: 1500, showConfirmButton: false });
                     } else if (r.dismiss === Swal.DismissReason.cancel) {
