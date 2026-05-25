@@ -1097,14 +1097,14 @@ function startRecording(targetWord, quizId) {
                 }).then(async r => {
                     if (r.isConfirmed) {
                         if (window._fb_saveSpeak) {
-                            await window._fb_saveSpeak(quizId, score100, spoken, comment, audioUrl);
+                            await window._fb_saveSpeak(quizId, score10, spoken, comment, audioUrl);
                         } else {
                             const sH = JSON.parse(localStorage.getItem('ks_speak_history') || '{}');
                             const myUid = window._fb_getMyUid ? window._fb_getMyUid() : uid;
-                            sH[myUid + '_' + quizId] = { score: score100, transcript: spoken, comment, audio: audioUrl };
+                            sH[myUid + '_' + quizId] = { score: score10, transcript: spoken, comment, audio: audioUrl };
                             localStorage.setItem('ks_speak_history', JSON.stringify(sH));
                             if (window._fb_notify) {
-                                await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${score100}/100 điểm! 🎤`);
+                                await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${score10}/10 điểm! 🎤`);
                             }
                         }
                         Swal.fire({ title: 'Đã Nộp!', text: `Con được ${score10}/10 điểm nhé!`, icon: 'success', timer: 1500, showConfirmButton: false });
@@ -1231,7 +1231,6 @@ function startInGameRecording(targetWord, index, points) {
             recognition.stop(); mr.stop(); stream.getTracks().forEach(t => t.stop());
             mr.onstop = () => {
                 const url = URL.createObjectURL(new Blob(chunks, { type: 'audio/wav' }));
-                const tW = target.split(/\s+/); const sW = transcript.split(/\s+/);
                 let m = 0; tW.forEach(w => { if (sW.includes(w)) m++; });
                 document.getElementById('inGameQuestionPanel').style.display = 'none';
                 if ((m / tW.length) >= 0.3) advanceGame(points);
