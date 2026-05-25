@@ -800,142 +800,130 @@ function playAudio(text,speed){
 }
 function toggleSection(el){el.parentElement.classList.toggle('collapsed');}
 
-/* ── SPEAKING RECORDER ── */
-function levenshteinDistance(a,b){
-  if(a.length===0)return b.length;if(b.length===0)return a.length;
-  const matrix=[];
-  for(let i=0;i<=b.length;i++)matrix[i]=[i];
-  for(let j=0;j<=a.length;j++)matrix[0][j]=j;
-  for(let i=1;i<=b.length;i++){
-    for(let j=1;j<=a.length;j++){
-      if(b.charAt(i-1)===a.charAt(j-1))matrix[i][j]=matrix[i-1][j-1];
-      else matrix[i][j]=Math.min(matrix[i-1][j-1]+1,Math.min(matrix[i][j-1]+1,matrix[i-1][j]+1));
-    }
-  }
-  return matrix[b.length][a.length];
-}
-function calculateSensitiveScore(transcript, targetWord) {
-  if (!transcript || transcript.trim() === '') return 0;
-  const target = targetWord.toLowerCase().replace(/[.,?!;:'"-]/g, '').trim();
-  const result = transcript.toLowerCase().replace(/[.,?!;:'"-]/g, '').trim();
-  if (result === target) return 10;
-  if (result.includes(target) || target.includes(result)) return 9;
-  const tWords = target.split(/\s+/);
-  const rWords = result.split(/\s+/);
-  let totalScore = 0;
-  let matchedWords = 0;
-  tWords.forEach(tw => {
-    let bestMatch = 0;
-    rWords.forEach(rw => {
-      const dist = levenshteinDistance(tw, rw);
-      const maxLength = Math.max(tw.length, rw.length);
-      const sim = (maxLength - dist) / maxLength;
-      if (sim > bestMatch) bestMatch = sim;
-    });
-    totalScore += bestMatch;
-    if(bestMatch >= 0.7) matchedWords++;
-  });
-  let finalGrade = Math.round((totalScore / tWords.length) * 10);
-  if (matchedWords === 0 && result.length < target.length * 0.3) {
-    finalGrade = Math.max(2, Math.floor(Math.random() * 2) + 2);
-  } else if (finalGrade <= 3 && result.length > 0) {
-    finalGrade = Math.floor(Math.random() * 3) + 4;
-  }
-  return Math.min(finalGrade, 10);
-}
-function getLocalFeedback(grade10, targetWord) {
-  if (grade10 >= 9) return `Tuyệt vời quá! Bé đọc từ "${targetWord}" chuẩn 10 điểm luôn! 🌟🎉`;
-  if (grade10 >= 7) return `Rất giỏi! Phát âm từ "${targetWord}" khá hay rồi! Bé cố gắng lên! 👍`;
-  if (grade10 >= 5) return `Bé có tiến bộ rồi! Lần sau bé thử há miệng to hơn một chút nhé! 💪`;
-  if (grade10 >= 3) return `Từ "${targetWord}" hơi khó đúng không? Bé bấm "Nghe Mẫu Chậm" rồi thử lại nhé! 🎧`;
-  return `Bé hãy cố gắng lên! Dùng micro to hơn rồi đọc lại nhé! Bé chắc chắn sẽ hay hơn! ❤️`;
-}
-
-function waveDotHtml() {
-  return [0,1,2,3,4].map(i => `<div style="width:12px;height:12px;background:#FF8C00;border-radius:50%;animation:dotBounce 0.6s ${i*0.1}s ease-in-out infinite"></div>`).join('');
-}
-
+/* ── SPEAKING RECORDER (đơn giản, dễ tính điểm) ── */
 window.startRecording = function(targetWord, quizId) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { Swal.fire('Lỗi','Tính năng này cần Chrome nhé!','error'); return; }
 
   const recognition = new SR();
   recognition.lang = 'en-US';
-  recognition.interimResults = true;
-  let finalTranscript = '', isStopped = false, timerInterval = null, chunks = [], mr;
+  recognition.interimResults = false;   // chỉ lấy kết quả cuối
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    mr = new MediaRecorder(stream);
-    mr.ondataavailable = e => { if(e.data.size>0) chunks.push(e.data); };
+    const mr = new MediaRecorder(stream);
+    let chunks = [];
+    mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
 
+    // Escape ký tự đặc biệt để hiển thị an toàn
     const safeWord = targetWord.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     Swal.fire({
-      title: '🎤 Đang lắng nghe...',
+      title: '🎤 Đang nghe...',
       html: `
-        <div style="font-size:3.5rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';line-height:1.2;margin-bottom:20px">"${safeWord}"</div>
-        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:15px">${waveDotHtml()}</div>
-        <div id="live-transcript" style="min-height:34px;color:#475569;font-size:1rem;font-weight:700;padding:10px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:15px">🎙️ ...</div>
-        <p style="color:#ef4444;font-size:1.1rem;font-weight:900" id="swal-timer-text">⏳ Còn lại: 10 giây</p>
-        <div style="width:100%;height:10px;background:#ffe4e6;border-radius:5px;margin-top:10px;overflow:hidden;margin-bottom:15px"><div id="swal-timer-bar" style="width:100%;height:100%;background:#ef4444;transition:width 1s linear"></div></div>
+        <p>Bé đọc to: <strong style="color:var(--blue-dark);font-size:2.2rem;display:block;margin-top:15px;font-family:'Baloo 2'">"${safeWord}"</strong></p>
       `,
-      showConfirmButton: true,
-      confirmButtonText: '⏹️ Đã đọc xong',
-      confirmButtonColor: '#ef4444',
+      showConfirmButton: false,
       allowOutsideClick: false,
       didOpen: () => {
+        Swal.showLoading();
         mr.start();
-        try{recognition.start();}catch(e){}
-        let timeLeft = 10;
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          const txt = document.getElementById('swal-timer-text'), bar = document.getElementById('swal-timer-bar');
-          if(txt) txt.innerText = `⏳ Còn lại: ${timeLeft} giây`;
-          if(bar) bar.style.width = `${(timeLeft/10)*100}%`;
-          if(timeLeft <=0){ clearInterval(timerInterval); if(!isStopped) Swal.clickConfirm(); }
-        }, 1000);
+        recognition.start();
       }
-    }).then(res => {
-      if(res.isConfirmed && !isStopped) processAudio();
     });
 
-    recognition.onresult = e => {
-      let temp = '';
-      for(let i=0;i<e.results.length;i++) temp += e.results[i][0].transcript;
-      finalTranscript = temp.trim();
-      const liveEl = document.getElementById('live-transcript');
-      if(liveEl) liveEl.innerText = `"${finalTranscript}"`;
-    };
+    recognition.onresult = event => {
+      // Lấy transcript và làm sạch
+      const transcript = event.results[0][0].transcript
+                              .toLowerCase()
+                              .replace(/[.,?!;:'"-]/g, '')
+                              .trim();
+      const target = targetWord
+                        .toLowerCase()
+                        .replace(/[.,?!;:'"-]/g, '')
+                        .trim();
 
-    const processAudio = () => {
-      isStopped = true; clearInterval(timerInterval);
-      Swal.fire({title:'✨ Đang chấm điểm...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
-      try{recognition.stop();}catch(e){}
-      try{mr.stop();stream.getTracks().forEach(t=>t.stop());}catch(e){}
-      setTimeout(() => {
-        const audioBlob = new Blob(chunks, {type:'audio/webm'});
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const score10 = calculateSensitiveScore(finalTranscript, targetWord);
-        const comment = getLocalFeedback(score10, targetWord);
-        const stars = '⭐'.repeat(Math.round(score10/2)) + '☆'.repeat(5-Math.round(score10/2));
-        Swal.fire({
-          title: score10>=8 ? '🌟 Tuyệt vời!' : '💪 Cố lên!',
-          html: `
-            <div style="font-size:3rem;font-weight:900;color:#2563eb;font-family:'Baloo 2';margin:10px 0">${score10}/10</div>
-            <div style="font-size:1.8rem;letter-spacing:3px;margin:10px 0;color:#F59E0B">${stars}</div>
-            <div style="background:#f8fafc;border-radius:12px;padding:12px;margin-top:15px;font-weight:700">Bạn đọc: "${finalTranscript}"</div>
-            <div style="margin-top:15px;font-weight:900;color:var(--orange-dark)">${comment}</div>
-          `,
-          confirmButtonColor: '#22c55e',
-          confirmButtonText: '✅ Nhận điểm'
-        }).then(() => {
-          if(window._fb_saveSpeak) window._fb_saveSpeak(quizId, score10, finalTranscript, comment, audioUrl);
+      recognition.stop();
+      mr.stop();
+      stream.getTracks().forEach(t => t.stop());
+
+      mr.onstop = async () => {
+        const audioUrl = URL.createObjectURL(
+          new Blob(chunks, { type: 'audio/wav' })
+        );
+
+        // ---- CÁCH CHẤM ĐIỂM ĐƠN GIẢN (dựa trên từ khớp) ----
+        const tW = target.split(/\s+/);          // các từ trong từ mẫu
+        const sW = transcript.split(/\s+/);      // các từ bé đọc
+        let matched = 0;
+        tW.forEach(w => {
+          if (sW.includes(w)) matched++;
         });
-      }, 600);
-    };
-  }).catch(err => Swal.fire('Lỗi','Không truy cập được micro','error'));
-};
 
+        let score = Math.round((matched / tW.length) * 100);
+        if (score > 100) score = 100;
+        // Nếu bé có nói nhưng không khớp từ nào, vẫn cho 10 điểm khích lệ
+        if (score === 0 && transcript !== '') score = 10;
+
+        const comment =
+          score === 100 ? 'Tuyệt hảo! 🌟' :
+          score >= 80   ? 'Rất tốt! 👍' :
+                          'Nghe lại mẫu và đọc lại nhé! 💪';
+        // ----------------------------------------------------
+
+        Swal.fire({
+          title: score >= 80 ? '🎉 Chúc mừng!' : '🤔 Cố lên!',
+          html: `
+            <div style="font-size:3.5rem;color:var(--blue-dark);font-weight:900;margin-bottom:15px;font-family:'Baloo 2'">
+              ${score}/100
+            </div>
+            <p style="font-size:1.2rem;margin-bottom:10px">
+              <strong>Bé đọc:</strong>
+              <span style="color:var(--orange-dark);font-weight:900">"${transcript}"</span>
+            </p>
+            <audio controls src="${audioUrl}" style="width:100%;height:40px;border-radius:20px;outline:none;margin-bottom:15px"></audio>
+            <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:15px"
+                onclick="playAudio('${targetWord}',0.5)">
+              🐢 Nghe Mẫu Chậm
+            </button>
+            <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark)">
+              ${comment}
+            </div>
+          `,
+          icon: score >= 80 ? 'success' : 'info',
+          showCancelButton: true,
+          confirmButtonText: '✅ Nộp Điểm',
+          cancelButtonText: '🎤 Đọc Lại',
+          confirmButtonColor: '#4A81E8',
+          cancelButtonColor: '#FF948C'
+        }).then(async r => {
+          if (r.isConfirmed) {
+            if (window._fb_saveSpeak)
+              await window._fb_saveSpeak(quizId, score, transcript, comment, audioUrl);
+            if (window._fb_notify)
+              await window._fb_notify(`Con vừa luyện đọc từ "${targetWord}" đạt ${score}/100 điểm! 🎤`);
+            Swal.fire({ title: 'Đã Nộp!', icon: 'success', timer: 1500, showConfirmButton: false });
+          } else if (r.dismiss === Swal.DismissReason.cancel) {
+            // Đọc lại
+            setTimeout(() => startRecording(targetWord, quizId), 500);
+          }
+        });
+      };
+    };
+
+    recognition.onerror = e => {
+      mr.stop();
+      stream.getTracks().forEach(t => t.stop());
+      Swal.fire(
+        e.error === 'not-allowed' ? 'Lỗi Micro' : 'Lỗi',
+        e.error === 'not-allowed' ? 'Cần cấp quyền Micro!' : 'Không nghe rõ, thử lại!',
+        'error'
+      );
+    };
+
+  }).catch(() => {
+    Swal.fire('Lỗi', 'Cần cấp quyền Micro!', 'error');
+  });
+};
 /* ── GAME ENGINE ── */
 let G = {
   quizId: null, questions: [], currentQIdx: 0,
