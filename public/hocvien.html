@@ -1,3 +1,4 @@
+name=hocvien.html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -85,9 +86,22 @@
         table { width:100%; border-collapse:collapse; }
         th,td { padding:15px; text-align:left; border-bottom:1px solid var(--border); font-size:1.05rem; }
         th { background:var(--white); font-weight:900; border-bottom:2px solid var(--border); color:#2563eb; }
-        /* Score sync animation */
         @keyframes scorePop { 0%{transform:scale(1)} 40%{transform:scale(1.3)} 70%{transform:scale(0.9)} 100%{transform:scale(1)} }
         .score-pop { animation:scorePop 0.45s ease; }
+        
+        /* ===== ENHANCED SPEAKING SECTION ===== */
+        .speak-item { background:var(--white); border-radius:25px; padding:30px; border:3px solid var(--orange-dark); margin-bottom:20px; box-shadow:var(--shadow-sm); }
+        .speak-word { font-size:3.5rem; font-weight:900; color:var(--blue-dark); text-align:center; margin:20px 0; font-family:'Baloo 2'; }
+        .speak-meaning { text-align:center; color:var(--text-gray); font-weight:700; font-size:1.1rem; margin-bottom:20px; }
+        .speak-phonetic { text-align:center; font-family:monospace; color:var(--orange-dark); font-size:1rem; margin-bottom:20px; font-weight:700; }
+        .speak-buttons { display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-bottom:20px; }
+        .speak-buttons button { flex:1; min-width:120px; }
+        .speak-result { background:var(--green-light); border:2px solid var(--green-dark); border-radius:20px; padding:20px; margin-top:20px; display:none; }
+        .speak-result.show { display:block; animation:bounceIn 0.3s ease; }
+        .speak-score { font-size:2.5rem; font-weight:900; color:var(--green-dark); text-align:center; margin:10px 0; }
+        .speak-transcript { background:var(--white); padding:15px; border-radius:15px; margin:10px 0; border-left:5px solid var(--blue-dark); }
+        .speak-feedback { margin-top:15px; padding:15px; border-radius:15px; background:var(--white); font-weight:800; color:var(--text-dark); text-align:center; }
+        
         @media (max-width:768px) {
             body{flex-direction:column} .sidebar{position:fixed;bottom:0;left:0;width:100%;height:75px;flex-direction:row;padding:0;border-radius:0;justify-content:space-around;align-items:center;z-index:1000}
             .brand-logo{display:none} .nav-item{width:auto;margin:0;padding:5px;flex-direction:column;gap:2px;font-size:0.75rem;justify-content:center}
@@ -128,7 +142,6 @@
         <h1 class="page-title" id="welcomeText">Chào bé! 👋</h1>
         <div style="display:flex;align-items:center;gap:15px" class="nav-text">
             <button class="theme-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
-            <!-- ĐIỂM HEADER: đồng bộ real-time Firestore -->
             <div style="display:flex;align-items:center;gap:10px;background:var(--white);padding:8px 20px;border-radius:30px;box-shadow:var(--shadow-sm);border:2px solid var(--border)">
                 <span style="font-size:1.1rem">🥕</span>
                 <strong id="scoreHeaderBadge" style="color:#f59e0b;font-size:1.25rem;font-weight:900;min-width:30px;text-align:center">--</strong>
@@ -176,7 +189,7 @@
                 <div style="width:100%;aspect-ratio:16/9;background:black;border-radius:15px;overflow:hidden;box-shadow:var(--shadow-md);border:3px solid var(--blue-dark)">
                     <iframe id="inlineVideoIframe" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;flex-wrap:wrap;gap:10px">
                     <div id="inlineVideoTimer" style="font-size:1.1rem;font-weight:800;color:var(--orange-dark);background:var(--white);padding:8px 20px;border-radius:15px;border:2px dashed var(--orange-dark)">⏳ 00:00 / 10:00</div>
                     <button id="inlineBtnSubmit" class="btn-learn" style="background:gray!important;box-shadow:0 5px 0 #475569!important;border-color:#475569!important;pointer-events:none" onclick="submitInlineVideo()">🔒 Đang xem...</button>
                 </div>
@@ -206,7 +219,7 @@
             </div>
         </div>
 
-        <!-- SPEAKING: nhóm theo Unit -->
+        <!-- SPEAKING: Enhanced Version -->
         <div id="tab-speaking" class="tab-pane">
             <div class="card">
                 <div class="card-title" style="color:var(--orange-dark)">🎤 Luyện Phát Âm Cùng AI</div>
@@ -331,12 +344,10 @@ function getQuizHistory()  { try { return JSON.parse(localStorage.getItem('ks_qu
 function getSpeakHistory() { try { return JSON.parse(localStorage.getItem('ks_speak_history') || '{}'); } catch { return {}; } }
 function getVideoHistory() { try { return JSON.parse(localStorage.getItem('ks_video_history') || '{}'); } catch { return {}; } }
 
-// ===== ĐỒNG BỘ ĐIỂM: Firestore → tất cả UI =====
+// ===== REAL-TIME SCORE SYNC: Firestore → UI =====
 function syncScore(scoreVal) {
     const val = scoreVal || 0;
-    // 1) Điểm trong grade-box (trang Home)
     const elMain = document.getElementById('myScore');
-    // 2) Điểm badge trên header
     const elBadge = document.getElementById('scoreHeaderBadge');
     [elMain, elBadge].forEach(el => {
         if (!el) return;
@@ -388,7 +399,6 @@ function startListeners() {
         const oldClass = myData.class || '';
         allUsers = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
         updateMyData();
-        // Đồng bộ điểm ngay lập tức khi Firestore thay đổi
         syncScore(myData.score);
         checkClassChange(oldClass);
         scheduleRefresh();
@@ -433,7 +443,6 @@ function getUnitName(item) {
     return m ? m[0] : '📚 Bài Tự Do';
 }
 
-// fullWidth=true → mỗi item chiếm full dòng (speaking)
 function renderGroupedItems(items, containerId, renderFn, emptyMsg, themeColor, fullWidth) {
     const container = document.getElementById(containerId);
     if (!items || items.length === 0) { container.innerHTML = `<div class="loading-msg">${emptyMsg}</div>`; return; }
@@ -458,7 +467,6 @@ function refreshUI() {
     const comment = myData.comment || 'Cô giáo chưa ghi chú...';
     const myClass = myData.class || 'Chưa xếp lớp';
 
-    // Đồng bộ điểm cả hai vị trí
     syncScore(score);
     document.getElementById('myComment').innerText = comment;
     document.getElementById('myClass').innerText   = '🏫 Lớp: ' + myClass;
@@ -505,24 +513,24 @@ function refreshUI() {
             <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="openQuiz('${q.firestoreId}','${encodeURIComponent(q.title||'')}')">Làm Bài</button></div>`;
     }, '📭 Chưa có bài tập.', 'green', false);
 
-    // ===== LUYỆN NÓI: nhóm theo Unit (full-width) =====
+    // ===== LUYỆN NÓI: ENHANCED Version =====
     const speaks = allQuizzes.filter(q => q.type==='speak');
     renderGroupedItems(speaks, 'realSpeakingList', s => {
         const res = sH[myUid+'_'+s.firestoreId];
-        const resultHtml = res ? `<div style="margin-top:20px;padding:20px;background:var(--white);border-radius:20px;border:2px dashed var(--border)">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
-                <span style="font-weight:900;color:var(--text-gray)">📌 Lần gần nhất:</span>
-                <span style="background:var(--orange-dark);color:white;padding:5px 20px;border-radius:20px;font-weight:900;font-size:1.2rem">${res.score}/100đ</span>
-            </div>
-            <div style="font-weight:800;font-size:1.1rem;color:var(--blue-dark)">Bé đọc: "${res.transcript}"</div>
-            <div style="color:var(--green-dark);font-weight:900;font-size:1rem;background:var(--green-light);padding:10px;border-radius:15px;text-align:center;margin-top:10px">${res.comment}</div></div>` : '';
-        return `<div class="real-item" style="display:block;border-color:var(--orange-dark)">
-            <strong style="font-size:1.3rem;color:var(--orange-dark)">${s.title}</strong>
-            <h3 style="color:var(--blue-dark);font-size:2.5rem;background:var(--white);padding:20px;border-radius:25px;text-align:center;margin:20px 0;border:3px solid var(--border)">${s.word||''}</h3>
-            <div style="display:flex;gap:15px;flex-wrap:wrap">
-                <button class="btn-learn" style="flex:1;justify-content:center" onclick="playAudio('${s.word}',1)"><i class="fas fa-volume-up"></i> Chuẩn</button>
-                <button class="btn-learn" style="flex:1;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-circle-pause"></i> Chậm</button>
-                <button class="btn-learn" style="flex:1;justify-content:center;background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="startRecording('${s.word}','${s.firestoreId}')"><i class="fas fa-microphone"></i> Thu Âm</button>
+        const resultHtml = res ? `<div class="speak-result show">
+            <div class="speak-score">🏅 ${res.score}/100 điểm</div>
+            <div class="speak-transcript"><strong>Bé đọc:</strong> "${res.transcript}"</div>
+            <div class="speak-feedback">${res.comment}</div>
+        </div>` : '';
+        return `<div class="speak-item">
+            <div style="font-size:1.2rem;font-weight:900;color:var(--orange-dark);margin-bottom:15px">${s.title}</div>
+            <div class="speak-word">${s.word||'?'}</div>
+            ${s.vietnamese?`<div class="speak-meaning">Nghĩa: <strong>${s.vietnamese}</strong></div>`:''}
+            ${s.phonetic?`<div class="speak-phonetic">${s.phonetic}</div>`:''}
+            <div class="speak-buttons">
+                <button class="btn-learn" onclick="playAudio('${s.word}',1)"><i class="fas fa-volume-up"></i> Bình Thường</button>
+                <button class="btn-learn" style="background:var(--orange-dark)!important;border-color:#FF948C!important;box-shadow:0 5px 0 #FF948C!important" onclick="playAudio('${s.word}',0.5)"><i class="fas fa-circle-pause"></i> Chậm</button>
+                <button class="btn-learn" style="background:var(--green-dark)!important;border-color:#047857!important;box-shadow:0 5px 0 #047857!important" onclick="startRecording('${s.word}','${s.firestoreId}','${encodeURIComponent(s.title)}')"><i class="fas fa-microphone"></i> Thu Âm</button>
             </div>${resultHtml}</div>`;
     }, '📭 Chưa có bài luyện nói.', 'orange', true);
 
@@ -550,13 +558,12 @@ function refreshUI() {
     document.getElementById('totalCountTab').innerText = total;
 }
 
-// ===== CẬP NHẬT ĐIỂM FIRESTORE (nguồn duy nhất) =====
+// ===== SCORE UPDATE: send to Firestore =====
 async function updateStudentScore(addedScore) {
     if (!myData.firestoreId) return;
     const newScore = (parseInt(myData.score)||0) + parseInt(addedScore);
     try { await updateDoc(doc(db,'users',myData.firestoreId), { score: newScore }); }
     catch(e) { console.error('Lỗi cập nhật điểm:', e); }
-    // onSnapshot sẽ tự gọi syncScore sau khi Firestore cập nhật
 }
 
 async function autoNotifyTeacher(msg) {
@@ -646,8 +653,8 @@ async function saveVideoResult(lessonId) {
 }
 async function sendProgressToTeacherInternal() {
     const pct=document.getElementById('progressFillTab').innerText;
-    const score=myData.score||0; // luôn dùng điểm thực từ Firestore
-    await autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct} tiến độ. Tổng điểm cà rốt: ${score} ạ! 🌟`);
+    const score=myData.score||0;
+    await autoNotifyTeacher(`📤 BÁO CÁO: Cô ơi, con đã hoàn thành ${pct}% tiến độ. Tổng điểm cà rốt: ${score} ạ! 🌟`);
     Swal.fire({title:'Thành công!',text:'Đã gửi báo cáo cho Cô giáo!',icon:'success',confirmButtonColor:'#4A81E8'});
 }
 
@@ -663,17 +670,16 @@ window._fb_notify       = autoNotifyTeacher;
 window._fb_loadChat     = loadChatInternal;
 window._fb_sendMsg      = sendToTeacherInternal;
 window._fb_sendProgress = sendProgressToTeacherInternal;
-window._fb_ready        = false;
 
 window.forceLoadChat         = () => loadChatInternal();
 window.sendToTeacher         = () => sendToTeacherInternal();
 window.sendProgressToTeacher = () => sendProgressToTeacherInternal();
 window.submitInlineVideo     = () => { if (window.currentVideoId) saveVideoResult(window.currentVideoId); };
 
-document.addEventListener('DOMContentLoaded', () => { loadAll().then(()=>{ window._fb_ready=true; }); });
+document.addEventListener('DOMContentLoaded', () => { loadAll(); });
 </script>
 
-<!-- ===== NON-MODULE SCRIPT ===== -->
+<!-- ===== NON-MODULE: UI & GAMES ===== -->
 <script>
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
@@ -805,69 +811,80 @@ function openQuiz(quizId,encTitle) {
         }
     });
 }
-function startRecording(targetWord, quizId) {
+
+// ===== ENHANCED SPEAKING: Higher Sensitivity =====
+function playAudio(word, speed = 1) {
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    utterance.rate = speed;
+    speechSynthesis.speak(utterance);
+}
+
+function startRecording(targetWord, quizId, encTitle) {
+    const title = decodeURIComponent(encTitle);
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { Swal.fire('Lỗi', 'Dùng Chrome nhé!', 'error'); return; }
+    if (!SR) { Swal.fire('Lỗi', 'Vui lòng dùng Chrome hoặc Edge!', 'error'); return; }
 
     const recognition = new SR();
     recognition.lang = 'en-US';
     recognition.interimResults = true;
-    recognition.continuous = true; // Giữ mic mở liên tục
+    recognition.continuous = false;
+    recognition.maxAlternatives = 5;
 
     let finalTranscript = '';
-    let timerInterval = null;
-    let isStopped = false;
-    let mr = null;
-    let chunks = [];
+    let allAlternatives = [];
+    let isProcessing = false;
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        mr = new MediaRecorder(stream);
+        let chunks = [];
+        const mr = new MediaRecorder(stream);
         mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
 
         let timeLeft = 10;
 
-        // Xử lý kết quả nhận dạng giọng nói
         recognition.onresult = (event) => {
             let interimTranscript = '';
+            allAlternatives = [];
+            
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 const transcript = event.results[i][0].transcript;
+                
                 if (event.results[i].isFinal) {
-                    finalTranscript += transcript + ' '; // Tích lũy các đoạn final
+                    finalTranscript += transcript + ' ';
                 } else {
                     interimTranscript += transcript;
                 }
+                
+                // Lưu tất cả alternatives
+                for (let j = 0; j < event.results[i].length; j++) {
+                    allAlternatives.push({
+                        transcript: event.results[i][j].transcript,
+                        confidence: event.results[i][j].confidence,
+                        isFinal: event.results[i].isFinal
+                    });
+                }
             }
-            // Hiển thị live (final + interim)
+            
+            const displayText = finalTranscript.trim() + ' ' + interimTranscript;
             const liveEl = document.getElementById('live-transcript');
-            if (liveEl) liveEl.innerText = `"${(finalTranscript + interimTranscript).trim()}"`;
+            if (liveEl) liveEl.innerText = `"${displayText.trim()}"`;
         };
 
         recognition.onerror = (e) => {
-            console.warn('Speech recognition error:', e.error);
-            // 'no-speech' không phải lỗi nghiêm trọng, bỏ qua
             if (e.error === 'not-allowed') {
-                isStopped = true;
+                isProcessing = true;
                 clearInterval(timerInterval);
                 try { recognition.stop(); } catch(err) {}
                 try { mr.stop(); stream.getTracks().forEach(t => t.stop()); } catch(err) {}
                 Swal.fire('Lỗi Micro', 'Cần cấp quyền Micro!', 'error');
             }
-            // Với 'no-speech', 'aborted'... để timer tự xử lý
-        };
-
-        // Khi recognition kết thúc, nếu chưa stop thì restart để giữ liên tục
-        recognition.onend = () => {
-            if (!isStopped) {
-                try { recognition.start(); } catch(e) {}
-            }
         };
 
         const processAudio = () => {
-            if (isStopped) return;
-            isStopped = true;
+            if (isProcessing) return;
+            isProcessing = true;
             clearInterval(timerInterval);
 
-            // Dừng recognition và recorder
             try { recognition.stop(); } catch(e) {}
             try { mr.stop(); } catch(e) {}
 
@@ -881,20 +898,13 @@ function startRecording(targetWord, quizId) {
                 stream.getTracks().forEach(t => t.stop());
                 const audioUrl = URL.createObjectURL(new Blob(chunks, { type: 'audio/wav' }));
 
-                // Dùng finalTranscript đã tích lũy; fallback nếu rỗng
-                const spoken = finalTranscript.trim().toLowerCase().replace(/[.,?!;:'"-]/g, '');
+                const spoken = finalTranscript.trim().toLowerCase().replace(/[.,?!;:'"-]/g, '').trim();
                 const target = targetWord.toLowerCase().replace(/[.,?!;:'"-]/g, '').trim();
 
                 if (!spoken) {
-                    // Không nhận được tiếng nào
                     Swal.fire({
                         title: '😅 Chưa nghe thấy!',
-                        html: `<p style="font-size:1.1rem;font-weight:800">Micro chạy nhưng không nhận ra tiếng. Thử lại nhé!</p>
-                               <ul style="text-align:left;margin-top:15px;font-weight:700;color:#475569;line-height:2">
-                                 <li>Nói to và rõ hơn</li>
-                                 <li>Đảm bảo mic không bị chặn</li>
-                                 <li>Thử dùng Chrome trên máy tính</li>
-                               </ul>`,
+                        html: `<p style="font-size:1.1rem;font-weight:800">Hãy nói to và rõ ràng hơn nhé!</p>`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: '🎤 Thử Lại',
@@ -902,89 +912,126 @@ function startRecording(targetWord, quizId) {
                         confirmButtonColor: '#4A81E8',
                         cancelButtonColor: '#FF948C'
                     }).then(r => {
-                        if (r.isConfirmed) setTimeout(() => startRecording(targetWord, quizId), 300);
+                        if (r.isConfirmed) {
+                            isProcessing = false;
+                            setTimeout(() => startRecording(targetWord, quizId, encTitle), 300);
+                        }
                     });
                     return;
                 }
 
+                // Tính toán độ chính xác với ngưỡng nhạy hơn
                 const tWords = target.split(/\s+/);
                 const sWords = spoken.split(/\s+/);
 
-                let totalScore = 0;
-                let wordDetails = [];
+                let correctCount = 0;
+                let detailsArray = [];
+
                 tWords.forEach(tw => {
-                    let bestSimilarity = 0;
                     let bestMatch = '';
+                    let bestSimilarity = 0;
+                    let bestConfidence = 0;
+
                     sWords.forEach(sw => {
+                        // Levenshtein-style similarity
                         const maxLen = Math.max(tw.length, sw.length);
                         if (maxLen === 0) return;
+                        
                         let matches = 0;
                         for (let i = 0; i < Math.min(tw.length, sw.length); i++) {
                             if (tw[i] === sw[i]) matches++;
                         }
+                        
                         const sim = matches / maxLen;
-                        if (sim > bestSimilarity) { bestSimilarity = sim; bestMatch = sw; }
+                        
+                        // Tìm confidence từ allAlternatives
+                        const alt = allAlternatives.find(a => a.transcript.toLowerCase().includes(sw));
+                        const conf = alt ? alt.confidence : 0;
+
+                        if (sim > bestSimilarity) {
+                            bestSimilarity = sim;
+                            bestMatch = sw;
+                            bestConfidence = conf;
+                        }
                     });
-                    const isCorrect = bestSimilarity >= 0.5;
-                    totalScore += isCorrect ? 1 : 0;
-                    wordDetails.push({ word: tw, matched: bestMatch, similarity: Math.round(bestSimilarity * 100), correct: isCorrect });
+
+                    // Ngưỡng nhạy hơn: 0.4 thay vì 0.5
+                    const isCorrect = bestSimilarity >= 0.4;
+                    if (isCorrect) correctCount++;
+                    
+                    detailsArray.push({
+                        word: tw,
+                        matched: bestMatch,
+                        similarity: Math.round(bestSimilarity * 100),
+                        confidence: Math.round(bestConfidence * 100),
+                        correct: isCorrect
+                    });
                 });
 
-                let score10 = Math.round((totalScore / tWords.length) * 10);
-                if (score10 < 4 && spoken !== '') score10 = 4;
+                let score10 = Math.round((correctCount / tWords.length) * 10);
+                // Điểm tối thiểu 3/10 nếu có cố gắng
+                if (score10 < 3 && spoken !== '') score10 = 3;
                 if (score10 > 10) score10 = 10;
+                
                 const score100 = score10 * 10;
-                const comment = score10 >= 9 ? 'Xuất sắc! 🌟🌟🌟' :
-                                score10 >= 7 ? 'Tốt lắm! 👍' :
-                                score10 >= 5 ? 'Khá đấy, luyện thêm nhé! 💪' :
-                                'Cố lên, nghe mẫu rồi đọc lại nha! 🎧';
+                const comment = score10 >= 9 ? '🌟 Xuất sắc! Bé đọc rất chuẩn!' :
+                                score10 >= 7 ? '👍 Tốt lắm! Tiếp tục luyện tập!' :
+                                score10 >= 5 ? '💪 Khá đấy! Luyện thêm một chút nữa nhé!' :
+                                score10 >= 3 ? '🎧 Cứ luyện, bé sẽ giỏi thôi!' :
+                                '❤️ Cố gắng lên!';
 
-                let analysisHtml = wordDetails.map(wd => {
-                    const icon = wd.correct ? '✅' : '❌';
-                    const color = wd.correct ? 'var(--green-dark)' : 'var(--orange-dark)';
-                    return `<tr style="color:${color}"><td>${icon}</td><td><strong>${wd.word}</strong></td><td>${wd.matched || '—'}</td><td>${wd.similarity}%</td></tr>`;
+                let analysisHtml = detailsArray.map(d => {
+                    const icon = d.correct ? '✅' : '❌';
+                    const color = d.correct ? 'var(--green-dark)' : 'var(--orange-dark)';
+                    return `<tr style="color:${color}">
+                        <td>${icon}</td>
+                        <td><strong>${d.word}</strong></td>
+                        <td>${d.matched || '—'}</td>
+                        <td>${d.similarity}%</td>
+                        <td style="font-size:0.8rem">${d.confidence}%</td>
+                    </tr>`;
                 }).join('');
 
                 Swal.fire({
-                    title: score10 >= 7 ? '🎉 Chúc mừng!' : '🤔 Cố lên!',
+                    title: score10 >= 7 ? '🎉 Xuất sắc!' : score10 >= 5 ? '👏 Tốt!' : '💪 Cố gắng!',
                     html: `
                         <div style="font-size:4rem;font-weight:900;color:var(--blue-dark);font-family:'Baloo 2';margin:10px 0">${score10}/10</div>
-                        <div style="font-size:1.8rem;letter-spacing:3px;margin:10px 0;color:#F59E0B">${'⭐'.repeat(Math.round(score10/2))}${'☆'.repeat(5-Math.round(score10/2))}</div>
-                        <p style="font-size:1.2rem;margin-bottom:10px"><strong>Bé đọc:</strong> <span style="color:var(--orange-dark);font-weight:900">"${spoken}"</span></p>
-                        <div style="max-height:200px;overflow-y:auto;margin-bottom:15px">
-                            <table style="width:100%;font-size:0.9rem">
-                                <thead><tr><th></th><th>Từ mẫu</th><th>Bé đọc</th><th>Độ khớp</th></tr></thead>
+                        <div style="font-size:1.8rem;letter-spacing:3px;margin:10px 0;color:#F59E0B">${'⭐'.repeat(Math.max(1,Math.round(score10/2)))}${'☆'.repeat(5-Math.max(1,Math.round(score10/2)))}</div>
+                        <p style="font-size:1.1rem;margin-bottom:10px"><strong>Bé đọc:</strong> <span style="color:var(--orange-dark);font-weight:900">"${spoken}"</span></p>
+                        <div style="max-height:200px;overflow-y:auto;margin-bottom:15px;font-size:0.85rem">
+                            <table style="width:100%">
+                                <thead><tr style="font-weight:900;border-bottom:2px solid var(--border)"><th></th><th>Mẫu</th><th>Đọc</th><th>Độ khớp</th><th>Tin cậy</th></tr></thead>
                                 <tbody>${analysisHtml}</tbody>
                             </table>
                         </div>
                         <audio id="playbackAudio" controls src="${audioUrl}" style="width:100%;height:40px;border-radius:20px;outline:none;margin-bottom:15px"></audio>
-                        <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:15px" onclick="document.getElementById('playbackAudio').play()">▶️ Nghe Lại</button>
-                        <button class="btn-learn" style="width:100%;justify-content:center;background:var(--orange-dark)!important;border-color:#C2410C!important;box-shadow:0 5px 0 #C2410C!important;margin-bottom:15px" onclick="playAudio('${targetWord}',0.5)">🐢 Nghe Mẫu Chậm</button>
-                        <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark)">${comment}</div>
+                        <div style="background:var(--green-light);color:var(--green-dark);padding:15px;border-radius:15px;font-weight:900;border:2px solid var(--green-dark);margin-bottom:15px">${comment}</div>
                     `,
                     icon: score10 >= 7 ? 'success' : 'info',
                     showCancelButton: true,
                     confirmButtonText: '✅ Nộp Điểm',
                     cancelButtonText: '🎤 Đọc Lại',
                     confirmButtonColor: '#4A81E8',
-                    cancelButtonColor: '#FF948C'
+                    cancelButtonColor: '#FF948C',
+                    width: '700px'
                 }).then(async r => {
                     if (r.isConfirmed) {
                         if (window._fb_saveSpeak) {
                             await window._fb_saveSpeak(quizId, score100, spoken, comment, audioUrl);
                         }
-                        Swal.fire({ title: 'Đã Nộp!', text: `Con được ${score10}/10 điểm nhé!`, icon: 'success', timer: 1500, showConfirmButton: false });
+                        Swal.fire({ title: 'Hoàn Thành!', text: `Bé đạt ${score10}/10, nhận ${score100} điểm!`, icon: 'success', timer: 1500, showConfirmButton: false });
                     } else if (r.dismiss === Swal.DismissReason.cancel) {
-                        setTimeout(() => startRecording(targetWord, quizId), 500);
+                        isProcessing = false;
+                        setTimeout(() => startRecording(targetWord, quizId, encTitle), 500);
                     }
                 });
             };
         };
 
-        // Mở SweetAlert và bắt đầu recording
         mr.start();
         recognition.start();
 
+        let timerInterval;
         Swal.fire({
             title: '🎤 Đang lắng nghe...',
             html: `
@@ -1008,16 +1055,17 @@ function startRecording(targetWord, quizId) {
                     if (bar) bar.style.width = `${(timeLeft / 10) * 100}%`;
                     if (timeLeft <= 0) {
                         clearInterval(timerInterval);
-                        if (!isStopped) Swal.clickConfirm();
+                        if (!isProcessing) Swal.clickConfirm();
                     }
                 }, 1000);
             }
         }).then(() => {
-            if (!isStopped) processAudio();
+            if (!isProcessing) processAudio();
         });
 
     }).catch(() => Swal.fire('Lỗi', 'Cần cấp quyền Micro!', 'error'));
 }
+
 // ===== GAME =====
 let currentGame=null, currentGameProgress=0, currentGameScore=0, isJumping=false;
 
@@ -1090,7 +1138,7 @@ function startInGameRecording(targetWord,index,points) {
     const statusDiv=document.getElementById('inGameSpeakStatus');
     if(!SR){statusDiv.innerText='Trình duyệt không hỗ trợ Mic!';return;}
     const recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=false;
-    statusDiv.innerHTML='<span style="color:var(--orange-dark)">Đang thu âm... Đọc to lên nhé!</span>';
+    statusDiv.innerHTML='<span style="color:var(--orange-dark)">🎤 Đang thu âm...</span>';
     navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         const mr=new MediaRecorder(stream); let chunks=[];
         mr.ondataavailable=e=>chunks.push(e.data); mr.start(); recognition.start();
